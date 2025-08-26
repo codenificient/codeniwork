@@ -2,8 +2,8 @@
 
 import { Button } from '@/components/ui/button'
 import { Card,CardDescription,CardHeader,CardTitle } from '@/components/ui/card'
-import { ArrowRight,Briefcase,Building2,Calendar,CheckCircle,Users,Zap } from 'lucide-react'
-import { useSession } from 'next-auth/react'
+import { ArrowRight,Briefcase,Building2,Calendar,CheckCircle,Users,Zap,LogOut } from 'lucide-react'
+import { useSession,signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
 export default function HomePage () {
@@ -32,6 +32,14 @@ export default function HomePage () {
 		}
 	}
 
+	const handleSignOut=async () => {
+		try {
+			await signOut( { callbackUrl: '/' } )
+		} catch ( error ) {
+			console.error( 'Error signing out:',error )
+		}
+	}
+
 
 
 	// Session state is available for dynamic button behavior
@@ -47,6 +55,21 @@ export default function HomePage () {
 					<span className="text-xl font-bold text-white">CodeniWork</span>
 				</div>
 				<div className="flex items-center space-x-4">
+					{hasSession && (
+						<>
+							<span className="text-white text-sm">
+								Welcome, {session?.user?.name || 'User'}!
+							</span>
+							<Button
+								onClick={handleSignOut}
+								variant="outline"
+								className="border-red-400 text-red-300 hover:bg-red-400/20 hover:border-red-300 hover:text-white"
+							>
+								<LogOut className="w-4 h-4 mr-2" />
+								Sign Out
+							</Button>
+						</>
+					)}
 					<Button
 						onClick={handleGetStarted}
 						className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700"
