@@ -2,16 +2,16 @@ import NextAuth from "next-auth"
 import GitHub from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const { handlers,auth,signIn,signOut }=NextAuth( {
 	providers: [
-		GitHub({
+		GitHub( {
 			clientId: process.env.GITHUB_ID!,
 			clientSecret: process.env.GITHUB_SECRET!,
-		}),
-		Google({
+		} ),
+		Google( {
 			clientId: process.env.GOOGLE_CLIENT_ID!,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-		}),
+		} ),
 	],
 	session: {
 		strategy: "jwt",
@@ -20,33 +20,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 		signIn: '/auth/signin',
 	},
 	callbacks: {
-		async jwt({ token, user }) {
-			if (user) {
-				token.id = user.id
+		async jwt ( { token,user } ) {
+			if ( user ) {
+				token.id=user.id
 			}
 			return token
 		},
-		async session({ session, token }) {
-			if (token && session.user) {
-				session.user.id = token.id as string
+		async session ( { session,token } ) {
+			if ( token&&session.user ) {
+				session.user.id=token.id as string
 			}
 			return session
 		},
-		async redirect({ url, baseUrl }) {
+		async redirect ( { url,baseUrl } ) {
 			// After successful OAuth authentication, always redirect to dashboard
-			if (url.startsWith('/auth/callback')) {
+			if ( url.startsWith( '/auth/callback' ) ) {
 				return `${baseUrl}/dashboard`
 			}
 			// For other internal URLs, allow them
-			if (url.startsWith(baseUrl)) {
+			if ( url.startsWith( baseUrl ) ) {
 				return url
 			}
 			// For relative URLs, prepend base URL
-			if (url.startsWith('/')) {
+			if ( url.startsWith( '/' ) ) {
 				return `${baseUrl}${url}`
 			}
 			// Default to dashboard
 			return `${baseUrl}/dashboard`
 		},
 	},
-})
+} )

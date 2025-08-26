@@ -8,33 +8,33 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-export default function SignInPage() {
-	const router = useRouter()
-	const [isLoading, setIsLoading] = useState(false)
-	const [error, setError] = useState<string | null>(null)
+export default function SignInPage () {
+	const router=useRouter()
+	const [ isLoading,setIsLoading ]=useState( false )
+	const [ error,setError ]=useState<string|null>( null )
 	// For now, use a default callback URL
 	// In a real app, you might want to handle this differently
-	const callbackUrl = '/dashboard'
+	const callbackUrl='/dashboard'
 
-	const handleGoogleSignIn = async () => {
-		setIsLoading(true)
-		setError(null)
+	const handleGoogleSignIn=async () => {
+		setIsLoading( true )
+		setError( null )
 		try {
-			await signIn('google', { callbackUrl })
-		} catch (error) {
-			setError('Google sign-in failed. Please try again.')
-			setIsLoading(false)
+			await signIn( 'google',{ callbackUrl } )
+		} catch ( error ) {
+			setError( 'Google sign-in failed. Please try again.' )
+			setIsLoading( false )
 		}
 	}
 
-	const handleGithubSignIn = async () => {
-		setIsLoading(true)
-		setError(null)
+	const handleGithubSignIn=async () => {
+		setIsLoading( true )
+		setError( null )
 		try {
-			await signIn('github', { callbackUrl })
-		} catch (error) {
-			setError('GitHub sign-in failed. Please try again.')
-			setIsLoading(false)
+			await signIn( 'github',{ callbackUrl } )
+		} catch ( error ) {
+			setError( 'GitHub sign-in failed. Please try again.' )
+			setIsLoading( false )
 		}
 	}
 
@@ -71,7 +71,7 @@ export default function SignInPage() {
 
 				<CardContent className="space-y-6">
 					{/* Error Display */}
-					{error && (
+					{error&&(
 						<div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
 							<div className="flex items-center">
 								<div className="flex-shrink-0">
