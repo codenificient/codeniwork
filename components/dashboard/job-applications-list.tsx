@@ -29,8 +29,8 @@ interface JobApplication {
 	location: string|null
 	jobUrl: string|null
 	notes: string|null
-	appliedAt: Date | string
-	deadline: Date | string | null
+	appliedAt: Date|string
+	deadline: Date|string|null
 	isRemote: boolean|null
 	company: {
 		id: string
@@ -81,20 +81,20 @@ export function JobApplicationsList () {
 		fetchApplications()
 	},[ session?.user?.id ] )
 
-	const formatDate = (date: Date | string) => {
+	const formatDate=( date: Date|string ) => {
 		// Convert string to Date if needed
-		const dateObj = typeof date === 'string' ? new Date(date) : date
-		
+		const dateObj=typeof date==='string'? new Date( date ):date
+
 		// Check if date is valid
-		if (isNaN(dateObj.getTime())) {
+		if ( isNaN( dateObj.getTime() ) ) {
 			return 'Invalid date'
 		}
-		
-		return dateObj.toLocaleDateString('en-US', {
+
+		return dateObj.toLocaleDateString( 'en-US',{
 			month: 'short',
 			day: 'numeric',
 			year: 'numeric'
-		})
+		} )
 	}
 
 	if ( isLoading ) {

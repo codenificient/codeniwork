@@ -9,7 +9,7 @@ interface ActivityEvent {
 	type: string
 	title: string
 	description: string|null
-	date: Date | string
+	date: Date|string
 	application: {
 		position: string
 		companyName: string
@@ -39,45 +39,45 @@ export function RecentActivity () {
 	const [ activities,setActivities ]=useState<ActivityEvent[]>( [] )
 	const [ isLoading,setIsLoading ]=useState( true )
 
-	useEffect(() => {
-		async function fetchActivities() {
-			if (!session?.user?.id) return
+	useEffect( () => {
+		async function fetchActivities () {
+			if ( !session?.user?.id ) return
 
 			try {
-				const response = await fetch('/api/dashboard/activity?limit=5')
-				if (!response.ok) {
-					throw new Error('Failed to fetch activity')
+				const response=await fetch( '/api/dashboard/activity?limit=5' )
+				if ( !response.ok ) {
+					throw new Error( 'Failed to fetch activity' )
 				}
-				const activityData = await response.json()
-				setActivities(activityData)
-			} catch (error) {
-				console.error('Error fetching recent activity:', error)
+				const activityData=await response.json()
+				setActivities( activityData )
+			} catch ( error ) {
+				console.error( 'Error fetching recent activity:',error )
 			} finally {
-				setIsLoading(false)
+				setIsLoading( false )
 			}
 		}
 
 		fetchActivities()
-	}, [session?.user?.id])
+	},[ session?.user?.id ] )
 
-	const formatDate = (date: Date | string) => {
+	const formatDate=( date: Date|string ) => {
 		// Convert string to Date if needed
-		const dateObj = typeof date === 'string' ? new Date(date) : date
-		
+		const dateObj=typeof date==='string'? new Date( date ):date
+
 		// Check if date is valid
-		if (isNaN(dateObj.getTime())) {
+		if ( isNaN( dateObj.getTime() ) ) {
 			return 'Invalid date'
 		}
-		
-		const now = new Date()
-		const diffTime = Math.abs(now.getTime() - dateObj.getTime())
-		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
-		if (diffDays === 0) return 'Today'
-		if (diffDays === 1) return 'Yesterday'
-		if (diffDays < 7) return `${diffDays} days ago`
-		if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`
-		return dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+		const now=new Date()
+		const diffTime=Math.abs( now.getTime()-dateObj.getTime() )
+		const diffDays=Math.ceil( diffTime/( 1000*60*60*24 ) )
+
+		if ( diffDays===0 ) return 'Today'
+		if ( diffDays===1 ) return 'Yesterday'
+		if ( diffDays<7 ) return `${diffDays} days ago`
+		if ( diffDays<30 ) return `${Math.floor( diffDays/7 )} weeks ago`
+		return dateObj.toLocaleDateString( 'en-US',{ month: 'short',day: 'numeric' } )
 	}
 
 	if ( isLoading ) {
