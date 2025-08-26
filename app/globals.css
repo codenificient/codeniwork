@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply relative text-white min-h-screen;
+  background-color: #2d0052; /* Deep base purple */
+}
+
+/* Rotating hazy purple clouds */
+body::before {
+  content: '';
+  position: fixed;
+  top: -25%;
+  left: -25%;
+  width: 150%;
+  height: 150%;
+  background:
+    radial-gradient(circle at 30% 30%, #5a0084 0%, #2d0052 80%),
+    radial-gradient(circle at 70% 70%, #4a0077 0%, #2d0052 80%);
+  animation: rotateClouds 80s linear infinite;
+  z-index: -1;
+  pointer-events: none;
+  transform-origin: center;
+  filter: blur(100px);
+  opacity: 1;
+}
+
+@keyframes rotateClouds {
+  0% {
+    transform: rotate(0deg) scale(1.05);
+  }
+  100% {
+    transform: rotate(360deg) scale(1.05);
+  }
+}

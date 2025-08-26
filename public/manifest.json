@@ -1,0 +1,21 @@
+{
+	"name": "Job Tracker",
+	"short_name": "Job Tracker",
+	"description": "Track your job applications with a beautiful, clean interface",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#ffffff",
+	"theme_color": "#3b82f6",
+	"icons": [
+		{
+			"src": "/favicon.svg",
+			"sizes": "32x32",
+			"type": "image/svg+xml"
+		},
+		{
+			"src": "/apple-touch-icon.svg",
+			"sizes": "180x180",
+			"type": "image/svg+xml"
+		}
+	]
+}
