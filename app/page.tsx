@@ -7,27 +7,27 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
 export default function HomePage () {
-	const { data: session, status } = useSession()
-	const router = useRouter()
-	const hasSession = status === "authenticated" && !!session
+	const { data: session,status }=useSession()
+	const router=useRouter()
+	const hasSession=status==="authenticated"&&!!session
 
-	const handleGetStarted = () => {
-		if (hasSession) {
+	const handleGetStarted=() => {
+		if ( hasSession ) {
 			// User is authenticated, go to dashboard
-			router.push('/dashboard')
+			router.push( '/dashboard' )
 		} else {
 			// User is not authenticated, go to sign up
-			router.push('/auth/signup')
+			router.push( '/auth/signup' )
 		}
 	}
 
-	const handleSignIn = () => {
-		if (hasSession) {
+	const handleSignIn=() => {
+		if ( hasSession ) {
 			// User is authenticated, go to dashboard
-			router.push('/dashboard')
+			router.push( '/dashboard' )
 		} else {
 			// User is not authenticated, go to sign in
-			router.push('/auth/signin')
+			router.push( '/auth/signin' )
 		}
 	}
 

@@ -9,9 +9,10 @@ export function middleware ( request: NextRequest ) {
 	const publicPaths=[ '/','/auth/signin','/auth/signup' ]
 	const isPublicPath=publicPaths.some( publicPath => path.startsWith( publicPath ) )
 
-	// Check if user is authenticated (has session cookie)
-	const hasSession=request.cookies.has( 'better-auth.session-token' )||
-		request.cookies.has( 'better-auth.session-token.sig' )
+	// Check if user is authenticated (has NextAuth.js session cookie)
+	const hasSession = request.cookies.has('next-auth.session-token') ||
+		request.cookies.has('__Secure-next-auth.session-token') ||
+		request.cookies.has('__Host-next-auth.csrf-token')
 
 	// If the path is public, allow access
 	if ( isPublicPath ) {
