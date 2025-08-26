@@ -3,7 +3,7 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card,CardContent } from '@/components/ui/card'
-import { getJobApplications } from '@/lib/db/queries'
+// Database queries moved to API routes
 import {
 	AlertCircle,
 	Building2,
@@ -60,22 +60,26 @@ export function JobApplicationsList () {
 	const [ applications,setApplications ]=useState<JobApplication[]>( [] )
 	const [ isLoading,setIsLoading ]=useState( true )
 
-	useEffect( () => {
-		async function fetchApplications () {
-			if ( !session?.user?.id ) return
+	useEffect(() => {
+		async function fetchApplications() {
+			if (!session?.user?.id) return
 
 			try {
-				const apps=await getJobApplications( session.user.id )
-				setApplications( apps )
-			} catch ( error ) {
-				console.error( 'Error fetching job applications:',error )
+				const response = await fetch('/api/dashboard/applications')
+				if (!response.ok) {
+					throw new Error('Failed to fetch applications')
+				}
+				const apps = await response.json()
+				setApplications(apps)
+			} catch (error) {
+				console.error('Error fetching job applications:', error)
 			} finally {
-				setIsLoading( false )
+				setIsLoading(false)
 			}
 		}
 
 		fetchApplications()
-	},[ session?.user?.id ] )
+	}, [session?.user?.id])
 
 	const formatDate=( date: Date ) => {
 		return date.toLocaleDateString( 'en-US',{

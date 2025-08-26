@@ -12,7 +12,7 @@ async function seedDatabase () {
 	try {
 		// Create sample users
 		console.log( '👥 Creating sample users...' )
-		const sampleUsers = await db.insert(users).values([
+		const sampleUsers=await db.insert( users ).values( [
 			{
 				email: 'john.doe@example.com',
 				name: 'John Doe',
@@ -31,7 +31,7 @@ async function seedDatabase () {
 				image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
 				passwordHash: '$2b$12$/7xN2h/qOQBVtQUpvM.58ul3CC/7nIX5RvpaxBVPmtgmK0vSYwVeu', // password: test123
 			},
-		]).returning()
+		] ).returning()
 
 		console.log( `✅ Created ${sampleUsers.length} users` )
 

@@ -1,9 +1,9 @@
-import NextAuth from "next-auth"
-import Credentials from "next-auth/providers/credentials"
-import bcrypt from "bcrypt"
-import { eq } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { users } from "@/lib/db/schema"
+import bcrypt from "bcrypt"
+import { eq } from "drizzle-orm"
+import NextAuth from "next-auth"
+import Credentials from "next-auth/providers/credentials"
 
 export const { handlers,auth,signIn,signOut }=NextAuth( {
 	providers: [
@@ -13,30 +13,30 @@ export const { handlers,auth,signIn,signOut }=NextAuth( {
 				email: { label: "Email",type: "email" },
 				password: { label: "Password",type: "password" }
 			},
-			async authorize(credentials) {
-				if (!credentials?.email || !credentials?.password) {
+			async authorize ( credentials ) {
+				if ( !credentials?.email||!credentials?.password ) {
 					return null
 				}
 
 				try {
 					// Find user by email
-					const userResult = await db.select().from(users).where(eq(users.email, credentials.email as string)).limit(1)
-					
-					if (userResult.length === 0) {
+					const userResult=await db.select().from( users ).where( eq( users.email,credentials.email as string ) ).limit( 1 )
+
+					if ( userResult.length===0 ) {
 						return null
 					}
 
-					const user = userResult[0]
+					const user=userResult[ 0 ]
 
 					// Check if user has password hash
-					if (!user.passwordHash) {
+					if ( !user.passwordHash ) {
 						return null
 					}
 
 					// Verify password
-					const isPasswordValid = await bcrypt.compare(credentials.password as string, user.passwordHash)
-					
-					if (!isPasswordValid) {
+					const isPasswordValid=await bcrypt.compare( credentials.password as string,user.passwordHash )
+
+					if ( !isPasswordValid ) {
 						return null
 					}
 
@@ -46,8 +46,8 @@ export const { handlers,auth,signIn,signOut }=NextAuth( {
 						name: user.name,
 						image: user.image
 					}
-				} catch (error) {
-					console.error("Database error during authentication:", error)
+				} catch ( error ) {
+					console.error( "Database error during authentication:",error )
 					return null
 				}
 			}

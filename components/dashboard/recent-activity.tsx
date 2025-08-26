@@ -1,6 +1,6 @@
 'use client'
 
-import { getRecentActivity } from '@/lib/db/queries'
+// Database queries moved to API routes
 import { useSession } from 'next-auth/react'
 import { useEffect,useState } from 'react'
 
@@ -39,22 +39,26 @@ export function RecentActivity () {
 	const [ activities,setActivities ]=useState<ActivityEvent[]>( [] )
 	const [ isLoading,setIsLoading ]=useState( true )
 
-	useEffect( () => {
-		async function fetchActivities () {
-			if ( !session?.user?.id ) return
+	useEffect(() => {
+		async function fetchActivities() {
+			if (!session?.user?.id) return
 
 			try {
-				const activityData=await getRecentActivity( session.user.id,5 )
-				setActivities( activityData )
-			} catch ( error ) {
-				console.error( 'Error fetching recent activity:',error )
+				const response = await fetch('/api/dashboard/activity?limit=5')
+				if (!response.ok) {
+					throw new Error('Failed to fetch activity')
+				}
+				const activityData = await response.json()
+				setActivities(activityData)
+			} catch (error) {
+				console.error('Error fetching recent activity:', error)
 			} finally {
-				setIsLoading( false )
+				setIsLoading(false)
 			}
 		}
 
 		fetchActivities()
-	},[ session?.user?.id ] )
+	}, [session?.user?.id])
 
 	const formatDate=( date: Date ) => {
 		const now=new Date()

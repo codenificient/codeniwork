@@ -2,8 +2,8 @@
 
 import { Button } from '@/components/ui/button'
 import { Card,CardDescription,CardHeader,CardTitle } from '@/components/ui/card'
-import { ArrowRight,Briefcase,Building2,Calendar,CheckCircle,Users,Zap,LogOut } from 'lucide-react'
-import { useSession,signOut } from 'next-auth/react'
+import { ArrowRight,Briefcase,Building2,Calendar,CheckCircle,LogOut,Users,Zap } from 'lucide-react'
+import { signOut,useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
 export default function HomePage () {
@@ -55,10 +55,10 @@ export default function HomePage () {
 					<span className="text-xl font-bold text-white">CodeniWork</span>
 				</div>
 				<div className="flex items-center space-x-4">
-					{hasSession && (
+					{hasSession&&(
 						<>
 							<span className="text-white text-sm">
-								Welcome, {session?.user?.name || 'User'}!
+								Welcome, {session?.user?.name||'User'}!
 							</span>
 							<Button
 								onClick={handleSignOut}

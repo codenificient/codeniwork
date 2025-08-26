@@ -12,7 +12,7 @@ import {
 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
-import { getDashboardStats } from '@/lib/db/queries'
+// Database queries moved to API routes
 
 interface DashboardStatsData {
 	totalApplications: number
@@ -36,7 +36,11 @@ export function DashboardStats() {
 			if (!session?.user?.id) return
 			
 			try {
-				const statsData = await getDashboardStats(session.user.id)
+				const response = await fetch('/api/dashboard/stats')
+				if (!response.ok) {
+					throw new Error('Failed to fetch stats')
+				}
+				const statsData = await response.json()
 				setStats(statsData)
 			} catch (error) {
 				console.error('Error fetching dashboard stats:', error)
