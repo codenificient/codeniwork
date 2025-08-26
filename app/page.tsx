@@ -2,14 +2,13 @@
 
 import { Button } from '@/components/ui/button'
 import { Card,CardDescription,CardHeader,CardTitle } from '@/components/ui/card'
-import { useSession } from 'next-auth/react'
 import { ArrowRight,Briefcase,Building2,Calendar,CheckCircle,Users,Zap } from 'lucide-react'
-import { useEffect,useState } from 'react'
+import { useSession } from 'next-auth/react'
 
 export default function HomePage () {
-	const { data: session, status } = useSession()
-	const isLoading = status === "loading"
-	const hasSession = !!session
+	const { data: session,status }=useSession()
+	const isLoading=status==="loading"
+	const hasSession=!!session
 
 	const handleGetStarted=() => {
 		if ( hasSession ) {

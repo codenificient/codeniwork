@@ -8,7 +8,7 @@ import { ArrowLeft,Chrome,Github,Mail } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect,useState } from 'react'
+import { useState } from 'react'
 
 export default function SignInPage () {
 	const router=useRouter()
@@ -68,7 +68,7 @@ export default function SignInPage () {
 	const handleGithubSignIn=async () => {
 		setIsLoading( true )
 		try {
-			await signIn( 'github', { callbackUrl } )
+			await signIn( 'github',{ callbackUrl } )
 		} catch ( error ) {
 			console.error( 'Sign in error:',error )
 			setIsLoading( false )

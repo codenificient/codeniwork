@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button'
 import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { signIn } from 'next-auth/react'
 import { ArrowLeft,Chrome,Github,Mail,User } from 'lucide-react'
+import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -45,7 +45,7 @@ export default function SignUpPage () {
 	const handleGoogleSignUp=async () => {
 		setIsLoading( true )
 		try {
-			await signIn( 'google', { callbackUrl: '/dashboard' } )
+			await signIn( 'google',{ callbackUrl: '/dashboard' } )
 		} catch ( error ) {
 			console.error( 'Sign up error:',error )
 			setIsLoading( false )
@@ -55,7 +55,7 @@ export default function SignUpPage () {
 	const handleGithubSignUp=async () => {
 		setIsLoading( true )
 		try {
-			await signIn( 'github', { callbackUrl: '/dashboard' } )
+			await signIn( 'github',{ callbackUrl: '/dashboard' } )
 		} catch ( error ) {
 			console.error( 'Sign up error:',error )
 			setIsLoading( false )
