@@ -2,7 +2,9 @@
 
 import { Button } from '@/components/ui/button'
 import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/card'
-import { ArrowLeft,Chrome,Github } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { ArrowLeft,Mail,Lock } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -16,25 +18,40 @@ export default function SignInPage () {
 	// In a real app, you might want to handle this differently
 	const callbackUrl='/dashboard'
 
-	const handleGoogleSignIn=async () => {
-		setIsLoading( true )
-		setError( null )
-		try {
-			await signIn( 'google',{ callbackUrl } )
-		} catch ( error ) {
-			setError( 'Google sign-in failed. Please try again.' )
-			setIsLoading( false )
-		}
+	const [formData, setFormData] = useState({
+		email: '',
+		password: '',
+	})
+
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setFormData({
+			...formData,
+			[e.target.name]: e.target.value,
+		})
 	}
 
-	const handleGithubSignIn=async () => {
-		setIsLoading( true )
-		setError( null )
+	const handleCredentialsSignIn = async (e: React.FormEvent) => {
+		e.preventDefault()
+		setIsLoading(true)
+		setError(null)
+
 		try {
-			await signIn( 'github',{ callbackUrl } )
-		} catch ( error ) {
-			setError( 'GitHub sign-in failed. Please try again.' )
-			setIsLoading( false )
+			const result = await signIn('credentials', {
+				email: formData.email,
+				password: formData.password,
+				redirect: false,
+			})
+
+			if (result?.error) {
+				setError('Invalid email or password. Please try again.')
+				setIsLoading(false)
+			} else {
+				// If we get here, sign in was successful
+				router.push(callbackUrl)
+			}
+		} catch (error) {
+			setError('An unexpected error occurred. Please try again.')
+			setIsLoading(false)
 		}
 	}
 
@@ -86,35 +103,49 @@ export default function SignInPage () {
 						</div>
 					)}
 
-					{/* OAuth Sign In */}
-					<div className="space-y-4">
-						<p className="text-center text-gray-600 mb-4">
-							Sign in with your preferred provider to continue
-						</p>
-					</div>
+					{/* Credentials Sign In Form */}
+					<form onSubmit={handleCredentialsSignIn} className="space-y-4">
+						<div className="space-y-2">
+							<Label htmlFor="email">Email</Label>
+							<div className="relative">
+								<Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+								<Input
+									id="email"
+									name="email"
+									type="email"
+									placeholder="Enter your email"
+									value={formData.email}
+									onChange={handleInputChange}
+									className="pl-10"
+									required
+								/>
+							</div>
+						</div>
 
-					{/* Social Sign In */}
-					<div className="space-y-3">
-						<Button
-							onClick={handleGoogleSignIn}
-							disabled={isLoading}
-							variant="outline"
-							className="w-full bg-white hover:bg-gray-50 text-gray-700 border-gray-300 h-12 text-lg font-medium"
-						>
-							<Chrome className="w-5 h-5 mr-3" />
-							Continue with Google
-						</Button>
+						<div className="space-y-2">
+							<Label htmlFor="password">Password</Label>
+							<div className="relative">
+								<Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+								<Input
+									id="password"
+									name="password"
+									type="password"
+									placeholder="Enter your password"
+									value={formData.password}
+									onChange={handleInputChange}
+									required
+								/>
+							</div>
+						</div>
 
 						<Button
-							onClick={handleGithubSignIn}
+							type="submit"
 							disabled={isLoading}
-							variant="outline"
-							className="w-full bg-gray-900 hover:bg-gray-800 text-white border-gray-700 h-12 text-lg font-medium"
+							className="w-full bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white h-12 text-lg font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
 						>
-							<Github className="w-5 h-5 mr-3" />
-							Continue with GitHub
+							{isLoading ? 'Signing In...' : 'Sign In'}
 						</Button>
-					</div>
+					</form>
 
 					{/* Sign Up Link */}
 					<div className="text-center text-sm text-gray-600">
