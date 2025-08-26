@@ -2,21 +2,14 @@
 
 import { Button } from '@/components/ui/button'
 import { Card,CardDescription,CardHeader,CardTitle } from '@/components/ui/card'
-import { authClient } from '@/lib/auth-client'
+import { useSession } from 'next-auth/react'
 import { ArrowRight,Briefcase,Building2,Calendar,CheckCircle,Users,Zap } from 'lucide-react'
 import { useEffect,useState } from 'react'
 
 export default function HomePage () {
-	const [ isLoading,setIsLoading ]=useState( false )
-	const [ hasSession,setHasSession ]=useState( false )
-
-	useEffect( () => {
-		// Check if user is already signed in
-		authClient.getSession().then( ( session ) => {
-			setHasSession( !!session.data )
-			setIsLoading( false )
-		} )
-	},[] )
+	const { data: session, status } = useSession()
+	const isLoading = status === "loading"
+	const hasSession = !!session
 
 	const handleGetStarted=() => {
 		if ( hasSession ) {

@@ -1,5 +1,6 @@
 'use client'
 
+import { SessionProvider } from 'next-auth/react'
 import { ReactNode } from 'react'
 
 interface AuthProviderProps {
@@ -7,7 +8,9 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider ( { children }: AuthProviderProps ) {
-	// Better Auth doesn't require a provider wrapper
-	// It works directly with the auth client and hooks
-	return <>{children}</>
+	return (
+		<SessionProvider>
+			{children}
+		</SessionProvider>
+	)
 }

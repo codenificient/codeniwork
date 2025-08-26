@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button'
 import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { authClient } from '@/lib/auth-client'
 import { ArrowLeft,Chrome,Github,Mail } from 'lucide-react'
+import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect,useState } from 'react'
@@ -22,14 +22,7 @@ export default function SignInPage () {
 	// In a real app, you might want to handle this differently
 	const callbackUrl='/dashboard'
 
-	useEffect( () => {
-		// Check if user is already signed in
-		authClient.getSession().then( ( session ) => {
-			if ( session.data ) {
-				router.push( callbackUrl )
-			}
-		} )
-	},[ router,callbackUrl ] )
+
 
 	const handleInputChange=( e: React.ChangeEvent<HTMLInputElement> ) => {
 		setFormData( {
@@ -43,13 +36,19 @@ export default function SignInPage () {
 		setIsLoading( true )
 
 		try {
-			const result=await authClient.signIn.email( {
+			const result=await signIn( 'credentials',{
 				email: formData.email,
 				password: formData.password,
+				redirect: false,
 			} )
 
-			// If we get here, sign in was successful
-			router.push( callbackUrl )
+			if ( result?.error ) {
+				console.error( 'Sign in error:',result.error )
+				setIsLoading( false )
+			} else {
+				// If we get here, sign in was successful
+				router.push( callbackUrl )
+			}
 		} catch ( error ) {
 			console.error( 'Sign in error:',error )
 			setIsLoading( false )
@@ -59,7 +58,7 @@ export default function SignInPage () {
 	const handleGoogleSignIn=async () => {
 		setIsLoading( true )
 		try {
-			await authClient.signIn.social( { provider: 'google' } )
+			await signIn( 'google',{ callbackUrl } )
 		} catch ( error ) {
 			console.error( 'Sign in error:',error )
 			setIsLoading( false )
@@ -69,7 +68,7 @@ export default function SignInPage () {
 	const handleGithubSignIn=async () => {
 		setIsLoading( true )
 		try {
-			await authClient.signIn.social( { provider: 'github' } )
+			await signIn( 'github', { callbackUrl } )
 		} catch ( error ) {
 			console.error( 'Sign in error:',error )
 			setIsLoading( false )

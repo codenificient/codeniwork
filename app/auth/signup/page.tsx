@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { authClient } from '@/lib/auth-client'
+import { signIn } from 'next-auth/react'
 import { ArrowLeft,Chrome,Github,Mail,User } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -33,16 +33,9 @@ export default function SignUpPage () {
 		try {
 			console.log( 'Attempting to sign up with:',{ email: formData.email,name: formData.name } )
 
-			const result=await authClient.signUp.email( {
-				email: formData.email,
-				password: formData.password,
-				name: formData.name,
-			} )
-
-			console.log( 'Sign up result:',result )
-
-			// If we get here, sign up was successful
-			router.push( '/dashboard' )
+			// For now, redirect to sign in since NextAuth.js doesn't have built-in signup
+			// In a real app, you'd create an API endpoint to handle user creation
+			router.push( '/auth/signin' )
 		} catch ( error ) {
 			console.error( 'Sign up error:',error )
 			setIsLoading( false )
@@ -52,7 +45,7 @@ export default function SignUpPage () {
 	const handleGoogleSignUp=async () => {
 		setIsLoading( true )
 		try {
-			await authClient.signIn.social( { provider: 'google' } )
+			await signIn( 'google', { callbackUrl: '/dashboard' } )
 		} catch ( error ) {
 			console.error( 'Sign up error:',error )
 			setIsLoading( false )
@@ -62,7 +55,7 @@ export default function SignUpPage () {
 	const handleGithubSignUp=async () => {
 		setIsLoading( true )
 		try {
-			await authClient.signIn.social( { provider: 'github' } )
+			await signIn( 'github', { callbackUrl: '/dashboard' } )
 		} catch ( error ) {
 			console.error( 'Sign up error:',error )
 			setIsLoading( false )

@@ -3,13 +3,14 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { authClient } from '@/lib/auth-client'
 import { Bell,LogOut,Menu,Search,Settings,User,X } from 'lucide-react'
+import { signOut,useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect,useRef,useState } from 'react'
 
 export function DashboardHeader () {
-	const { data: session,isLoading }=authClient.useSession()
+	const { data: session,status }=useSession()
+	const isLoading=status==="loading"
 	const [ isMenuOpen,setIsMenuOpen ]=useState( false )
 	const [ searchQuery,setSearchQuery ]=useState( '' )
 	const router=useRouter()
@@ -39,9 +40,7 @@ export function DashboardHeader () {
 
 	const handleSignOut=async () => {
 		try {
-			await authClient.signOut()
-			// Redirect to homepage after sign out
-			router.push( '/' )
+			await signOut( { callbackUrl: '/' } )
 		} catch ( error ) {
 			console.error( 'Error signing out:',error )
 		}
