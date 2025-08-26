@@ -3,6 +3,7 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card,CardContent } from '@/components/ui/card'
+import { getJobApplications } from '@/lib/db/queries'
 import {
 	AlertCircle,
 	Building2,
@@ -17,78 +18,77 @@ import {
 	XCircle
 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
-import { getJobApplications } from '@/lib/db/queries'
+import { useEffect,useState } from 'react'
 
 interface JobApplication {
 	id: string
 	position: string
 	status: string
-	priority: string | null
-	salary: string | null
-	location: string | null
-	jobUrl: string | null
-	notes: string | null
+	priority: string|null
+	salary: string|null
+	location: string|null
+	jobUrl: string|null
+	notes: string|null
 	appliedAt: Date
-	deadline: Date | null
-	isRemote: boolean | null
+	deadline: Date|null
+	isRemote: boolean|null
 	company: {
 		id: string
 		name: string
-		logo: string | null
-		website: string | null
+		logo: string|null
+		website: string|null
 	}
 }
 
-const statusConfig = {
-	applied: { label: 'Applied', color: 'bg-blue-100 text-blue-800', icon: Clock },
-	screening: { label: 'Screening', color: 'bg-yellow-100 text-yellow-800', icon: AlertCircle },
-	interview: { label: 'Interview', color: 'bg-purple-100 text-purple-800', icon: Calendar },
-	offer: { label: 'Offer', color: 'bg-green-100 text-green-800', icon: CheckCircle },
-	rejected: { label: 'Rejected', color: 'bg-red-100 text-red-800', icon: XCircle },
-	withdrawn: { label: 'Withdrawn', color: 'bg-gray-100 text-gray-800', icon: XCircle }
+const statusConfig={
+	applied: { label: 'Applied',color: 'bg-blue-100 text-blue-800',icon: Clock },
+	screening: { label: 'Screening',color: 'bg-yellow-100 text-yellow-800',icon: AlertCircle },
+	interview: { label: 'Interview',color: 'bg-purple-100 text-purple-800',icon: Calendar },
+	offer: { label: 'Offer',color: 'bg-green-100 text-green-800',icon: CheckCircle },
+	rejected: { label: 'Rejected',color: 'bg-red-100 text-red-800',icon: XCircle },
+	withdrawn: { label: 'Withdrawn',color: 'bg-gray-100 text-gray-800',icon: XCircle }
 }
 
-const priorityConfig = {
-	low: { label: 'Low', color: 'bg-gray-100 text-gray-800' },
-	medium: { label: 'Medium', color: 'bg-yellow-100 text-yellow-800' },
-	high: { label: 'High', color: 'bg-red-100 text-red-800' }
+const priorityConfig={
+	low: { label: 'Low',color: 'bg-gray-100 text-gray-800' },
+	medium: { label: 'Medium',color: 'bg-yellow-100 text-yellow-800' },
+	high: { label: 'High',color: 'bg-red-100 text-red-800' }
 }
 
-export function JobApplicationsList() {
-	const { data: session } = useSession()
-	const [applications, setApplications] = useState<JobApplication[]>([])
-	const [isLoading, setIsLoading] = useState(true)
+export function JobApplicationsList () {
+	const { data: session }=useSession()
+	const [ applications,setApplications ]=useState<JobApplication[]>( [] )
+	const [ isLoading,setIsLoading ]=useState( true )
 
-	useEffect(() => {
-		async function fetchApplications() {
-			if (!session?.user?.id) return
-			
+	useEffect( () => {
+		async function fetchApplications () {
+			if ( !session?.user?.id ) return
+
 			try {
-				const apps = await getJobApplications(session.user.id)
-				setApplications(apps)
-			} catch (error) {
-				console.error('Error fetching job applications:', error)
+				const apps=await getJobApplications( session.user.id )
+				setApplications( apps )
+			} catch ( error ) {
+				console.error( 'Error fetching job applications:',error )
 			} finally {
-				setIsLoading(false)
+				setIsLoading( false )
 			}
 		}
 
 		fetchApplications()
-	}, [session?.user?.id])
+	},[ session?.user?.id ] )
 
-	const formatDate = (date: Date) => {
-		return date.toLocaleDateString('en-US', {
+	const formatDate=( date: Date ) => {
+		return date.toLocaleDateString( 'en-US',{
 			month: 'short',
 			day: 'numeric',
 			year: 'numeric'
-		})
+		} )
 	}
 
-	if (isLoading) {
+	if ( isLoading ) {
 		return (
 			<div className="space-y-4">
-				{Array.from({ length: 3 }).map((_, i) => (
+				{Array.from( { length: 3 } ).map( ( _,i ) => (
 					<Card key={i} className="bg-white/80 backdrop-blur-sm animate-pulse">
 						<CardContent className="p-6">
 							<div className="flex items-start space-x-4">
@@ -101,12 +101,12 @@ export function JobApplicationsList() {
 							</div>
 						</CardContent>
 					</Card>
-				))}
+				) )}
 			</div>
 		)
 	}
 
-	if (applications.length === 0) {
+	if ( applications.length===0 ) {
 		return (
 			<div className="text-center py-12">
 				<Building2 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
@@ -118,10 +118,10 @@ export function JobApplicationsList() {
 
 	return (
 		<div className="space-y-4">
-			{applications.map((app) => {
-				const status = statusConfig[app.status as keyof typeof statusConfig]
-				const priority = app.priority ? priorityConfig[app.priority as keyof typeof priorityConfig] : null
-				const StatusIcon = status.icon
+			{applications.map( ( app ) => {
+				const status=statusConfig[ app.status as keyof typeof statusConfig ]
+				const priority=app.priority? priorityConfig[ app.priority as keyof typeof priorityConfig ]:null
+				const StatusIcon=status.icon
 
 				return (
 					<Card
@@ -133,18 +133,18 @@ export function JobApplicationsList() {
 								<div className="flex items-start space-x-4 flex-1">
 									{/* Company Logo */}
 									<div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center border border-purple-200/50">
-										{app.company.logo ? (
+										{app.company.logo? (
 											<img
 												src={app.company.logo}
 												alt={`${app.company.name} logo`}
 												className="w-10 h-10 rounded-lg"
-												onError={(e) => {
-													const target = e.target as HTMLImageElement
-													target.style.display = 'none'
-													target.nextElementSibling?.classList.remove('hidden')
+												onError={( e ) => {
+													const target=e.target as HTMLImageElement
+													target.style.display='none'
+													target.nextElementSibling?.classList.remove( 'hidden' )
 												}}
 											/>
-										) : null}
+										):null}
 										<Building2 className="w-8 h-8 text-gray-400 hidden" />
 									</div>
 
@@ -168,7 +168,7 @@ export function JobApplicationsList() {
 													<StatusIcon className="w-3 h-3 mr-1" />
 													{status.label}
 												</Badge>
-												{priority && (
+												{priority&&(
 													<Badge className={priority.color}>
 														{priority.label}
 													</Badge>
@@ -177,11 +177,11 @@ export function JobApplicationsList() {
 										</div>
 
 										<div className="flex items-center space-x-4 text-sm text-gray-600">
-											{app.location && (
+											{app.location&&(
 												<div className="flex items-center space-x-1">
 													<MapPin className="w-4 h-4" />
 													<span>{app.location}</span>
-													{app.isRemote && (
+													{app.isRemote&&(
 														<Badge variant="outline" className="ml-2 text-xs">
 															Remote
 														</Badge>
@@ -190,9 +190,9 @@ export function JobApplicationsList() {
 											)}
 											<div className="flex items-center space-x-1">
 												<Calendar className="w-4 h-4" />
-												<span>Applied {formatDate(app.appliedAt)}</span>
+												<span>Applied {formatDate( app.appliedAt )}</span>
 											</div>
-											{app.salary && (
+											{app.salary&&(
 												<div className="flex items-center space-x-1">
 													<Star className="w-4 h-4" />
 													<span>{app.salary}</span>
@@ -200,7 +200,7 @@ export function JobApplicationsList() {
 											)}
 										</div>
 
-										{app.notes && (
+										{app.notes&&(
 											<p className="text-sm text-gray-600 bg-gray-50/80 p-3 rounded-lg border border-gray-100/50">
 												{app.notes}
 											</p>
@@ -210,11 +210,11 @@ export function JobApplicationsList() {
 
 								{/* Action Buttons */}
 								<div className="flex items-center space-x-2 ml-4">
-									{app.jobUrl && (
+									{app.jobUrl&&(
 										<Button
 											variant="outline"
 											size="sm"
-											onClick={() => window.open(app.jobUrl!, '_blank')}
+											onClick={() => window.open( app.jobUrl!,'_blank' )}
 											className="text-blue-600 hover:text-blue-700 border-blue-200 hover:border-blue-300"
 										>
 											<ExternalLink className="w-4 h-4" />
@@ -239,7 +239,7 @@ export function JobApplicationsList() {
 						</CardContent>
 					</Card>
 				)
-			})}
+			} )}
 		</div>
 	)
 }

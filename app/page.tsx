@@ -4,39 +4,34 @@ import { Button } from '@/components/ui/button'
 import { Card,CardDescription,CardHeader,CardTitle } from '@/components/ui/card'
 import { ArrowRight,Briefcase,Building2,Calendar,CheckCircle,Users,Zap } from 'lucide-react'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 export default function HomePage () {
-	const { data: session,status }=useSession()
-	const isLoading=status==="loading"
-	const hasSession=!!session
+	const { data: session, status } = useSession()
+	const router = useRouter()
+	const hasSession = status === "authenticated" && !!session
 
-	const handleGetStarted=() => {
-		if ( hasSession ) {
+	const handleGetStarted = () => {
+		if (hasSession) {
 			// User is authenticated, go to dashboard
-			window.location.href='/dashboard'
+			router.push('/dashboard')
 		} else {
 			// User is not authenticated, go to sign up
-			window.location.href='/auth/signup'
+			router.push('/auth/signup')
 		}
 	}
 
-	const handleSignIn=() => {
-		if ( hasSession ) {
+	const handleSignIn = () => {
+		if (hasSession) {
 			// User is authenticated, go to dashboard
-			window.location.href='/dashboard'
+			router.push('/dashboard')
 		} else {
 			// User is not authenticated, go to sign in
-			window.location.href='/auth/signin'
+			router.push('/auth/signin')
 		}
 	}
 
-	if ( isLoading ) {
-		return (
-			<div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50 flex items-center justify-center">
-				<div className="animate-spin rounded-full h-32 w-32 border-b-2 border-purple-600"></div>
-			</div>
-		)
-	}
+
 
 	return (
 		<div className="min-h-screen relative">

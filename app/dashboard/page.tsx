@@ -1,11 +1,11 @@
 import { AddApplicationButton } from '@/components/dashboard/add-application-button'
 import { JobApplicationsList } from '@/components/dashboard/job-applications-list'
+import { RecentActivity } from '@/components/dashboard/recent-activity'
 import { DashboardStats } from '@/components/dashboard/stats'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { Suspense } from 'react'
-import { RecentActivity } from '@/components/dashboard/recent-activity'
 
-export default function DashboardPage() {
+export default function DashboardPage () {
 	return (
 		<div className="min-h-screen">
 			<div className="p-6">

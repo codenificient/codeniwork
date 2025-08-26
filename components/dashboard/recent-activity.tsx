@@ -1,14 +1,14 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
 import { getRecentActivity } from '@/lib/db/queries'
+import { useSession } from 'next-auth/react'
+import { useEffect,useState } from 'react'
 
 interface ActivityEvent {
 	id: string
 	type: string
 	title: string
-	description: string | null
+	description: string|null
 	date: Date
 	application: {
 		position: string
@@ -16,7 +16,7 @@ interface ActivityEvent {
 	}
 }
 
-const activityTypeColors = {
+const activityTypeColors={
 	email: 'from-blue-900/50 to-purple-900/50',
 	call: 'from-green-900/50 to-teal-900/50',
 	interview: 'from-purple-900/50 to-pink-900/50',
@@ -25,7 +25,7 @@ const activityTypeColors = {
 	followup: 'from-orange-900/50 to-red-900/50'
 }
 
-const activityTypeDots = {
+const activityTypeDots={
 	email: 'bg-blue-400',
 	call: 'bg-green-400',
 	interview: 'bg-purple-400',
@@ -34,56 +34,56 @@ const activityTypeDots = {
 	followup: 'bg-orange-400'
 }
 
-export function RecentActivity() {
-	const { data: session } = useSession()
-	const [activities, setActivities] = useState<ActivityEvent[]>([])
-	const [isLoading, setIsLoading] = useState(true)
+export function RecentActivity () {
+	const { data: session }=useSession()
+	const [ activities,setActivities ]=useState<ActivityEvent[]>( [] )
+	const [ isLoading,setIsLoading ]=useState( true )
 
-	useEffect(() => {
-		async function fetchActivities() {
-			if (!session?.user?.id) return
-			
+	useEffect( () => {
+		async function fetchActivities () {
+			if ( !session?.user?.id ) return
+
 			try {
-				const activityData = await getRecentActivity(session.user.id, 5)
-				setActivities(activityData)
-			} catch (error) {
-				console.error('Error fetching recent activity:', error)
+				const activityData=await getRecentActivity( session.user.id,5 )
+				setActivities( activityData )
+			} catch ( error ) {
+				console.error( 'Error fetching recent activity:',error )
 			} finally {
-				setIsLoading(false)
+				setIsLoading( false )
 			}
 		}
 
 		fetchActivities()
-	}, [session?.user?.id])
+	},[ session?.user?.id ] )
 
-	const formatDate = (date: Date) => {
-		const now = new Date()
-		const diffTime = Math.abs(now.getTime() - date.getTime())
-		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-		
-		if (diffDays === 0) return 'Today'
-		if (diffDays === 1) return 'Yesterday'
-		if (diffDays < 7) return `${diffDays} days ago`
-		if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`
-		return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+	const formatDate=( date: Date ) => {
+		const now=new Date()
+		const diffTime=Math.abs( now.getTime()-date.getTime() )
+		const diffDays=Math.ceil( diffTime/( 1000*60*60*24 ) )
+
+		if ( diffDays===0 ) return 'Today'
+		if ( diffDays===1 ) return 'Yesterday'
+		if ( diffDays<7 ) return `${diffDays} days ago`
+		if ( diffDays<30 ) return `${Math.floor( diffDays/7 )} weeks ago`
+		return date.toLocaleDateString( 'en-US',{ month: 'short',day: 'numeric' } )
 	}
 
-	if (isLoading) {
+	if ( isLoading ) {
 		return (
 			<div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
 				<h3 className="text-lg font-semibold text-white mb-4">Recent Activity</h3>
 				<div className="space-y-3">
-					{Array.from({ length: 3 }).map((_, i) => (
+					{Array.from( { length: 3 } ).map( ( _,i ) => (
 						<div key={i} className="p-3 bg-white/10 rounded-lg animate-pulse">
 							<div className="h-4 bg-white/20 rounded w-3/4"></div>
 						</div>
-					))}
+					) )}
 				</div>
 			</div>
 		)
 	}
 
-	if (activities.length === 0) {
+	if ( activities.length===0 ) {
 		return (
 			<div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
 				<h3 className="text-lg font-semibold text-white mb-4">Recent Activity</h3>
@@ -99,11 +99,11 @@ export function RecentActivity() {
 		<div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
 			<h3 className="text-lg font-semibold text-white mb-4">Recent Activity</h3>
 			<div className="space-y-3">
-				{activities.map((activity) => {
-					const type = activity.type.toLowerCase() as keyof typeof activityTypeColors
-					const bgColor = activityTypeColors[type] || 'from-gray-900/50 to-gray-800/50'
-					const dotColor = activityTypeDots[type] || 'bg-gray-400'
-					
+				{activities.map( ( activity ) => {
+					const type=activity.type.toLowerCase() as keyof typeof activityTypeColors
+					const bgColor=activityTypeColors[ type ]||'from-gray-900/50 to-gray-800/50'
+					const dotColor=activityTypeDots[ type ]||'bg-gray-400'
+
 					return (
 						<div
 							key={activity.id}
@@ -115,7 +115,7 @@ export function RecentActivity() {
 									<span className="text-sm text-white font-medium">
 										{activity.title}
 									</span>
-									{activity.description && (
+									{activity.description&&(
 										<p className="text-xs text-blue-200 mt-1">
 											{activity.description}
 										</p>
@@ -125,14 +125,14 @@ export function RecentActivity() {
 											{activity.application.position} at {activity.application.companyName}
 										</span>
 										<span className="text-xs text-blue-200/70">
-											{formatDate(activity.date)}
+											{formatDate( activity.date )}
 										</span>
 									</div>
 								</div>
 							</div>
 						</div>
 					)
-				})}
+				} )}
 			</div>
 		</div>
 	)
