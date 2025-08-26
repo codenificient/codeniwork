@@ -6,21 +6,21 @@ import './globals.css'
 
 const inter=Inter( { subsets: [ 'latin' ] } )
 
-export const metadata: Metadata = {
+export const metadata: Metadata={
 	title: 'CodeniWork - Job Application Tracker',
 	description: 'Track your career with CodeniWork - a beautiful, modern job application tracker inspired by Clean My Mac',
-	keywords: ['codeniwork', 'job tracker', 'application tracker', 'career management', 'job search'],
-	authors: [{ name: 'CodeniWork Team' }],
+	keywords: [ 'codeniwork','job tracker','application tracker','career management','job search' ],
+	authors: [ { name: 'CodeniWork Team' } ],
 	manifest: '/manifest.json',
 	icons: {
 		icon: [
-			{ url: '/favicon.svg', type: 'image/svg+xml' }
+			{ url: '/favicon.svg',type: 'image/svg+xml' }
 		],
 		apple: '/apple-touch-icon.svg',
 	},
 }
 
-export const viewport = {
+export const viewport={
 	width: 'device-width',
 	initialScale: 1,
 }

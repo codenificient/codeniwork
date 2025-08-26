@@ -1,5 +1,9 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
+import bcrypt from "bcrypt"
+import { eq } from "drizzle-orm"
+import { db } from "@/lib/db"
+import { users } from "@/lib/db/schema"
 
 export const { handlers,auth,signIn,signOut }=NextAuth( {
 	providers: [
@@ -9,23 +13,43 @@ export const { handlers,auth,signIn,signOut }=NextAuth( {
 				email: { label: "Email",type: "email" },
 				password: { label: "Password",type: "password" }
 			},
-			async authorize ( credentials ) {
-				if ( !credentials?.email||!credentials?.password ) {
+			async authorize(credentials) {
+				if (!credentials?.email || !credentials?.password) {
 					return null
 				}
 
-				// For now, use a simple check - you can implement proper database authentication later
-				// This is a temporary solution to get the credentials provider working
-				if ( credentials.email==="test@example.com"&&credentials.password==="password" ) {
-					return {
-						id: "1",
-						email: credentials.email,
-						name: "Test User",
-						image: null
+				try {
+					// Find user by email
+					const userResult = await db.select().from(users).where(eq(users.email, credentials.email as string)).limit(1)
+					
+					if (userResult.length === 0) {
+						return null
 					}
-				}
 
-				return null
+					const user = userResult[0]
+
+					// Check if user has password hash
+					if (!user.passwordHash) {
+						return null
+					}
+
+					// Verify password
+					const isPasswordValid = await bcrypt.compare(credentials.password as string, user.passwordHash)
+					
+					if (!isPasswordValid) {
+						return null
+					}
+
+					return {
+						id: user.id,
+						email: user.email,
+						name: user.name,
+						image: user.image
+					}
+				} catch (error) {
+					console.error("Database error during authentication:", error)
+					return null
+				}
 			}
 		} ),
 	],

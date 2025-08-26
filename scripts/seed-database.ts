@@ -12,26 +12,26 @@ async function seedDatabase () {
 	try {
 		// Create sample users
 		console.log( '👥 Creating sample users...' )
-		const sampleUsers=await db.insert( users ).values( [
+		const sampleUsers = await db.insert(users).values([
 			{
 				email: 'john.doe@example.com',
 				name: 'John Doe',
 				image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-				passwordHash: '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4tbQJhKz8O', // password: test123
+				passwordHash: '$2b$12$/7xN2h/qOQBVtQUpvM.58ul3CC/7nIX5RvpaxBVPmtgmK0vSYwVeu', // password: test123
 			},
 			{
 				email: 'jane.smith@example.com',
 				name: 'Jane Smith',
 				image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
-				passwordHash: '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4tbQJhKz8O', // password: test123
+				passwordHash: '$2b$12$/7xN2h/qOQBVtQUpvM.58ul3CC/7nIX5RvpaxBVPmtgmK0vSYwVeu', // password: test123
 			},
 			{
 				email: 'mike.johnson@example.com',
 				name: 'Mike Johnson',
 				image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-				passwordHash: '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4tbQJhKz8O', // password: test123
+				passwordHash: '$2b$12$/7xN2h/qOQBVtQUpvM.58ul3CC/7nIX5RvpaxBVPmtgmK0vSYwVeu', // password: test123
 			},
-		] ).returning()
+		]).returning()
 
 		console.log( `✅ Created ${sampleUsers.length} users` )
 
