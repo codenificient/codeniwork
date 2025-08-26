@@ -4,8 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ArrowLeft,Chrome,Github,Mail,User } from 'lucide-react'
-import { signIn } from 'next-auth/react'
+import { ArrowLeft,Mail,User,Lock } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -26,39 +25,40 @@ export default function SignUpPage () {
 		} )
 	}
 
-	const handleEmailSignUp=async ( e: React.FormEvent ) => {
+	const [error, setError] = useState<string | null>(null)
+
+	const handleEmailSignUp = async (e: React.FormEvent) => {
 		e.preventDefault()
-		setIsLoading( true )
+		setIsLoading(true)
+		setError(null)
 
 		try {
-			console.log( 'Attempting to sign up with:',{ email: formData.email,name: formData.name } )
+			const response = await fetch('/api/auth/signup', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					email: formData.email,
+					password: formData.password,
+					name: formData.name,
+				}),
+			})
 
-			// For now, redirect to sign in since NextAuth.js doesn't have built-in signup
-			// In a real app, you'd create an API endpoint to handle user creation
-			router.push( '/auth/signin' )
-		} catch ( error ) {
-			console.error( 'Sign up error:',error )
-			setIsLoading( false )
-		}
-	}
+			const data = await response.json()
 
-	const handleGoogleSignUp=async () => {
-		setIsLoading( true )
-		try {
-			await signIn( 'google',{ callbackUrl: '/dashboard' } )
-		} catch ( error ) {
-			console.error( 'Sign up error:',error )
-			setIsLoading( false )
-		}
-	}
+			if (!response.ok) {
+				setError(data.error || 'Failed to create account')
+				setIsLoading(false)
+				return
+			}
 
-	const handleGithubSignUp=async () => {
-		setIsLoading( true )
-		try {
-			await signIn( 'github',{ callbackUrl: '/dashboard' } )
-		} catch ( error ) {
-			console.error( 'Sign up error:',error )
-			setIsLoading( false )
+			// Account created successfully, redirect to sign in
+			router.push('/auth/signin?message=Account created successfully! Please sign in.')
+		} catch (error) {
+			console.error('Sign up error:', error)
+			setError('An unexpected error occurred. Please try again.')
+			setIsLoading(false)
 		}
 	}
 
@@ -89,6 +89,22 @@ export default function SignUpPage () {
 				</CardHeader>
 
 				<CardContent className="space-y-6">
+					{/* Error Display */}
+					{error && (
+						<div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+							<div className="flex items-center">
+								<div className="flex-shrink-0">
+									<svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+										<path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+									</svg>
+								</div>
+								<div className="ml-3">
+									<p className="text-sm text-red-800">{error}</p>
+								</div>
+							</div>
+						</div>
+					)}
+
 					{/* Email/Password Form */}
 					<form onSubmit={handleEmailSignUp} className="space-y-4">
 						<div className="space-y-2">
@@ -148,37 +164,9 @@ export default function SignUpPage () {
 						</Button>
 					</form>
 
-					{/* Divider */}
-					<div className="relative">
-						<div className="absolute inset-0 flex items-center">
-							<span className="w-full border-t border-gray-300" />
-						</div>
-						<div className="relative flex justify-center text-xs uppercase">
-							<span className="bg-white px-2 text-gray-500">Or continue with</span>
-						</div>
-					</div>
-
-					{/* Social Sign Up */}
-					<div className="space-y-3">
-						<Button
-							onClick={handleGoogleSignUp}
-							disabled={isLoading}
-							variant="outline"
-							className="w-full bg-white hover:bg-gray-50 text-gray-700 border-gray-300 h-12 text-lg font-medium"
-						>
-							<Chrome className="w-5 h-5 mr-3" />
-							Continue with Google
-						</Button>
-
-						<Button
-							onClick={handleGithubSignUp}
-							disabled={isLoading}
-							variant="outline"
-							className="w-full bg-gray-900 hover:bg-gray-800 text-white border-gray-700 h-12 text-lg font-medium"
-						>
-							<Github className="w-5 h-5 mr-3" />
-							Continue with GitHub
-						</Button>
+					{/* Success message display */}
+					<div className="text-center text-sm text-gray-600">
+						<p>By creating an account, you agree to our Terms of Service and Privacy Policy.</p>
 					</div>
 
 					{/* Sign In Link */}

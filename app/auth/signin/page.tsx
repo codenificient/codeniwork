@@ -4,54 +4,67 @@ import { Button } from '@/components/ui/button'
 import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ArrowLeft,Mail,Lock } from 'lucide-react'
+import { ArrowLeft,Lock,Mail } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-export default function SignInPage () {
-	const router=useRouter()
-	const [ isLoading,setIsLoading ]=useState( false )
-	const [ error,setError ]=useState<string|null>( null )
+export default function SignInPage() {
+	const router = useRouter()
+	const [isLoading, setIsLoading] = useState(false)
+	const [error, setError] = useState<string | null>(null)
+	const [successMessage, setSuccessMessage] = useState<string | null>(null)
+
 	// For now, use a default callback URL
 	// In a real app, you might want to handle this differently
-	const callbackUrl='/dashboard'
+	const callbackUrl = '/dashboard'
 
-	const [formData, setFormData] = useState({
+	// Check for success message from sign-up
+	useEffect(() => {
+		const urlParams = new URLSearchParams(window.location.search)
+		const message = urlParams.get('message')
+		if (message) {
+			setSuccessMessage(message)
+			// Clear the URL parameter
+			window.history.replaceState({}, document.title, window.location.pathname)
+		}
+	}, [])
+
+	const [ formData,setFormData ]=useState( {
 		email: '',
 		password: '',
-	})
+	} )
 
-	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setFormData({
+	const handleInputChange=( e: React.ChangeEvent<HTMLInputElement> ) => {
+		setFormData( {
 			...formData,
-			[e.target.name]: e.target.value,
-		})
+			[ e.target.name ]: e.target.value,
+		} )
 	}
 
-	const handleCredentialsSignIn = async (e: React.FormEvent) => {
+	const handleCredentialsSignIn=async ( e: React.FormEvent ) => {
 		e.preventDefault()
-		setIsLoading(true)
-		setError(null)
+		setIsLoading( true )
+		setError( null )
 
 		try {
-			const result = await signIn('credentials', {
+			const result=await signIn( 'credentials',{
 				email: formData.email,
 				password: formData.password,
 				redirect: false,
-			})
+			} )
 
-			if (result?.error) {
-				setError('Invalid email or password. Please try again.')
-				setIsLoading(false)
+			if ( result?.error ) {
+				setError( 'Invalid email or password. Please try again.' )
+				setIsLoading( false )
 			} else {
 				// If we get here, sign in was successful
-				router.push(callbackUrl)
+				router.push( callbackUrl )
 			}
-		} catch (error) {
-			setError('An unexpected error occurred. Please try again.')
-			setIsLoading(false)
+		} catch ( error ) {
+			setError( 'An unexpected error occurred. Please try again.' )
+			setIsLoading( false )
 		}
 	}
 
@@ -143,7 +156,7 @@ export default function SignInPage () {
 							disabled={isLoading}
 							className="w-full bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white h-12 text-lg font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
 						>
-							{isLoading ? 'Signing In...' : 'Sign In'}
+							{isLoading? 'Signing In...':'Sign In'}
 						</Button>
 					</form>
 
