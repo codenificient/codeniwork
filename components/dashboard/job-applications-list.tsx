@@ -29,8 +29,8 @@ interface JobApplication {
 	location: string|null
 	jobUrl: string|null
 	notes: string|null
-	appliedAt: Date
-	deadline: Date|null
+	appliedAt: Date | string
+	deadline: Date | string | null
 	isRemote: boolean|null
 	company: {
 		id: string
@@ -60,33 +60,41 @@ export function JobApplicationsList () {
 	const [ applications,setApplications ]=useState<JobApplication[]>( [] )
 	const [ isLoading,setIsLoading ]=useState( true )
 
-	useEffect(() => {
-		async function fetchApplications() {
-			if (!session?.user?.id) return
+	useEffect( () => {
+		async function fetchApplications () {
+			if ( !session?.user?.id ) return
 
 			try {
-				const response = await fetch('/api/dashboard/applications')
-				if (!response.ok) {
-					throw new Error('Failed to fetch applications')
+				const response=await fetch( '/api/dashboard/applications' )
+				if ( !response.ok ) {
+					throw new Error( 'Failed to fetch applications' )
 				}
-				const apps = await response.json()
-				setApplications(apps)
-			} catch (error) {
-				console.error('Error fetching job applications:', error)
+				const apps=await response.json()
+				setApplications( apps )
+			} catch ( error ) {
+				console.error( 'Error fetching job applications:',error )
 			} finally {
-				setIsLoading(false)
+				setIsLoading( false )
 			}
 		}
 
 		fetchApplications()
-	}, [session?.user?.id])
+	},[ session?.user?.id ] )
 
-	const formatDate=( date: Date ) => {
-		return date.toLocaleDateString( 'en-US',{
+	const formatDate = (date: Date | string) => {
+		// Convert string to Date if needed
+		const dateObj = typeof date === 'string' ? new Date(date) : date
+		
+		// Check if date is valid
+		if (isNaN(dateObj.getTime())) {
+			return 'Invalid date'
+		}
+		
+		return dateObj.toLocaleDateString('en-US', {
 			month: 'short',
 			day: 'numeric',
 			year: 'numeric'
-		} )
+		})
 	}
 
 	if ( isLoading ) {
