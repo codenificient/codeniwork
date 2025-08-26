@@ -8,13 +8,13 @@ import { signOut,useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect,useRef,useState } from 'react'
 
-export function DashboardHeader() {
-	const { data: session, status } = useSession()
-	const isLoading = status === "loading"
-	const [isMenuOpen, setIsMenuOpen] = useState(false)
-	const [searchQuery, setSearchQuery] = useState('')
-	const router = useRouter()
-	const menuRef = useRef<HTMLDivElement>(null)
+export function DashboardHeader () {
+	const { data: session,status }=useSession()
+	const isLoading=status==="loading"
+	const [ isMenuOpen,setIsMenuOpen ]=useState( false )
+	const [ searchQuery,setSearchQuery ]=useState( '' )
+	const router=useRouter()
+	const menuRef=useRef<HTMLDivElement>( null )
 
 	// Debug logging for session data
 	useEffect( () => {
@@ -47,7 +47,7 @@ export function DashboardHeader() {
 	}
 
 	// Prevent hydration mismatch by not rendering until session is loaded
-	if (isLoading) {
+	if ( isLoading ) {
 		return (
 			<header className="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
 				<div className="px-6 py-4">

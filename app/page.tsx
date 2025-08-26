@@ -6,11 +6,11 @@ import { ArrowRight,Briefcase,Building2,Calendar,CheckCircle,Users,Zap } from 'l
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
-export default function HomePage() {
-	const { data: session, status } = useSession()
-	const router = useRouter()
-	const hasSession = status === "authenticated" && !!session
-	const isLoading = status === "loading"
+export default function HomePage () {
+	const { data: session,status }=useSession()
+	const router=useRouter()
+	const hasSession=status==="authenticated"&&!!session
+	const isLoading=status==="loading"
 
 	const handleGetStarted=() => {
 		if ( hasSession ) {
@@ -35,7 +35,7 @@ export default function HomePage() {
 
 
 	// Show loading state to prevent hydration mismatch
-	if (isLoading) {
+	if ( isLoading ) {
 		return (
 			<div className="min-h-screen relative">
 				<nav className="px-6 py-4 flex items-center justify-between">

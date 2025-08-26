@@ -7,7 +7,7 @@ interface AuthProviderProps {
 	children: ReactNode
 }
 
-export function AuthProvider({ children }: AuthProviderProps) {
+export function AuthProvider ( { children }: AuthProviderProps ) {
 	return (
 		<SessionProvider
 			refetchInterval={0}

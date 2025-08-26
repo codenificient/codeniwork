@@ -21,18 +21,18 @@ export default function SignInPage () {
 	const callbackUrl='/dashboard'
 
 	// Check for success message from sign-up
-	useEffect(() => {
+	useEffect( () => {
 		// Only run on client side
-		if (typeof window !== 'undefined') {
-			const urlParams = new URLSearchParams(window.location.search)
-			const message = urlParams.get('message')
-			if (message) {
-				setSuccessMessage(message)
+		if ( typeof window!=='undefined' ) {
+			const urlParams=new URLSearchParams( window.location.search )
+			const message=urlParams.get( 'message' )
+			if ( message ) {
+				setSuccessMessage( message )
 				// Clear the URL parameter
-				window.history.replaceState({}, document.title, window.location.pathname)
+				window.history.replaceState( {},document.title,window.location.pathname )
 			}
 		}
-	}, [])
+	},[] )
 
 	const [ formData,setFormData ]=useState( {
 		email: '',
