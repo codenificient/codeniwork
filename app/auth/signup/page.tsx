@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ArrowLeft,Mail,User,Lock } from 'lucide-react'
+import { ArrowLeft,Mail,User } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -25,40 +25,40 @@ export default function SignUpPage () {
 		} )
 	}
 
-	const [error, setError] = useState<string | null>(null)
+	const [ error,setError ]=useState<string|null>( null )
 
-	const handleEmailSignUp = async (e: React.FormEvent) => {
+	const handleEmailSignUp=async ( e: React.FormEvent ) => {
 		e.preventDefault()
-		setIsLoading(true)
-		setError(null)
+		setIsLoading( true )
+		setError( null )
 
 		try {
-			const response = await fetch('/api/auth/signup', {
+			const response=await fetch( '/api/auth/signup',{
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({
+				body: JSON.stringify( {
 					email: formData.email,
 					password: formData.password,
 					name: formData.name,
-				}),
-			})
+				} ),
+			} )
 
-			const data = await response.json()
+			const data=await response.json()
 
-			if (!response.ok) {
-				setError(data.error || 'Failed to create account')
-				setIsLoading(false)
+			if ( !response.ok ) {
+				setError( data.error||'Failed to create account' )
+				setIsLoading( false )
 				return
 			}
 
 			// Account created successfully, redirect to sign in
-			router.push('/auth/signin?message=Account created successfully! Please sign in.')
-		} catch (error) {
-			console.error('Sign up error:', error)
-			setError('An unexpected error occurred. Please try again.')
-			setIsLoading(false)
+			router.push( '/auth/signin?message=Account created successfully! Please sign in.' )
+		} catch ( error ) {
+			console.error( 'Sign up error:',error )
+			setError( 'An unexpected error occurred. Please try again.' )
+			setIsLoading( false )
 		}
 	}
 
@@ -90,7 +90,7 @@ export default function SignUpPage () {
 
 				<CardContent className="space-y-6">
 					{/* Error Display */}
-					{error && (
+					{error&&(
 						<div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
 							<div className="flex items-center">
 								<div className="flex-shrink-0">

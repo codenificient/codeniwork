@@ -7,9 +7,12 @@ interface AuthProviderProps {
 	children: ReactNode
 }
 
-export function AuthProvider ( { children }: AuthProviderProps ) {
+export function AuthProvider({ children }: AuthProviderProps) {
 	return (
-		<SessionProvider>
+		<SessionProvider
+			refetchInterval={0}
+			refetchOnWindowFocus={false}
+		>
 			{children}
 		</SessionProvider>
 	)

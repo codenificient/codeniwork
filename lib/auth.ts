@@ -6,17 +6,17 @@ export const { handlers,auth,signIn,signOut }=NextAuth( {
 		Credentials( {
 			name: "credentials",
 			credentials: {
-				email: { label: "Email", type: "email" },
-				password: { label: "Password", type: "password" }
+				email: { label: "Email",type: "email" },
+				password: { label: "Password",type: "password" }
 			},
-			async authorize(credentials) {
-				if (!credentials?.email || !credentials?.password) {
+			async authorize ( credentials ) {
+				if ( !credentials?.email||!credentials?.password ) {
 					return null
 				}
 
 				// For now, use a simple check - you can implement proper database authentication later
 				// This is a temporary solution to get the credentials provider working
-				if (credentials.email === "test@example.com" && credentials.password === "password") {
+				if ( credentials.email==="test@example.com"&&credentials.password==="password" ) {
 					return {
 						id: "1",
 						email: credentials.email,

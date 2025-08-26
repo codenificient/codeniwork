@@ -28,7 +28,7 @@ export default function RootLayout ( {
 } ) {
 	return (
 		<html lang="en" className="h-full">
-			<body className={`${inter.className} h-full`}>
+			<body className={`${inter.className} h-full`} suppressHydrationWarning={true}>
 				<AuthProvider>
 					{children}
 					<Toaster />

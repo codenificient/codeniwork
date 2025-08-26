@@ -8,26 +8,29 @@ import { ArrowLeft,Lock,Mail } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useEffect,useState } from 'react'
 
-export default function SignInPage() {
-	const router = useRouter()
-	const [isLoading, setIsLoading] = useState(false)
-	const [error, setError] = useState<string | null>(null)
-	const [successMessage, setSuccessMessage] = useState<string | null>(null)
+export default function SignInPage () {
+	const router=useRouter()
+	const [ isLoading,setIsLoading ]=useState( false )
+	const [ error,setError ]=useState<string|null>( null )
+	const [ successMessage,setSuccessMessage ]=useState<string|null>( null )
 
 	// For now, use a default callback URL
 	// In a real app, you might want to handle this differently
-	const callbackUrl = '/dashboard'
+	const callbackUrl='/dashboard'
 
 	// Check for success message from sign-up
 	useEffect(() => {
-		const urlParams = new URLSearchParams(window.location.search)
-		const message = urlParams.get('message')
-		if (message) {
-			setSuccessMessage(message)
-			// Clear the URL parameter
-			window.history.replaceState({}, document.title, window.location.pathname)
+		// Only run on client side
+		if (typeof window !== 'undefined') {
+			const urlParams = new URLSearchParams(window.location.search)
+			const message = urlParams.get('message')
+			if (message) {
+				setSuccessMessage(message)
+				// Clear the URL parameter
+				window.history.replaceState({}, document.title, window.location.pathname)
+			}
 		}
 	}, [])
 
