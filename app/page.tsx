@@ -34,32 +34,7 @@ export default function HomePage () {
 
 
 
-	// Show loading state to prevent hydration mismatch
-	if ( isLoading ) {
-		return (
-			<div className="min-h-screen relative">
-				<nav className="px-6 py-4 flex items-center justify-between">
-					<div className="flex items-center space-x-2">
-						<div className="w-8 h-8 rounded-lg flex items-center justify-center">
-							<img src="/favicon.svg" alt="CodeniWork" className="w-6 h-6" />
-						</div>
-						<span className="text-xl font-bold text-white">CodeniWork</span>
-					</div>
-					<div className="flex items-center space-x-4">
-						<div className="w-32 h-10 bg-white/20 rounded-md animate-pulse"></div>
-					</div>
-				</nav>
-				<div className="px-6 py-20 text-center">
-					<div className="w-96 h-16 bg-white/20 rounded-md animate-pulse mx-auto mb-6"></div>
-					<div className="w-96 h-8 bg-white/20 rounded-md animate-pulse mx-auto mb-8"></div>
-					<div className="flex flex-col sm:flex-row gap-4 justify-center">
-						<div className="w-48 h-16 bg-white/20 rounded-md animate-pulse"></div>
-						<div className="w-32 h-16 bg-white/20 rounded-md animate-pulse"></div>
-					</div>
-				</div>
-			</div>
-		)
-	}
+	// Session state is available for dynamic button behavior
 
 	return (
 		<div className="min-h-screen relative">
