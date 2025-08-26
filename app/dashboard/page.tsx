@@ -1,4 +1,5 @@
 import { AddApplicationButton } from '@/components/dashboard/add-application-button'
+import { DashboardHeader } from '@/components/dashboard/header'
 import { JobApplicationsList } from '@/components/dashboard/job-applications-list'
 import { RecentActivity } from '@/components/dashboard/recent-activity'
 import { DashboardStats } from '@/components/dashboard/stats'
@@ -8,6 +9,7 @@ import { Suspense } from 'react'
 export default function DashboardPage () {
 	return (
 		<div className="min-h-screen">
+			<DashboardHeader />
 			<div className="p-6">
 				<div className="mb-8">
 					<h1 className="text-3xl font-bold text-white mb-2">CodeniWork Dashboard</h1>
