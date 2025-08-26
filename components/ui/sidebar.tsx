@@ -15,6 +15,8 @@ import {
 	Users,
 	Zap
 } from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
 interface SidebarProps {
@@ -25,57 +27,58 @@ const menuItems=[
 	{
 		title: 'Dashboard',
 		icon: BarChart3,
-		href: '/',
-		active: true
+		href: '/dashboard',
+		active: false
 	},
 	{
 		title: 'Applications',
 		icon: Briefcase,
-		href: '/applications'
+		href: '/dashboard/applications'
 	},
 	{
 		title: 'Companies',
 		icon: Building2,
-		href: '/companies'
+		href: '/dashboard/companies'
 	},
 	{
 		title: 'Calendar',
 		icon: Calendar,
-		href: '/calendar'
+		href: '/dashboard/calendar'
 	},
 	{
 		title: 'Analytics',
 		icon: Target,
-		href: '/analytics'
+		href: '/dashboard/analytics'
 	},
 	{
 		title: 'Documents',
 		icon: FileText,
-		href: '/documents'
+		href: '/dashboard/documents'
 	},
 	{
 		title: 'Contacts',
 		icon: Users,
-		href: '/contacts'
+		href: '/dashboard/contacts'
 	},
 	{
 		title: 'Quick Actions',
 		icon: Zap,
-		href: '/quick-actions'
+		href: '/dashboard/quick-actions'
 	}
 ]
 
 export function Sidebar ( { className }: SidebarProps ) {
 	const [ isCollapsed,setIsCollapsed ]=useState( false )
+	const pathname=usePathname()
 
 	return (
 		<div className={cn(
-			"relative h-screen bg-gradient-to-b from-purple-600 via-blue-600 to-cyan-500 transition-all duration-300",
+			"relative h-screen bg-gradient-to-b from-purple-800 via-purple-700 to-purple-900 transition-all duration-300",
 			isCollapsed? "w-16":"w-64",
 			className
 		)}>
 			{/* Gradient Overlay */}
-			<div className="absolute inset-0 bg-gradient-to-b from-purple-600/90 via-blue-600/90 to-cyan-500/90 backdrop-blur-sm" />
+			<div className="absolute inset-0 bg-gradient-to-b from-purple-800/95 via-purple-700/95 to-purple-900/95 backdrop-blur-sm" />
 
 			{/* Content */}
 			<div className="relative z-10 h-full flex flex-col">
@@ -103,34 +106,35 @@ export function Sidebar ( { className }: SidebarProps ) {
 				<nav className="flex-1 px-3 py-4 space-y-2">
 					{menuItems.map( ( item ) => {
 						const Icon=item.icon
+						const isActive=pathname===item.href
 						return (
-							<a
+							<Link
 								key={item.title}
 								href={item.href}
 								className={cn(
 									"flex items-center space-x-3 px-3 py-3 rounded-xl text-white transition-all duration-200 group",
-									item.active
-										? "bg-white/20 shadow-lg backdrop-blur-sm"
-										:"hover:bg-white/10 hover:shadow-md"
+									isActive
+										? "bg-gradient-to-r from-purple-600/80 to-purple-700/80 shadow-lg backdrop-blur-sm border border-purple-400/30"
+										:"hover:bg-gradient-to-r hover:from-purple-600/40 hover:to-purple-700/40 hover:shadow-md"
 								)}
 							>
 								<div className={cn(
 									"p-2 rounded-lg transition-all duration-200",
-									item.active
-										? "bg-white/30 text-white"
-										:"bg-white/20 text-white/80 group-hover:bg-white/30 group-hover:text-white"
+									isActive
+										? "bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-md"
+										:"bg-white/20 text-white/80 group-hover:bg-gradient-to-r group-hover:from-purple-500/60 group-hover:to-blue-600/60 group-hover:text-white"
 								)}>
 									<Icon className="w-5 h-5" />
 								</div>
 								{!isCollapsed&&(
 									<span className={cn(
 										"font-medium transition-all duration-200",
-										item.active? "text-white":"text-white/90 group-hover:text-white"
+										isActive? "text-white":"text-white/90 group-hover:text-white"
 									)}>
 										{item.title}
 									</span>
 								)}
-							</a>
+							</Link>
 						)
 					} )}
 				</nav>
@@ -140,7 +144,7 @@ export function Sidebar ( { className }: SidebarProps ) {
 					<Button
 						variant="ghost"
 						size="sm"
-						className="w-full text-white hover:bg-white/20 justify-start"
+						className="w-full text-white hover:bg-gradient-to-r hover:from-purple-600/40 hover:to-purple-700/40 justify-start"
 					>
 						<Settings className="w-5 h-5 mr-3" />
 						{!isCollapsed&&<span>Settings</span>}
@@ -149,10 +153,10 @@ export function Sidebar ( { className }: SidebarProps ) {
 			</div>
 
 			{/* Decorative Elements */}
-			<div className="absolute top-20 left-4 w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
-			<div className="absolute top-32 right-6 w-3 h-3 bg-pink-400 rounded-full animate-pulse delay-100" />
-			<div className="absolute top-48 left-8 w-2 h-2 bg-green-400 rounded-full animate-pulse delay-200" />
-			<div className="absolute bottom-32 right-4 w-2 h-2 bg-orange-400 rounded-full animate-pulse delay-300" />
+			<div className="absolute top-20 left-4 w-2 h-2 bg-purple-400 rounded-full animate-pulse" />
+			<div className="absolute top-32 right-6 w-3 h-3 bg-purple-300 rounded-full animate-pulse delay-100" />
+			<div className="absolute top-48 left-8 w-2 h-2 bg-purple-500 rounded-full animate-pulse delay-200" />
+			<div className="absolute bottom-32 right-4 w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-300" />
 		</div>
 	)
 }

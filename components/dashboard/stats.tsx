@@ -78,10 +78,10 @@ export function DashboardStats () {
 	return (
 		<div className="space-y-6">
 			<div className="flex items-center justify-between">
-				<h2 className="text-2xl font-bold text-gray-900">
+				<h2 className="text-2xl font-bold text-white">
 					Overview
 				</h2>
-				<div className="flex items-center space-x-2 text-sm text-gray-600">
+				<div className="flex items-center space-x-2 text-sm text-blue-200">
 					<TrendingUp className="w-4 h-4" />
 					<span>Last 30 days</span>
 				</div>
@@ -93,7 +93,7 @@ export function DashboardStats () {
 					return (
 						<Card
 							key={index}
-							className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-0 bg-white/80 backdrop-blur-sm"
+							className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-0 bg-white/10 backdrop-blur-sm border-white/20"
 						>
 							<CardHeader className="pb-3">
 								<div className="flex items-center justify-between">
@@ -101,18 +101,18 @@ export function DashboardStats () {
 										<IconComponent className={`w-5 h-5 ${stat.textColor}`} />
 									</div>
 									<span className={`text-xs font-medium px-2 py-1 rounded-full ${stat.changeType==='positive'
-											? 'bg-green-100 text-green-800'
-											:'bg-red-100 text-red-800'
+										? 'bg-green-100 text-green-800'
+										:'bg-red-100 text-red-800'
 										}`}>
 										{stat.change}
 									</span>
 								</div>
 							</CardHeader>
 							<CardContent className="pt-0">
-								<CardTitle className="text-2xl font-bold text-gray-900 mb-1">
+								<CardTitle className="text-2xl font-bold text-white mb-1">
 									{stat.value}
 								</CardTitle>
-								<p className="text-sm text-gray-600">
+								<p className="text-sm text-blue-200">
 									{stat.title}
 								</p>
 							</CardContent>
@@ -122,13 +122,13 @@ export function DashboardStats () {
 			</div>
 
 			{/* Progress Bar */}
-			<Card className="bg-gradient-to-r from-purple-50/80 to-blue-50/80 border-0 backdrop-blur-sm">
+			<Card className="bg-white/10 backdrop-blur-sm border-white/20">
 				<CardContent className="p-6">
 					<div className="flex items-center justify-between mb-4">
-						<h3 className="text-lg font-semibold text-gray-900">
+						<h3 className="text-lg font-semibold text-white">
 							Application Success Rate
 						</h3>
-						<span className="text-2xl font-bold text-purple-600">
+						<span className="text-2xl font-bold text-purple-300">
 							75%
 						</span>
 					</div>
@@ -138,7 +138,7 @@ export function DashboardStats () {
 							style={{ width: '75%' }}
 						></div>
 					</div>
-					<div className="flex justify-between text-sm text-gray-600 mt-2">
+					<div className="flex justify-between text-sm text-blue-200 mt-2">
 						<span>Applied: 24</span>
 						<span>Success: 18</span>
 					</div>

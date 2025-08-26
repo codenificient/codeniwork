@@ -9,28 +9,19 @@ import { useRouter } from 'next/navigation'
 import { useEffect,useRef,useState } from 'react'
 
 export function DashboardHeader () {
-	const [ session,setSession ]=useState<any>( null )
+	const { data: session,isLoading }=authClient.useSession()
 	const [ isMenuOpen,setIsMenuOpen ]=useState( false )
 	const [ searchQuery,setSearchQuery ]=useState( '' )
-	const [ isLoading,setIsLoading ]=useState( true )
 	const router=useRouter()
 	const menuRef=useRef<HTMLDivElement>( null )
 
+	// Debug logging for session data
 	useEffect( () => {
-		// Get the current session
-		const getSession=async () => {
-			try {
-				const sessionData=await authClient.getSession()
-				setSession( sessionData.data )
-			} catch ( error ) {
-				console.error( 'Error getting session:',error )
-			} finally {
-				setIsLoading( false )
-			}
+		if ( session ) {
+			console.log( 'Better Auth session:',session )
+			console.log( 'Session user:',session.user )
 		}
-
-		getSession()
-	},[] )
+	},[ session ] )
 
 	// Close menu when clicking outside
 	useEffect( () => {
@@ -99,16 +90,16 @@ export function DashboardHeader () {
 						<div className="relative" ref={menuRef}>
 							{isLoading? (
 								<div className="w-8 h-8 bg-blue-200/50 rounded-full animate-pulse"></div>
-							):(
+							):session?.user? (
 								<Button
 									variant="ghost"
 									onClick={() => setIsMenuOpen( !isMenuOpen )}
 									className="flex items-center space-x-2 text-blue-200 hover:text-white hover:bg-white/20"
 								>
-									{session?.user?.image? (
+									{session.user.image? (
 										<img
 											src={session.user.image}
-											alt={session.user.name||'User'}
+											alt={session.user.name||session.user.email||'User'}
 											className="w-8 h-8 rounded-full"
 										/>
 									):(
@@ -117,17 +108,30 @@ export function DashboardHeader () {
 										</div>
 									)}
 									<span className="hidden md:block font-medium text-white">
-										{session?.user?.name||'Guest'}
+										{session.user.name||session.user.email||'User'}
+									</span>
+								</Button>
+							):(
+								<Button
+									variant="ghost"
+									onClick={() => router.push( '/auth/signin' )}
+									className="flex items-center space-x-2 text-blue-200 hover:text-white hover:bg-white/20"
+								>
+									<div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center">
+										<User className="w-4 h-4 text-white" />
+									</div>
+									<span className="hidden md:block font-medium text-white">
+										Sign In
 									</span>
 								</Button>
 							)}
 
 							{/* Dropdown Menu */}
-							{isMenuOpen&&session&&(
+							{isMenuOpen&&session?.user&&(
 								<Card className="absolute right-0 mt-2 w-48 py-2 shadow-xl border-white/20 bg-blue-900/95 backdrop-blur-sm">
 									<div className="px-4 py-2 border-b border-blue-200/30">
 										<p className="text-sm font-medium text-white">
-											{session.user?.name||'User'}
+											{session.user?.name||session.user?.email||'User'}
 										</p>
 										<p className="text-xs text-blue-200">
 											{session.user?.email||'No email'}

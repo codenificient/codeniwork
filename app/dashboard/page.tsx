@@ -1,34 +1,19 @@
 import { AddApplicationButton } from '@/components/dashboard/add-application-button'
-import { DashboardHeader } from '@/components/dashboard/header'
 import { JobApplicationsList } from '@/components/dashboard/job-applications-list'
 import { DashboardStats } from '@/components/dashboard/stats'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
-import { Sidebar } from '@/components/ui/sidebar'
 import { Suspense } from 'react'
 
 export default function DashboardPage () {
 	return (
-		<div className="flex h-screen overflow-hidden relative">
-			{/* Colorful Background Elements */}
-			<div className="fixed inset-0 pointer-events-none">
-				{/* Large gradient circles */}
-				<div className="absolute top-20 left-20 w-96 h-96 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse" />
-				<div className="absolute top-40 right-32 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl animate-pulse delay-1000" />
-				<div className="absolute bottom-32 left-1/3 w-72 h-72 bg-gradient-to-br from-green-400/20 to-teal-400/20 rounded-full blur-3xl animate-pulse delay-2000" />
-				{/* Floating orbs */}
-				<div className="absolute top-1/4 left-1/4 w-4 h-4 bg-yellow-400 rounded-full animate-bounce" />
-				<div className="absolute top-1/3 right-1/4 w-3 h-3 bg-pink-400 rounded-full animate-bounce delay-300" />
-				<div className="absolute bottom-1/4 left-1/2 w-5 h-5 bg-green-400 rounded-full animate-bounce delay-700" />
-			</div>
+		<div className="min-h-screen">
+			<div className="p-6">
+				<div className="mb-8">
+					<h1 className="text-3xl font-bold text-white mb-2">CodeniWork Dashboard</h1>
+					<p className="text-blue-200">Track your job applications and career progress</p>
+				</div>
 
-			{/* Sidebar */}
-			<Sidebar />
-
-			{/* Main Content */}
-			<div className="flex-1 flex flex-col overflow-hidden">
-				<DashboardHeader />
-
-				<main className="flex-1 overflow-y-auto p-6 space-y-6">
+				<div className="space-y-6">
 					{/* Stats Overview */}
 					<Suspense fallback={<LoadingSpinner />}>
 						<DashboardStats />
@@ -97,7 +82,7 @@ export default function DashboardPage () {
 							</div>
 						</div>
 					</div>
-				</main>
+				</div>
 			</div>
 		</div>
 	)

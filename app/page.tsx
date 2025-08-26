@@ -220,7 +220,7 @@ export default function HomePage () {
 					{/* Made with love */}
 					<div className="text-center md:text-right">
 						<p className="text-sm text-gray-500">
-							Made with ❤️ by <span className="font-semibold text-purple-300">CodenificienT</span>
+							Made with ❤️ by <a href="https://tioye.dev" target="_blank" rel="noopener noreferrer" className="font-semibold text-purple-300 hover:text-purple-200 transition-colors duration-200 underline decoration-purple-400/50 hover:decoration-purple-300">CodenificienT</a>
 						</p>
 					</div>
 				</div>

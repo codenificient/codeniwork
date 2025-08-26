@@ -30,4 +30,16 @@ export const auth=betterAuth( {
 	},
 	baseURL: process.env.NEXTAUTH_URL||'http://localhost:3000',
 	secret: process.env.BETTER_AUTH_SECRET,
+	session: {
+		strategy: "jwt",
+		maxAge: 30*24*60*60, // 30 days
+	},
+	callbacks: {
+		async session ( { session,user } ) {
+			if ( session.user ) {
+				session.user.id=user.id
+			}
+			return session
+		},
+	},
 } )
