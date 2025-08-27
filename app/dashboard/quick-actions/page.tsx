@@ -1,7 +1,14 @@
+'use client'
+
 import { DashboardHeader } from '@/components/dashboard/header'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card,CardContent,CardHeader,CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { AddApplicationDialog } from '@/components/dashboard/add-application-dialog'
+import { UploadDocumentDialog } from '@/components/dashboard/upload-document-dialog'
+import { ScheduleFollowupDialog } from '@/components/dashboard/schedule-followup-dialog'
+import { ExportDataDialog } from '@/components/dashboard/export-data-dialog'
+import { RecentActivity } from '@/components/dashboard/recent-activity'
 import {
 	Calendar,
 	Clock,
@@ -13,11 +20,18 @@ import {
 	Star,
 	TrendingUp,
 	Users,
-	Zap
+	Zap,
+	Target,
+	Briefcase,
+	UserPlus,
+	Send,
+	RefreshCw
 } from 'lucide-react'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
-// Quick action categories
-const quickActions=[
+// Quick action categories with enhanced functionality
+const quickActions = [
 	{
 		category: 'Applications',
 		actions: [
@@ -26,22 +40,24 @@ const quickActions=[
 				description: 'Track a new job application',
 				icon: Plus,
 				color: 'from-blue-500 to-blue-600',
-				href: '/dashboard/applications',
+				action: 'add-application',
 				shortcut: 'Ctrl + N'
 			},
 			{
-				title: 'Search Jobs',
-				description: 'Find new opportunities',
-				icon: Search,
+				title: 'View Applications',
+				description: 'See all your applications',
+				icon: Briefcase,
 				color: 'from-green-500 to-green-600',
-				href: '#',
-				shortcut: 'Ctrl + S'
+				action: 'navigate',
+				href: '/dashboard/applications',
+				shortcut: 'Ctrl + A'
 			},
 			{
 				title: 'Update Status',
 				description: 'Update application progress',
 				icon: TrendingUp,
 				color: 'from-purple-500 to-purple-600',
+				action: 'navigate',
 				href: '/dashboard/applications',
 				shortcut: 'Ctrl + U'
 			}
@@ -55,7 +71,8 @@ const quickActions=[
 				description: 'Add new resume version',
 				icon: FileText,
 				color: 'from-orange-500 to-orange-600',
-				href: '/dashboard/documents',
+				action: 'upload-document',
+				documentType: 'resume',
 				shortcut: 'Ctrl + R'
 			},
 			{
@@ -63,7 +80,8 @@ const quickActions=[
 				description: 'Write a new cover letter',
 				icon: FileText,
 				color: 'from-pink-500 to-pink-600',
-				href: '/dashboard/documents',
+				action: 'upload-document',
+				documentType: 'cover_letter',
 				shortcut: 'Ctrl + L'
 			},
 			{
@@ -71,7 +89,8 @@ const quickActions=[
 				description: 'Refresh your portfolio',
 				icon: FileText,
 				color: 'from-indigo-500 to-indigo-600',
-				href: '/dashboard/documents',
+				action: 'upload-document',
+				documentType: 'portfolio',
 				shortcut: 'Ctrl + P'
 			}
 		]
@@ -82,8 +101,9 @@ const quickActions=[
 			{
 				title: 'Add New Contact',
 				description: 'Save a new connection',
-				icon: Users,
+				icon: UserPlus,
 				color: 'from-teal-500 to-teal-600',
+				action: 'navigate',
 				href: '/dashboard/contacts',
 				shortcut: 'Ctrl + C'
 			},
@@ -92,65 +112,119 @@ const quickActions=[
 				description: 'Set reminder for contact',
 				icon: Calendar,
 				color: 'from-cyan-500 to-cyan-600',
-				href: '/dashboard/calendar',
+				action: 'schedule-followup',
 				shortcut: 'Ctrl + F'
 			},
 			{
 				title: 'Send Thank You',
 				description: 'Follow up after interview',
-				icon: Mail,
+				icon: Send,
 				color: 'from-emerald-500 to-emerald-600',
-				href: '#',
+				action: 'send-thankyou',
 				shortcut: 'Ctrl + T'
+			}
+		]
+	},
+	{
+		category: 'Analytics & Tools',
+		actions: [
+			{
+				title: 'View Analytics',
+				description: 'Track your progress',
+				icon: Target,
+				color: 'from-red-500 to-red-600',
+				action: 'navigate',
+				href: '/dashboard/analytics',
+				shortcut: 'Ctrl + G'
+			},
+			{
+				title: 'Export Data',
+				description: 'Download your data',
+				icon: FileText,
+				color: 'from-yellow-500 to-yellow-600',
+				action: 'export-data',
+				shortcut: 'Ctrl + E'
+			},
+			{
+				title: 'Refresh Data',
+				description: 'Update all information',
+				icon: RefreshCw,
+				color: 'from-gray-500 to-gray-600',
+				action: 'refresh-data',
+				shortcut: 'Ctrl + R'
 			}
 		]
 	}
 ]
 
-// Recent activities
-const recentActivities=[
-	{
-		id: 1,
-		action: 'Application submitted',
-		company: 'TechCorp Solutions',
-		time: '2 hours ago',
-		status: 'Completed'
-	},
-	{
-		id: 2,
-		action: 'Resume updated',
-		company: 'Personal',
-		time: '1 day ago',
-		status: 'Completed'
-	},
-	{
-		id: 3,
-		action: 'Interview scheduled',
-		company: 'InnovateLab',
-		time: '2 days ago',
-		status: 'Pending'
-	},
-	{
-		id: 4,
-		action: 'Cover letter created',
-		company: 'DataFlow Systems',
-		time: '3 days ago',
-		status: 'Completed'
-	}
-]
+export default function QuickActionsPage() {
+	const router = useRouter()
+	const [isAddApplicationOpen, setIsAddApplicationOpen] = useState(false)
+	const [isUploadDocumentOpen, setIsUploadDocumentOpen] = useState(false)
+	const [isScheduleFollowupOpen, setIsScheduleFollowupOpen] = useState(false)
+	const [isExportDataOpen, setIsExportDataOpen] = useState(false)
+	const [documentType, setDocumentType] = useState('')
+	const [isRefreshing, setIsRefreshing] = useState(false)
 
-const getStatusColor=( status: string ) => {
-	switch ( status ) {
-		case 'Completed':
-			return 'bg-green-600/20 text-green-200 border-green-400/30'
-		case 'Pending':
-			return 'bg-yellow-600/20 text-yellow-200 border-yellow-400/30'
-		default:
-			return 'bg-gray-600/20 text-gray-200 border-gray-400/30'
+	// Handle action clicks
+	const handleActionClick = (action: any) => {
+		switch (action.action) {
+			case 'add-application':
+				setIsAddApplicationOpen(true)
+				break
+			case 'upload-document':
+				setDocumentType(action.documentType)
+				setIsUploadDocumentOpen(true)
+				break
+			case 'schedule-followup':
+				setIsScheduleFollowupOpen(true)
+				break
+			case 'send-thankyou':
+				// Navigate to applications to send thank you
+				router.push('/dashboard/applications')
+				break
+			case 'export-data':
+				setIsExportDataOpen(true)
+				break
+			case 'refresh-data':
+				handleRefreshData()
+				break
+			case 'navigate':
+				if (action.href) {
+					router.push(action.href)
+				}
+				break
+			default:
+				break
+		}
 	}
-}
 
-export default function QuickActionsPage () {
+	// Handle data refresh
+	const handleRefreshData = async () => {
+		setIsRefreshing(true)
+		try {
+			// Refresh the page to get latest data
+			window.location.reload()
+		} catch (error) {
+			console.error('Error refreshing data:', error)
+		} finally {
+			setIsRefreshing(false)
+		}
+	}
+
+	// Handle document upload success
+	const handleDocumentUploaded = async () => {
+		setIsUploadDocumentOpen(false)
+		setDocumentType('')
+		// Optionally refresh the page or show success message
+	}
+
+	// Handle application added success
+	const handleApplicationAdded = async () => {
+		setIsAddApplicationOpen(false)
+		// Optionally refresh the page or show success message
+	}
+
 	return (
 		<div className="min-h-screen">
 			<DashboardHeader />
@@ -162,15 +236,15 @@ export default function QuickActionsPage () {
 
 				{/* Quick Actions Grid */}
 				<div className="space-y-8 mb-8">
-					{quickActions.map( ( category ) => (
+					{quickActions.map((category) => (
 						<div key={category.category}>
 							<h2 className="text-xl font-semibold text-white mb-4 flex items-center space-x-2">
 								<Zap className="w-5 h-5 text-yellow-400" />
 								<span>{category.category}</span>
 							</h2>
 							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-								{category.actions.map( ( action ) => {
-									const Icon=action.icon
+								{category.actions.map((action) => {
+									const Icon = action.icon
 									return (
 										<Card key={action.title} className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-200 group cursor-pointer">
 											<CardContent className="p-6">
@@ -191,53 +265,55 @@ export default function QuickActionsPage () {
 												<Button
 													variant="ghost"
 													size="sm"
+													onClick={() => handleActionClick(action)}
 													className="w-full text-blue-200 hover:text-white hover:bg-white/20 group-hover:bg-gradient-to-r group-hover:from-purple-600/40 group-hover:to-blue-600/40 transition-all duration-200"
 												>
-													<ExternalLink className="w-4 h-4 mr-2" />
-													Go to {action.title}
+													{action.action === 'refresh-data' && isRefreshing ? (
+														<RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+													) : (
+														<ExternalLink className="w-4 h-4 mr-2" />
+													)}
+													{action.action === 'refresh-data' && isRefreshing ? 'Refreshing...' : `Go to ${action.title}`}
 												</Button>
 											</CardContent>
 										</Card>
 									)
-								} )}
+								})}
 							</div>
 						</div>
-					) )}
+					))}
 				</div>
 
 				{/* Recent Activities */}
-				<Card className="bg-white/10 backdrop-blur-sm border-white/20">
-					<CardHeader>
-						<CardTitle className="text-white flex items-center space-x-2">
-							<Clock className="w-5 h-5" />
-							<span>Recent Activities</span>
-						</CardTitle>
-					</CardHeader>
-					<CardContent>
-						<div className="space-y-4">
-							{recentActivities.map( ( activity ) => (
-								<div key={activity.id} className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
-									<div className="flex items-center space-x-3">
-										<div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
-											<Star className="w-4 h-4 text-white" />
-										</div>
-										<div>
-											<p className="text-white font-medium">{activity.action}</p>
-											<p className="text-blue-200 text-sm">{activity.company}</p>
-										</div>
-									</div>
-									<div className="flex items-center space-x-3">
-										<Badge className={getStatusColor( activity.status )}>
-											{activity.status}
-										</Badge>
-										<span className="text-xs text-blue-200">{activity.time}</span>
-									</div>
-								</div>
-							) )}
-						</div>
-					</CardContent>
-				</Card>
+				<RecentActivity />
+
+				{/* Dialogs */}
+				<AddApplicationDialog 
+					open={isAddApplicationOpen} 
+					onOpenChange={setIsAddApplicationOpen}
+					onApplicationAdded={handleApplicationAdded}
+				/>
+				
+				<UploadDocumentDialog 
+					open={isUploadDocumentOpen} 
+					onOpenChange={setIsUploadDocumentOpen}
+					onDocumentUploaded={handleDocumentUploaded}
+					presetDocumentType={documentType}
+				/>
+				
+				<ScheduleFollowupDialog 
+					open={isScheduleFollowupOpen} 
+					onOpenChange={setIsScheduleFollowupOpen}
+				/>
+				
+				<ExportDataDialog 
+					open={isExportDataOpen} 
+					onOpenChange={setIsExportDataOpen}
+				/>
 			</div>
 		</div>
 	)
 }
+
+
+

@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FileText, File, Upload, X } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -32,12 +32,14 @@ interface UploadDocumentDialogProps {
 	open: boolean
 	onOpenChange: (open: boolean) => void
 	onDocumentUploaded: () => Promise<void>
+	presetDocumentType?: string
 }
 
 export function UploadDocumentDialog({ 
 	open, 
 	onOpenChange, 
-	onDocumentUploaded 
+	onDocumentUploaded,
+	presetDocumentType
 }: UploadDocumentDialogProps) {
 	const { toast } = useToast()
 	const fileInputRef = useRef<HTMLInputElement>(null)
@@ -57,7 +59,7 @@ export function UploadDocumentDialog({
 		resolver: zodResolver(documentSchema),
 		defaultValues: {
 			name: '',
-			type: 'resume',
+			type: presetDocumentType || 'resume',
 			description: '',
 			status: 'active',
 			version: 'v1.0',
@@ -65,6 +67,13 @@ export function UploadDocumentDialog({
 	})
 
 	const documentType = watch('type')
+
+	// Update form when presetDocumentType changes
+	useEffect(() => {
+		if (presetDocumentType) {
+			setValue('type', presetDocumentType)
+		}
+	}, [presetDocumentType, setValue])
 
 	const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0]

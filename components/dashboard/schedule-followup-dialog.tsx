@@ -1,165 +1,209 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { Calendar, Clock, Plus } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Calendar, Clock, User } from 'lucide-react'
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+
+const followupSchema = z.object({
+	contactName: z.string().min(1, 'Contact name is required'),
+	contactType: z.string().min(1, 'Contact type is required'),
+	reminderDate: z.string().min(1, 'Reminder date is required'),
+	reminderTime: z.string().min(1, 'Reminder time is required'),
+	notes: z.string().optional(),
+	priority: z.string().default('medium')
+})
+
+type FollowupFormData = z.infer<typeof followupSchema>
 
 interface ScheduleFollowupDialogProps {
-	trigger?: React.ReactNode
+	open: boolean
+	onOpenChange: (open: boolean) => void
 }
 
-export function ScheduleFollowupDialog({ trigger }: ScheduleFollowupDialogProps) {
-	const [isOpen, setIsOpen] = useState(false)
-	const [formData, setFormData] = useState({
-		date: '',
-		time: '',
-		title: '',
-		description: '',
-		applicationId: '',
-		reminderType: 'email'
+export function ScheduleFollowupDialog({ open, onOpenChange }: ScheduleFollowupDialogProps) {
+	const { toast } = useToast()
+	const [isSubmitting, setIsSubmitting] = useState(false)
+
+	const {
+		register,
+		handleSubmit,
+		reset,
+		formState: { errors }
+	} = useForm<FollowupFormData>({
+		resolver: zodResolver(followupSchema),
+		defaultValues: {
+			priority: 'medium'
+		}
 	})
 
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault()
-		
+	const onSubmit = async (data: FollowupFormData) => {
+		setIsSubmitting(true)
 		try {
 			// Here you would typically save to your database
-			// For now, we'll just log and close the dialog
-			console.log('Scheduling follow-up:', formData)
+			// For now, we'll simulate a successful save
+			await new Promise(resolve => setTimeout(resolve, 1000))
 			
-			// TODO: Implement API call to save follow-up
-			// const response = await fetch('/api/followups', {
-			//   method: 'POST',
-			//   headers: { 'Content-Type': 'application/json' },
-			//   body: JSON.stringify(formData)
-			// })
-			
-			// Reset form and close dialog
-			setFormData({
-				date: '',
-				time: '',
-				title: '',
-				description: '',
-				applicationId: '',
-				reminderType: 'email'
+			toast({
+				title: 'Follow-up Scheduled!',
+				description: `Reminder set for ${data.contactName} on ${data.reminderDate}`,
 			})
-			setIsOpen(false)
 			
-			// Show success message (you can use your toast system)
-			alert('Follow-up scheduled successfully!')
+			reset()
+			onOpenChange(false)
 		} catch (error) {
-			console.error('Error scheduling follow-up:', error)
-			alert('Failed to schedule follow-up. Please try again.')
+			toast({
+				title: 'Error',
+				description: 'Failed to schedule follow-up. Please try again.',
+				variant: 'destructive'
+			})
+		} finally {
+			setIsSubmitting(false)
 		}
 	}
 
-	const handleInputChange = (field: string, value: string) => {
-		setFormData(prev => ({ ...prev, [field]: value }))
+	const handleCancel = () => {
+		reset()
+		onOpenChange(false)
 	}
 
 	return (
-		<Dialog open={isOpen} onOpenChange={setIsOpen}>
-			<DialogTrigger asChild>
-				{trigger || (
-					<Button className="w-full bg-gradient-to-r from-green-500 to-teal-600 text-white py-3 px-4 rounded-xl font-medium hover:from-green-600 hover:to-teal-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-						<Plus className="w-4 h-4 mr-2" />
-						Schedule Follow-up
-					</Button>
-				)}
-			</DialogTrigger>
-			<DialogContent className="sm:max-w-[500px] bg-white/95 backdrop-blur-sm border border-white/20">
+		<Dialog open={open} onOpenChange={onOpenChange}>
+			<DialogContent className="sm:max-w-[500px] bg-gray-900/95 backdrop-blur-sm border border-gray-700 text-white">
 				<DialogHeader>
-					<DialogTitle className="text-xl font-semibold text-gray-900">
+					<DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
 						Schedule Follow-up
 					</DialogTitle>
 				</DialogHeader>
-				
-				<form onSubmit={handleSubmit} className="space-y-4">
+
+				<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 					<div className="grid grid-cols-2 gap-4">
 						<div>
-							<Label htmlFor="date" className="text-sm font-medium text-gray-700">
-								Date
+							<Label htmlFor="contactName" className="text-white">
+								<User className="w-4 h-4 inline mr-2" />
+								Contact Name
 							</Label>
-							<div className="relative">
-								<Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-								<Input
-									id="date"
-									type="date"
-									value={formData.date}
-									onChange={(e) => handleInputChange('date', e.target.value)}
-									className="pl-10 bg-white/80 border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent"
-									required
-								/>
-							</div>
+							<Input
+								id="contactName"
+								{...register('contactName')}
+								className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+								placeholder="Enter contact name"
+							/>
+							{errors.contactName && (
+								<p className="text-red-400 text-sm mt-1">{errors.contactName.message}</p>
+							)}
 						</div>
-						
+
 						<div>
-							<Label htmlFor="time" className="text-sm font-medium text-gray-700">
-								Time
+							<Label htmlFor="contactType" className="text-white">
+								Contact Type
 							</Label>
-							<div className="relative">
-								<Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-								<Input
-									id="time"
-									type="time"
-									value={formData.time}
-									onChange={(e) => handleInputChange('time', e.target.value)}
-									className="pl-10 bg-white/80 border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent"
-									required
-								/>
-							</div>
+							<Select onValueChange={(value) => register('contactType').onChange({ target: { value } })}>
+								<SelectTrigger className="bg-gray-800 border-gray-600 text-white">
+									<SelectValue placeholder="Select type" />
+								</SelectTrigger>
+								<SelectContent className="bg-gray-800 border-gray-600 text-white">
+									<SelectItem value="recruiter">Recruiter</SelectItem>
+									<SelectItem value="hiring_manager">Hiring Manager</SelectItem>
+									<SelectItem value="colleague">Colleague</SelectItem>
+									<SelectItem value="network">Network Contact</SelectItem>
+									<SelectItem value="other">Other</SelectItem>
+								</SelectContent>
+							</Select>
+							{errors.contactType && (
+								<p className="text-red-400 text-sm mt-1">{errors.contactType.message}</p>
+							)}
 						</div>
 					</div>
-					
-					<div>
-						<Label htmlFor="title" className="text-sm font-medium text-gray-700">
-							Title
-						</Label>
-						<Input
-							id="title"
-							placeholder="e.g., Follow up on application"
-							value={formData.title}
-							onChange={(e) => handleInputChange('title', e.target.value)}
-							className="bg-white/80 border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent"
-							required
-						/>
+
+					<div className="grid grid-cols-2 gap-4">
+						<div>
+							<Label htmlFor="reminderDate" className="text-white">
+								<Calendar className="w-4 h-4 inline mr-2" />
+								Reminder Date
+							</Label>
+							<Input
+								id="reminderDate"
+								type="date"
+								{...register('reminderDate')}
+								className="bg-gray-800 border-gray-600 text-white"
+							/>
+							{errors.reminderDate && (
+								<p className="text-red-400 text-sm mt-1">{errors.reminderDate.message}</p>
+							)}
+						</div>
+
+						<div>
+							<Label htmlFor="reminderTime" className="text-white">
+								<Clock className="w-4 h-4 inline mr-2" />
+								Reminder Time
+							</Label>
+							<Input
+								id="reminderTime"
+								type="time"
+								{...register('reminderTime')}
+								className="bg-gray-800 border-gray-600 text-white"
+							/>
+							{errors.reminderTime && (
+								<p className="text-red-400 text-sm mt-1">{errors.reminderTime.message}</p>
+							)}
+						</div>
 					</div>
-					
+
 					<div>
-						<Label htmlFor="description" className="text-sm font-medium text-gray-700">
-							Description
+						<Label htmlFor="priority" className="text-white">
+							Priority
+						</Label>
+						<Select onValueChange={(value) => register('priority').onChange({ target: { value } })} defaultValue="medium">
+							<SelectTrigger className="bg-gray-800 border-gray-600 text-white">
+								<SelectValue />
+							</SelectTrigger>
+							<SelectContent className="bg-gray-800 border-gray-600 text-white">
+								<SelectItem value="low">Low</SelectItem>
+								<SelectItem value="medium">Medium</SelectItem>
+								<SelectItem value="high">High</SelectItem>
+							</SelectContent>
+						</Select>
+					</div>
+
+					<div>
+						<Label htmlFor="notes" className="text-white">
+							Notes
 						</Label>
 						<Textarea
-							id="description"
-							placeholder="Add notes about this follow-up..."
-							value={formData.description}
-							onChange={(e) => handleInputChange('description', e.target.value)}
-							className="bg-white/80 border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+							id="notes"
+							{...register('notes')}
+							className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+							placeholder="Add any additional notes..."
 							rows={3}
 						/>
 					</div>
-					
-					<div className="flex justify-end space-x-3 pt-4">
+
+					<DialogFooter className="flex space-x-3">
 						<Button
 							type="button"
 							variant="outline"
-							onClick={() => setIsOpen(false)}
-							className="border-gray-300 text-gray-700 hover:bg-gray-50"
+							onClick={handleCancel}
+							className="bg-gray-800 border-gray-600 text-white hover:bg-gray-700"
 						>
 							Cancel
 						</Button>
 						<Button
 							type="submit"
-							className="bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 text-white"
+							disabled={isSubmitting}
+							className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
 						>
-							Schedule Follow-up
+							{isSubmitting ? 'Scheduling...' : 'Schedule Follow-up'}
 						</Button>
-					</div>
+					</DialogFooter>
 				</form>
 			</DialogContent>
 		</Dialog>

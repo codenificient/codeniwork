@@ -1,208 +1,230 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Dialog,DialogContent,DialogHeader,DialogTitle,DialogTrigger } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
-import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/select'
-import { Download,FileSpreadsheet,FileText } from 'lucide-react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useToast } from '@/hooks/use-toast'
+import { Download, FileText, Database, Calendar, Users, Building } from 'lucide-react'
 import { useState } from 'react'
 
 interface ExportDataDialogProps {
-	trigger?: React.ReactNode
+	open: boolean
+	onOpenChange: (open: boolean) => void
 }
 
-export function ExportDataDialog ( { trigger }: ExportDataDialogProps ) {
-	const [ isOpen,setIsOpen ]=useState( false )
-	const [ exportOptions,setExportOptions ]=useState( {
-		format: 'csv',
-		dateRange: 'all',
-		includeApplications: true,
-		includeCompanies: true,
-		includeActivity: true,
-		includeStats: true
-	} )
+export function ExportDataDialog({ open, onOpenChange }: ExportDataDialogProps) {
+	const { toast } = useToast()
+	const [isExporting, setIsExporting] = useState(false)
+	const [selectedData, setSelectedData] = useState({
+		applications: true,
+		companies: true,
+		documents: true,
+		activities: true,
+		profile: true
+	})
+	const [exportFormat, setExportFormat] = useState('json')
+	const [dateRange, setDateRange] = useState('all')
 
-	const handleExport=async () => {
+	const handleDataToggle = (key: keyof typeof selectedData) => {
+		setSelectedData(prev => ({
+			...prev,
+			[key]: !prev[key]
+		}))
+	}
+
+	const handleExport = async () => {
+		setIsExporting(true)
 		try {
-			// Show loading state
-			console.log( 'Exporting data with options:',exportOptions )
-
-			// TODO: Implement actual export functionality
-			// This would typically call your API to generate and download the file
-
 			// Simulate export process
-			await new Promise( resolve => setTimeout( resolve,2000 ) )
+			await new Promise(resolve => setTimeout(resolve, 2000))
+			
+			// Here you would typically call your export API
+			// const response = await fetch('/api/export', {
+			//   method: 'POST',
+			//   headers: { 'Content-Type': 'application/json' },
+			//   body: JSON.stringify({
+			//     dataTypes: Object.keys(selectedData).filter(key => selectedData[key as keyof typeof selectedData]),
+			//     format: exportFormat,
+			//     dateRange
+			//   })
+			// })
 
-			// For now, create a sample CSV content
-			const csvContent=`Position,Company,Status,Applied Date,Notes
-Software Engineer,Google,Applied,2024-01-15,Great opportunity
-Product Manager,Microsoft,Interview,2024-01-10,Second round scheduled
-Data Scientist,Amazon,Screening,2024-01-08,Waiting for response`
-
-			// Create and download file
-			const blob=new Blob( [ csvContent ],{ type: 'text/csv' } )
-			const url=window.URL.createObjectURL( blob )
-			const a=document.createElement( 'a' )
-			a.href=url
-			a.download=`codeniwork-export-${new Date().toISOString().split( 'T' )[ 0 ]}.csv`
-			document.body.appendChild( a )
-			a.click()
-			window.URL.revokeObjectURL( url )
-			document.body.removeChild( a )
-
-			// Close dialog and show success message
-			setIsOpen( false )
-			alert( 'Data exported successfully!' )
-		} catch ( error ) {
-			console.error( 'Error exporting data:',error )
-			alert( 'Failed to export data. Please try again.' )
+			toast({
+				title: 'Export Successful!',
+				description: `Your data has been exported in ${exportFormat.toUpperCase()} format.`,
+			})
+			
+			onOpenChange(false)
+		} catch (error) {
+			toast({
+				title: 'Export Failed',
+				description: 'Failed to export data. Please try again.',
+				variant: 'destructive'
+			})
+		} finally {
+			setIsExporting(false)
 		}
 	}
 
-	const handleOptionChange=( field: string,value: string|boolean ) => {
-		setExportOptions( prev => ( { ...prev,[ field ]: value } ) )
+	const handleCancel = () => {
+		onOpenChange(false)
 	}
 
+	const hasSelectedData = Object.values(selectedData).some(Boolean)
+
 	return (
-		<Dialog open={isOpen} onOpenChange={setIsOpen}>
-			<DialogTrigger asChild>
-				{trigger||(
-					<Button className="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white py-3 px-4 rounded-xl font-medium hover:from-orange-600 hover:to-red-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-						<Download className="w-4 h-4 mr-2" />
-						Export Data
-					</Button>
-				)}
-			</DialogTrigger>
-			<DialogContent className="sm:max-w-[500px] bg-white/95 backdrop-blur-sm border border-white/20">
+		<Dialog open={open} onOpenChange={onOpenChange}>
+			<DialogContent className="sm:max-w-[600px] bg-gray-900/95 backdrop-blur-sm border border-gray-700 text-white">
 				<DialogHeader>
-					<DialogTitle className="text-xl font-semibold text-gray-900 flex items-center">
-						<Download className="w-5 h-5 mr-2 text-orange-500" />
-						Export Dashboard Data
+					<DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+						Export Your Data
 					</DialogTitle>
 				</DialogHeader>
 
 				<div className="space-y-6">
-					{/* Export Format */}
-					<div>
-						<Label className="text-sm font-medium text-gray-700 mb-2 block">
-							Export Format
-						</Label>
-						<Select
-							value={exportOptions.format}
-							onValueChange={( value ) => handleOptionChange( 'format',value )}
-						>
-							<SelectTrigger className="bg-white/80 border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
-								<SelectValue />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value="csv">
-									<div className="flex items-center">
-										<FileSpreadsheet className="w-4 h-4 mr-2" />
-										CSV
-									</div>
-								</SelectItem>
-								<SelectItem value="json">
-									<div className="flex items-center">
-										<FileText className="w-4 h-4 mr-2" />
-										JSON
-									</div>
-								</SelectItem>
-								<SelectItem value="pdf">
-									<div className="flex items-center">
-										<FileText className="w-4 h-4 mr-2" />
-										PDF Report
-									</div>
-								</SelectItem>
-							</SelectContent>
-						</Select>
-					</div>
-
-					{/* Date Range */}
-					<div>
-						<Label className="text-sm font-medium text-gray-700 mb-2 block">
-							Date Range
-						</Label>
-						<Select
-							value={exportOptions.dateRange}
-							onValueChange={( value ) => handleOptionChange( 'dateRange',value )}
-						>
-							<SelectTrigger className="bg-white/80 border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
-								<SelectValue />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value="all">All Time</SelectItem>
-								<SelectItem value="last30">Last 30 Days</SelectItem>
-								<SelectItem value="last90">Last 90 Days</SelectItem>
-								<SelectItem value="lastYear">Last Year</SelectItem>
-								<SelectItem value="custom">Custom Range</SelectItem>
-							</SelectContent>
-						</Select>
-					</div>
-
 					{/* Data Selection */}
 					<div>
-						<Label className="text-sm font-medium text-gray-700 mb-3 block">
-							Include Data
-						</Label>
-						<div className="space-y-3">
-							<label className="flex items-center space-x-3 cursor-pointer">
+						<h3 className="text-lg font-semibold text-white mb-4">Select Data to Export</h3>
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<div className="flex items-center space-x-3 p-3 bg-white/5 rounded-lg border border-white/10">
 								<Checkbox
-									checked={exportOptions.includeApplications}
-									onChange={( e ) => handleOptionChange( 'includeApplications',e.target.checked )}
-									className="text-orange-500 focus:ring-orange-500"
+									id="applications"
+									checked={selectedData.applications}
+									onChange={() => handleDataToggle('applications')}
+									className="border-gray-400 data-[state=checked]:bg-purple-600"
 								/>
-								<span className="text-sm text-gray-700">Job Applications</span>
-							</label>
+								<Label htmlFor="applications" className="text-white flex items-center space-x-2">
+									<FileText className="w-4 h-4" />
+									<span>Job Applications</span>
+								</Label>
+							</div>
 
-							<label className="flex items-center space-x-3 cursor-pointer">
+							<div className="flex items-center space-x-3 p-3 bg-white/5 rounded-lg border border-white/10">
 								<Checkbox
-									checked={exportOptions.includeCompanies}
-									onChange={( e ) => handleOptionChange( 'includeCompanies',e.target.checked )}
-									className="text-orange-500 focus:ring-orange-500"
+									id="companies"
+									checked={selectedData.companies}
+									onChange={() => handleDataToggle('companies')}
+									className="border-gray-400 data-[state=checked]:bg-purple-600"
 								/>
-								<span className="text-sm text-gray-700">Companies</span>
-							</label>
+								<Label htmlFor="companies" className="text-white flex items-center space-x-2">
+									<Building className="w-4 h-4" />
+									<span>Companies</span>
+								</Label>
+							</div>
 
-							<label className="flex items-center space-x-3 cursor-pointer">
+							<div className="flex items-center space-x-3 p-3 bg-white/5 rounded-lg border border-white/10">
 								<Checkbox
-									checked={exportOptions.includeActivity}
-									onChange={( e ) => handleOptionChange( 'includeActivity',e.target.checked )}
-									className="text-orange-500 focus:ring-orange-500"
+									id="documents"
+									checked={selectedData.documents}
+									onChange={() => handleDataToggle('documents')}
+									className="border-gray-400 data-[state=checked]:bg-purple-600"
 								/>
-								<span className="text-sm text-gray-700">Recent Activity</span>
-							</label>
+								<Label htmlFor="documents" className="text-white flex items-center space-x-2">
+									<FileText className="w-4 h-4" />
+									<span>Documents</span>
+								</Label>
+							</div>
 
-							<label className="flex items-center space-x-3 cursor-pointer">
+							<div className="flex items-center space-x-3 p-3 bg-white/5 rounded-lg border border-white/10">
 								<Checkbox
-									checked={exportOptions.includeStats}
-									onChange={( e ) => handleOptionChange( 'includeStats',e.target.checked )}
-									className="text-orange-500 focus:ring-orange-500"
+									id="activities"
+									checked={selectedData.activities}
+									onChange={() => handleDataToggle('activities')}
+									className="border-gray-400 data-[state=checked]:bg-purple-600"
 								/>
-								<span className="text-sm text-gray-700">Dashboard Statistics</span>
-							</label>
+								<Label htmlFor="activities" className="text-white flex items-center space-x-2">
+									<Calendar className="w-4 h-4" />
+									<span>Activity History</span>
+								</Label>
+							</div>
+
+							<div className="flex items-center space-x-3 p-3 bg-white/5 rounded-lg border border-white/10">
+								<Checkbox
+									id="profile"
+									checked={selectedData.profile}
+									onChange={() => handleDataToggle('profile')}
+									className="border-gray-400 data-[state=checked]:bg-purple-600"
+								/>
+								<Label htmlFor="profile" className="text-white flex items-center space-x-2">
+									<Users className="w-4 h-4" />
+									<span>Profile Data</span>
+								</Label>
+							</div>
 						</div>
 					</div>
 
-					{/* Action Buttons */}
-					<div className="flex justify-end space-x-3 pt-4">
-						<Button
-							type="button"
-							variant="outline"
-							onClick={() => setIsOpen( false )}
-							className="border-gray-300 text-gray-700 hover:bg-gray-50"
-						>
-							Cancel
-						</Button>
-						<Button
-							onClick={handleExport}
-							className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white"
-						>
-							<Download className="w-4 h-4 mr-2" />
-							Export Data
-						</Button>
+					{/* Export Options */}
+					<div className="grid grid-cols-2 gap-4">
+						<div>
+							<Label htmlFor="exportFormat" className="text-white">
+								Export Format
+							</Label>
+							<Select value={exportFormat} onValueChange={setExportFormat}>
+								<SelectTrigger className="bg-gray-800 border-gray-600 text-white">
+									<SelectValue />
+								</SelectTrigger>
+								<SelectContent className="bg-gray-800 border-gray-600 text-white">
+									<SelectItem value="json">JSON</SelectItem>
+									<SelectItem value="csv">CSV</SelectItem>
+									<SelectItem value="pdf">PDF Report</SelectItem>
+								</SelectContent>
+							</Select>
+						</div>
+
+						<div>
+							<Label htmlFor="dateRange" className="text-white">
+								Date Range
+							</Label>
+							<Select value={dateRange} onValueChange={setDateRange}>
+								<SelectTrigger className="bg-gray-800 border-gray-600 text-white">
+									<SelectValue />
+								</SelectTrigger>
+								<SelectContent className="bg-gray-800 border-gray-600 text-white">
+									<SelectItem value="all">All Time</SelectItem>
+									<SelectItem value="last30">Last 30 Days</SelectItem>
+									<SelectItem value="last90">Last 90 Days</SelectItem>
+									<SelectItem value="lastYear">Last Year</SelectItem>
+								</SelectContent>
+							</Select>
+						</div>
+					</div>
+
+					{/* Export Info */}
+					<div className="bg-blue-900/20 border border-blue-700/30 rounded-lg p-4">
+						<div className="flex items-start space-x-3">
+							<Database className="w-5 h-5 text-blue-400 mt-0.5" />
+							<div className="text-sm text-blue-200">
+								<p className="font-medium mb-1">Export Information</p>
+								<p>Your data will be securely exported and can be used for backup, analysis, or migration purposes.</p>
+								<p className="mt-2 text-blue-300">
+									Selected: {Object.values(selectedData).filter(Boolean).length} data types • 
+									Format: {exportFormat.toUpperCase()} • 
+									Range: {dateRange === 'all' ? 'All Time' : dateRange}
+								</p>
+							</div>
+						</div>
 					</div>
 				</div>
+
+				<DialogFooter className="flex space-x-3">
+					<Button
+						variant="outline"
+						onClick={handleCancel}
+						className="bg-gray-800 border-gray-600 text-white hover:bg-gray-700"
+					>
+						Cancel
+					</Button>
+					<Button
+						onClick={handleExport}
+						disabled={!hasSelectedData || isExporting}
+						className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
+					>
+						<Download className="w-4 h-4 mr-2" />
+						{isExporting ? 'Exporting...' : 'Export Data'}
+					</Button>
+				</DialogFooter>
 			</DialogContent>
 		</Dialog>
 	)

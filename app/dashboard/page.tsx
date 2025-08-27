@@ -7,15 +7,19 @@ import { JobApplicationsList } from '@/components/dashboard/job-applications-lis
 import { RecentActivity } from '@/components/dashboard/recent-activity'
 import { ScheduleFollowupDialog } from '@/components/dashboard/schedule-followup-dialog'
 import { DashboardStats } from '@/components/dashboard/stats'
+import { Button } from '@/components/ui/button'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
-import { Suspense,useState } from 'react'
+import { Calendar, FileText } from 'lucide-react'
+import { Suspense, useState } from 'react'
 
-export default function DashboardPage () {
-	const [ refreshKey,setRefreshKey ]=useState( 0 )
+export default function DashboardPage() {
+	const [refreshKey, setRefreshKey] = useState(0)
+	const [isScheduleFollowupOpen, setIsScheduleFollowupOpen] = useState(false)
+	const [isExportDataOpen, setIsExportDataOpen] = useState(false)
 
-	const handleRefresh=async () => {
+	const handleRefresh = async () => {
 		// Increment refresh key to trigger re-renders
-		setRefreshKey( prev => prev+1 )
+		setRefreshKey(prev => prev + 1)
 	}
 
 	return (
@@ -57,8 +61,22 @@ export default function DashboardPage () {
 								</h3>
 								<div className="space-y-3">
 									<AddApplicationButton variant="quick-action" onApplicationAdded={handleRefresh} />
-									<ScheduleFollowupDialog />
-									<ExportDataDialog />
+									<Button
+										variant="outline"
+										onClick={() => setIsScheduleFollowupOpen(true)}
+										className="w-full bg-gray-800 border-gray-600 text-white hover:bg-gray-700"
+									>
+										<Calendar className="w-4 h-4 mr-2" />
+										Schedule Follow-up
+									</Button>
+									<Button
+										variant="outline"
+										onClick={() => setIsExportDataOpen(true)}
+										className="w-full bg-gray-800 border-gray-600 text-white hover:bg-gray-700"
+									>
+										<FileText className="w-4 h-4 mr-2" />
+										Export Data
+									</Button>
 								</div>
 							</div>
 
@@ -70,6 +88,17 @@ export default function DashboardPage () {
 					</div>
 				</div>
 			</div>
+
+			{/* Dialogs */}
+			<ScheduleFollowupDialog 
+				open={isScheduleFollowupOpen} 
+				onOpenChange={setIsScheduleFollowupOpen}
+			/>
+			
+			<ExportDataDialog 
+				open={isExportDataOpen} 
+				onOpenChange={setIsExportDataOpen}
+			/>
 		</div>
 	)
 }
