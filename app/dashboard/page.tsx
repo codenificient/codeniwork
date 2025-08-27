@@ -1,6 +1,6 @@
 import { AddApplicationButton } from '@/components/dashboard/add-application-button'
-import { DashboardHeader } from '@/components/dashboard/header'
 import { ExportDataDialog } from '@/components/dashboard/export-data-dialog'
+import { DashboardHeader } from '@/components/dashboard/header'
 import { JobApplicationsList } from '@/components/dashboard/job-applications-list'
 import { RecentActivity } from '@/components/dashboard/recent-activity'
 import { ScheduleFollowupDialog } from '@/components/dashboard/schedule-followup-dialog'
@@ -47,7 +47,7 @@ export default function DashboardPage () {
 									Quick Actions
 								</h3>
 								<div className="space-y-3">
-									<AddApplicationButton />
+									<AddApplicationButton variant="quick-action" />
 									<ScheduleFollowupDialog />
 									<ExportDataDialog />
 								</div>
