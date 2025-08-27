@@ -89,7 +89,7 @@ export default function HomePage () {
 					Built with a clean, intuitive interface inspired by modern design principles.
 				</p>
 				<div className="flex flex-col sm:flex-row gap-4 justify-center">
-					{hasSession ? (
+					{hasSession? (
 						// When user is authenticated, show only one button
 						<Button
 							onClick={handleGetStarted}
@@ -99,7 +99,7 @@ export default function HomePage () {
 							Go to Dashboard
 							<ArrowRight className="ml-2 w-5 h-5" />
 						</Button>
-					) : (
+					):(
 						// When user is not authenticated, show both buttons
 						<>
 							<Button
@@ -206,7 +206,7 @@ export default function HomePage () {
 			</div>
 
 			{/* CTA Section */}
-			{!hasSession && (
+			{!hasSession&&(
 				<div className="px-6 py-20 bg-black/20 backdrop-blur-sm border border-white/10">
 					<div className="max-w-4xl mx-auto text-center text-white">
 						<h2 className="text-3xl font-bold mb-4">

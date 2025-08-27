@@ -3,6 +3,7 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card,CardContent } from '@/components/ui/card'
+import { EditApplicationDialog } from './edit-application-dialog'
 // Database queries moved to API routes
 import {
 	AlertCircle,
@@ -59,26 +60,15 @@ export function JobApplicationsList () {
 	const { data: session }=useSession()
 	const [ applications,setApplications ]=useState<JobApplication[]>( [] )
 	const [ isLoading,setIsLoading ]=useState( true )
+	const [ editingApplication,setEditingApplication ]=useState<JobApplication|null>( null )
+	const [ isEditDialogOpen,setIsEditDialogOpen ]=useState( false )
 
 	useEffect( () => {
-		async function fetchApplications () {
-			if ( !session?.user?.id ) return
+		if ( !session?.user?.id ) return
 
-			try {
-				const response=await fetch( '/api/dashboard/applications' )
-				if ( !response.ok ) {
-					throw new Error( 'Failed to fetch applications' )
-				}
-				const apps=await response.json()
-				setApplications( apps )
-			} catch ( error ) {
-				console.error( 'Error fetching job applications:',error )
-			} finally {
-				setIsLoading( false )
-			}
-		}
-
-		fetchApplications()
+		fetchApplications().finally(() => {
+			setIsLoading( false )
+		})
 	},[ session?.user?.id ] )
 
 	const formatDate=( date: Date|string ) => {
@@ -95,6 +85,31 @@ export function JobApplicationsList () {
 			day: 'numeric',
 			year: 'numeric'
 		} )
+	}
+
+	const handleEditApplication = (application: JobApplication) => {
+		setEditingApplication(application)
+		setIsEditDialogOpen(true)
+	}
+
+	const handleApplicationUpdated = () => {
+		// Refresh the applications list
+		if (session?.user?.id) {
+			fetchApplications()
+		}
+	}
+
+	const fetchApplications = async () => {
+		try {
+			const response = await fetch('/api/dashboard/applications')
+			if (!response.ok) {
+				throw new Error('Failed to fetch applications')
+			}
+			const apps = await response.json()
+			setApplications(apps)
+		} catch (error) {
+			console.error('Error fetching job applications:', error)
+		}
 	}
 
 	if ( isLoading ) {
@@ -129,7 +144,8 @@ export function JobApplicationsList () {
 	}
 
 	return (
-		<div className="space-y-4">
+		<>
+			<div className="space-y-4">
 			{applications.map( ( app ) => {
 				const status=statusConfig[ app.status as keyof typeof statusConfig ]
 				const priority=app.priority? priorityConfig[ app.priority as keyof typeof priorityConfig ]:null
@@ -236,6 +252,7 @@ export function JobApplicationsList () {
 										variant="outline"
 										size="sm"
 										className="text-gray-600 hover:text-gray-700 border-gray-200 hover:border-gray-300"
+										onClick={() => handleEditApplication(app)}
 									>
 										<Edit className="w-4 h-4" />
 									</Button>
@@ -253,5 +270,14 @@ export function JobApplicationsList () {
 				)
 			} )}
 		</div>
+
+		{/* Edit Application Dialog */}
+		<EditApplicationDialog
+			open={isEditDialogOpen}
+			onOpenChange={setIsEditDialogOpen}
+			application={editingApplication}
+			onApplicationUpdated={handleApplicationUpdated}
+		/>
+		</>
 	)
 }

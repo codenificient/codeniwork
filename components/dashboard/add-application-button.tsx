@@ -6,15 +6,15 @@ import { useState } from 'react'
 import { AddApplicationDialog } from './add-application-dialog'
 
 interface AddApplicationButtonProps {
-	variant?: 'default' | 'quick-action'
+	variant?: 'default'|'quick-action'
 }
 
-export function AddApplicationButton({ variant = 'default' }: AddApplicationButtonProps) {
+export function AddApplicationButton ( { variant='default' }: AddApplicationButtonProps ) {
 	const [ isDialogOpen,setIsDialogOpen ]=useState( false )
 
-	const buttonClasses = variant === 'quick-action' 
+	const buttonClasses=variant==='quick-action'
 		? "w-full bg-gradient-to-r from-purple-500 to-blue-600 text-white py-3 px-4 rounded-xl font-medium hover:from-purple-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-		: "bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+		:"bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
 
 	return (
 		<>
@@ -23,7 +23,7 @@ export function AddApplicationButton({ variant = 'default' }: AddApplicationButt
 				className={buttonClasses}
 			>
 				<Plus className="w-4 h-4 mr-2" />
-				{variant === 'quick-action' ? 'Add New Application' : 'Add Application'}
+				{variant==='quick-action'? 'Add New Application':'Add Application'}
 			</Button>
 
 			<AddApplicationDialog
