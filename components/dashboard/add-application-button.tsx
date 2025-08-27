@@ -7,9 +7,10 @@ import { AddApplicationDialog } from './add-application-dialog'
 
 interface AddApplicationButtonProps {
 	variant?: 'default'|'quick-action'
+	onApplicationAdded?: () => Promise<void>
 }
 
-export function AddApplicationButton ( { variant='default' }: AddApplicationButtonProps ) {
+export function AddApplicationButton ( { variant='default', onApplicationAdded }: AddApplicationButtonProps ) {
 	const [ isDialogOpen,setIsDialogOpen ]=useState( false )
 
 	const buttonClasses=variant==='quick-action'
@@ -29,6 +30,7 @@ export function AddApplicationButton ( { variant='default' }: AddApplicationButt
 			<AddApplicationDialog
 				open={isDialogOpen}
 				onOpenChange={setIsDialogOpen}
+				onApplicationAdded={onApplicationAdded}
 			/>
 		</>
 	)

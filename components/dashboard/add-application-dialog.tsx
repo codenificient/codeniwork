@@ -33,9 +33,10 @@ type ApplicationFormData=z.infer<typeof applicationSchema>
 interface AddApplicationDialogProps {
 	open: boolean
 	onOpenChange: ( open: boolean ) => void
+	onApplicationAdded?: () => Promise<void>
 }
 
-export function AddApplicationDialog ( { open,onOpenChange }: AddApplicationDialogProps ) {
+export function AddApplicationDialog ( { open,onOpenChange,onApplicationAdded }: AddApplicationDialogProps ) {
 	const { toast }=useToast()
 	const [ isSubmitting,setIsSubmitting ]=useState( false )
 
@@ -59,24 +60,47 @@ export function AddApplicationDialog ( { open,onOpenChange }: AddApplicationDial
 	const onSubmit=async ( data: ApplicationFormData ) => {
 		setIsSubmitting( true )
 		try {
-			// Here you would typically send the data to your API
-			console.log( 'Application data:',data )
+			// Send the data to the API
+			const response = await fetch('/api/dashboard/applications/add', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					...data,
+					status: 'applied', // Default status for new applications
+				}),
+			})
 
-			toast( {
+			if (!response.ok) {
+				const errorData = await response.json()
+				throw new Error(errorData.error || 'Failed to add application')
+			}
+
+			const newApplication = await response.json()
+			console.log('New application created:', newApplication)
+
+			toast({
 				title: 'Success!',
 				description: 'Job application added successfully.',
-			} )
+			})
+
+			// Call the callback to refresh the applications list and recent activity
+			if (onApplicationAdded) {
+				await onApplicationAdded()
+			}
 
 			reset()
-			onOpenChange( false )
-		} catch ( error ) {
-			toast( {
+			onOpenChange(false)
+		} catch (error) {
+			console.error('Error adding application:', error)
+			toast({
 				title: 'Error',
-				description: 'Failed to add job application. Please try again.',
+				description: error instanceof Error ? error.message : 'Failed to add job application. Please try again.',
 				variant: 'destructive',
-			} )
+			})
 		} finally {
-			setIsSubmitting( false )
+			setIsSubmitting(false)
 		}
 	}
 

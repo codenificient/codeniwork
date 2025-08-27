@@ -4,6 +4,7 @@ import { companies,jobApplications } from '@/lib/db/schema'
 import { and,eq } from 'drizzle-orm'
 import { NextRequest,NextResponse } from 'next/server'
 import { z } from 'zod'
+import { createActivityEvent } from '@/lib/db/queries'
 
 // Validation schema for updating job applications
 const updateApplicationSchema=z.object( {
@@ -120,6 +121,48 @@ export async function PUT (
 			return NextResponse.json(
 				{ error: 'Failed to update application' },
 				{ status: 500 }
+			)
+		}
+
+		// Create activity event for the application update
+		const statusChanged = currentApp.status !== validatedData.status
+		const companyChanged = currentApp.companyId !== companyId
+		const positionChanged = currentApp.position !== validatedData.position
+
+		if (statusChanged) {
+			await createActivityEvent(
+				applicationId,
+				'status_updated',
+				`Status changed to ${validatedData.status}`,
+				`Application status updated from ${currentApp.status} to ${validatedData.status} for ${validatedData.position} at ${validatedData.companyName}`
+			)
+		}
+
+		if (companyChanged) {
+			await createActivityEvent(
+				applicationId,
+				'company_changed',
+				`Company changed to ${validatedData.companyName}`,
+				`Company changed for ${validatedData.position} position to ${validatedData.companyName}`
+			)
+		}
+
+		if (positionChanged) {
+			await createActivityEvent(
+				applicationId,
+				'position_updated',
+				`Position updated to ${validatedData.position}`,
+				`Position title updated to ${validatedData.position} at ${validatedData.companyName}`
+			)
+		}
+
+		// If no major changes, create a general update activity
+		if (!statusChanged && !companyChanged && !positionChanged) {
+			await createActivityEvent(
+				applicationId,
+				'application_updated',
+				`Application details updated`,
+				`General application details updated for ${validatedData.position} at ${validatedData.companyName}`
 			)
 		}
 

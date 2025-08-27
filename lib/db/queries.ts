@@ -122,3 +122,23 @@ export async function getApplicationCountsByStatus(userId: string) {
 
 	return counts
 }
+
+export async function createActivityEvent(
+	applicationId: string,
+	type: string,
+	title: string,
+	description?: string
+) {
+	const [event] = await db
+		.insert(applicationEvents)
+		.values({
+			applicationId,
+			type,
+			title,
+			description,
+			date: new Date(),
+		})
+		.returning()
+
+	return event
+}

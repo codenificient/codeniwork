@@ -1,3 +1,5 @@
+'use client'
+
 import { AddApplicationButton } from '@/components/dashboard/add-application-button'
 import { ExportDataDialog } from '@/components/dashboard/export-data-dialog'
 import { DashboardHeader } from '@/components/dashboard/header'
@@ -6,9 +8,16 @@ import { RecentActivity } from '@/components/dashboard/recent-activity'
 import { ScheduleFollowupDialog } from '@/components/dashboard/schedule-followup-dialog'
 import { DashboardStats } from '@/components/dashboard/stats'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
-import { Suspense } from 'react'
+import { Suspense, useState } from 'react'
 
-export default function DashboardPage () {
+export default function DashboardPage() {
+	const [refreshKey, setRefreshKey] = useState(0)
+
+	const handleRefresh = async () => {
+		// Increment refresh key to trigger re-renders
+		setRefreshKey(prev => prev + 1)
+	}
+
 	return (
 		<div className="min-h-screen">
 			<DashboardHeader />
@@ -21,7 +30,7 @@ export default function DashboardPage () {
 				<div className="space-y-6">
 					{/* Stats Overview */}
 					<Suspense fallback={<LoadingSpinner />}>
-						<DashboardStats />
+						<DashboardStats key={refreshKey} />
 					</Suspense>
 
 					{/* Main Content Grid */}
@@ -32,10 +41,10 @@ export default function DashboardPage () {
 								<h2 className="text-2xl font-bold text-white">
 									Job Applications
 								</h2>
-								<AddApplicationButton />
+								<AddApplicationButton onApplicationAdded={handleRefresh} />
 							</div>
 							<Suspense fallback={<LoadingSpinner />}>
-								<JobApplicationsList />
+								<JobApplicationsList key={refreshKey} />
 							</Suspense>
 						</div>
 
@@ -47,7 +56,7 @@ export default function DashboardPage () {
 									Quick Actions
 								</h3>
 								<div className="space-y-3">
-									<AddApplicationButton variant="quick-action" />
+									<AddApplicationButton variant="quick-action" onApplicationAdded={handleRefresh} />
 									<ScheduleFollowupDialog />
 									<ExportDataDialog />
 								</div>
@@ -55,7 +64,7 @@ export default function DashboardPage () {
 
 							{/* Recent Activity */}
 							<Suspense fallback={<LoadingSpinner />}>
-								<RecentActivity />
+								<RecentActivity key={refreshKey} />
 							</Suspense>
 						</div>
 					</div>
