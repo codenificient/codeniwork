@@ -235,16 +235,16 @@ export function EditApplicationDialog ( {
 						<div className="space-y-2">
 							<Label htmlFor="status" className="text-white">Status</Label>
 							<Select onValueChange={( value ) => setValue( 'status',value as any )}>
-								<SelectTrigger>
+								<SelectTrigger className="bg-gray-800 border-gray-600 text-white hover:bg-gray-700 focus:ring-purple-500 focus:border-purple-500">
 									<SelectValue placeholder="Select status" />
 								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="applied">Applied</SelectItem>
-									<SelectItem value="screening">Screening</SelectItem>
-									<SelectItem value="interview">Interview</SelectItem>
-									<SelectItem value="offer">Offer</SelectItem>
-									<SelectItem value="rejected">Rejected</SelectItem>
-									<SelectItem value="withdrawn">Withdrawn</SelectItem>
+								<SelectContent className="bg-gray-800 border-gray-600 text-white">
+									<SelectItem value="applied" className="hover:bg-gray-700 focus:bg-gray-700">Applied</SelectItem>
+									<SelectItem value="screening" className="hover:bg-gray-700 focus:bg-gray-700">Screening</SelectItem>
+									<SelectItem value="interview" className="hover:bg-gray-700 focus:bg-gray-700">Interview</SelectItem>
+									<SelectItem value="offer" className="hover:bg-gray-700 focus:bg-gray-700">Offer</SelectItem>
+									<SelectItem value="rejected" className="hover:bg-gray-700 focus:bg-gray-700">Rejected</SelectItem>
+									<SelectItem value="withdrawn" className="hover:bg-gray-700 focus:bg-gray-700">Withdrawn</SelectItem>
 								</SelectContent>
 							</Select>
 						</div>
@@ -252,13 +252,13 @@ export function EditApplicationDialog ( {
 						<div className="space-y-2">
 							<Label htmlFor="priority" className="text-white">Priority</Label>
 							<Select onValueChange={( value ) => setValue( 'priority',value as 'low'|'medium'|'high' )}>
-								<SelectTrigger>
+								<SelectTrigger className="bg-gray-800 border-gray-600 text-white hover:bg-gray-700 focus:ring-purple-500 focus:border-purple-500">
 									<SelectValue placeholder="Select priority" />
 								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="low">Low</SelectItem>
-									<SelectItem value="medium">Medium</SelectItem>
-									<SelectItem value="high">High</SelectItem>
+								<SelectContent className="bg-gray-800 border-gray-600 text-white">
+									<SelectItem value="low" className="hover:bg-gray-700 focus:bg-gray-700">Low</SelectItem>
+									<SelectItem value="medium" className="hover:bg-gray-700 focus:bg-gray-700">Medium</SelectItem>
+									<SelectItem value="high" className="hover:bg-gray-700 focus:bg-gray-700">High</SelectItem>
 								</SelectContent>
 							</Select>
 						</div>
