@@ -73,9 +73,27 @@ export const applicationEvents=pgTable( 'application_events',{
 	createdAt: timestamp( 'created_at' ).defaultNow().notNull(),
 } )
 
+// Documents table
+export const documents=pgTable( 'documents',{
+	id: uuid( 'id' ).primaryKey().defaultRandom(),
+	userId: uuid( 'user_id' ).references( () => users.id,{ onDelete: 'cascade' } ).notNull(),
+	name: text( 'name' ).notNull(),
+	type: text( 'type' ).notNull(), // 'resume', 'cover_letter', 'portfolio', 'other'
+	format: text( 'format' ).notNull(), // 'PDF', 'DOCX', 'DOC', etc.
+	size: text( 'size' ), // File size in KB/MB
+	fileUrl: text( 'file_url' ).notNull(), // Cloudinary URL
+	publicId: text( 'public_id' ), // Cloudinary public ID for deletion
+	description: text( 'description' ),
+	status: text( 'status' ).default( 'active' ).notNull(), // 'active', 'archived', 'template'
+	version: text( 'version' ).default( 'v1.0' ),
+	createdAt: timestamp( 'created_at' ).defaultNow().notNull(),
+	updatedAt: timestamp( 'updated_at' ).defaultNow().notNull(),
+} )
+
 // Relations
 export const usersRelations=relations( users,( { many } ) => ( {
 	applications: many( jobApplications ),
+	documents: many( documents ),
 } ) )
 
 export const companiesRelations=relations( companies,( { many } ) => ( {
