@@ -92,10 +92,26 @@ export function JobApplicationsList () {
 		setIsEditDialogOpen( true )
 	}
 
-	const handleApplicationUpdated=() => {
-		// Refresh the applications list
+	const handleApplicationUpdated=async () => {
+		// Refresh the applications list with loading state
 		if ( session?.user?.id ) {
-			fetchApplications()
+			try {
+				// Set a brief loading state for better UX
+				setIsLoading( true )
+				
+				// Add a small delay to show the loading state
+				await new Promise( resolve => setTimeout( resolve, 500 ) )
+				
+				await fetchApplications()
+				
+				// Show success feedback
+				console.log( 'Applications list refreshed successfully' )
+			} catch ( error ) {
+				console.error( 'Error refreshing applications:',error )
+				// Optionally show error toast here if needed
+			} finally {
+				setIsLoading( false )
+			}
 		}
 	}
 

@@ -56,7 +56,7 @@ interface EditApplicationDialogProps {
 	open: boolean
 	onOpenChange: ( open: boolean ) => void
 	application: JobApplication|null
-	onApplicationUpdated: () => void
+	onApplicationUpdated: () => Promise<void>
 }
 
 export function EditApplicationDialog ( {
@@ -135,10 +135,13 @@ export function EditApplicationDialog ( {
 
 			toast( {
 				title: 'Success!',
-				description: 'Job application updated successfully.',
+				description: 'Job application updated successfully. Refreshing data...',
 			} )
 
-			onApplicationUpdated()
+			// Call the callback to refresh the applications list
+			await onApplicationUpdated()
+			
+			// Close the dialog after successful update and refresh
 			onOpenChange( false )
 		} catch ( error ) {
 			console.error( 'Error updating application:',error )
