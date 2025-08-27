@@ -1,7 +1,9 @@
 import { AddApplicationButton } from '@/components/dashboard/add-application-button'
 import { DashboardHeader } from '@/components/dashboard/header'
+import { ExportDataDialog } from '@/components/dashboard/export-data-dialog'
 import { JobApplicationsList } from '@/components/dashboard/job-applications-list'
 import { RecentActivity } from '@/components/dashboard/recent-activity'
+import { ScheduleFollowupDialog } from '@/components/dashboard/schedule-followup-dialog'
 import { DashboardStats } from '@/components/dashboard/stats'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { Suspense } from 'react'
@@ -45,15 +47,9 @@ export default function DashboardPage () {
 									Quick Actions
 								</h3>
 								<div className="space-y-3">
-									<button className="w-full bg-gradient-to-r from-purple-500 to-blue-600 text-white py-3 px-4 rounded-xl font-medium hover:from-purple-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-										Add New Application
-									</button>
-									<button className="w-full bg-gradient-to-r from-green-500 to-teal-600 text-white py-3 px-4 rounded-xl font-medium hover:from-green-600 hover:to-teal-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-										Schedule Follow-up
-									</button>
-									<button className="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white py-3 px-4 rounded-xl font-medium hover:from-orange-600 hover:to-red-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-										Export Data
-									</button>
+									<AddApplicationButton />
+									<ScheduleFollowupDialog />
+									<ExportDataDialog />
 								</div>
 							</div>
 
