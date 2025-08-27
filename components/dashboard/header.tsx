@@ -161,8 +161,8 @@ export function DashboardHeader () {
 									<div className="py-1">
 										<button
 											onClick={() => {
-												router.push('/profile')
-												setIsMenuOpen(false)
+												router.push( '/profile' )
+												setIsMenuOpen( false )
 											}}
 											className="flex items-center w-full px-4 py-2 text-sm text-blue-200 hover:bg-blue-800/80 transition-colors"
 										>
