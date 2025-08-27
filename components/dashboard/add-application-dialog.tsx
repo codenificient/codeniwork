@@ -61,54 +61,54 @@ export function AddApplicationDialog ( { open,onOpenChange,onApplicationAdded }:
 		setIsSubmitting( true )
 		try {
 			// Send the data to the API
-			const response = await fetch('/api/dashboard/applications/add', {
+			const response=await fetch( '/api/dashboard/applications/add',{
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({
+				body: JSON.stringify( {
 					...data,
 					status: 'applied', // Default status for new applications
-				}),
-			})
+				} ),
+			} )
 
-			if (!response.ok) {
-				const errorData = await response.json()
-				throw new Error(errorData.error || 'Failed to add application')
+			if ( !response.ok ) {
+				const errorData=await response.json()
+				throw new Error( errorData.error||'Failed to add application' )
 			}
 
-			const newApplication = await response.json()
-			console.log('New application created:', newApplication)
+			const newApplication=await response.json()
+			console.log( 'New application created:',newApplication )
 
-			toast({
+			toast( {
 				title: 'Success!',
 				description: 'Job application added successfully.',
-			})
+			} )
 
 			// Call the callback to refresh the applications list and recent activity
-			if (onApplicationAdded) {
+			if ( onApplicationAdded ) {
 				await onApplicationAdded()
 			}
 
 			reset()
-			onOpenChange(false)
-		} catch (error) {
-			console.error('Error adding application:', error)
-			toast({
+			onOpenChange( false )
+		} catch ( error ) {
+			console.error( 'Error adding application:',error )
+			toast( {
 				title: 'Error',
-				description: error instanceof Error ? error.message : 'Failed to add job application. Please try again.',
+				description: error instanceof Error? error.message:'Failed to add job application. Please try again.',
 				variant: 'destructive',
-			})
+			} )
 		} finally {
-			setIsSubmitting(false)
+			setIsSubmitting( false )
 		}
 	}
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-[500px] bg-white/95 backdrop-blur-sm border border-white/20">
+			<DialogContent className="sm:max-w-[500px] bg-gray-900/95 backdrop-blur-sm border border-gray-700 text-white">
 				<DialogHeader>
-					<DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+					<DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
 						Add New Application
 					</DialogTitle>
 				</DialogHeader>
@@ -116,12 +116,12 @@ export function AddApplicationDialog ( { open,onOpenChange,onApplicationAdded }:
 				<form onSubmit={handleSubmit( onSubmit )} className="space-y-6">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div className="space-y-2">
-							<Label htmlFor="companyName">Company Name *</Label>
+							<Label htmlFor="companyName" className="text-white">Company Name *</Label>
 							<Input
 								id="companyName"
 								{...register( 'companyName' )}
 								placeholder="e.g., Google, Apple"
-								className={errors.companyName? 'border-red-500':''}
+								className={`bg-gray-800 border-gray-600 text-white placeholder-gray-400 ${errors.companyName? 'border-red-500':''}`}
 							/>
 							{errors.companyName&&(
 								<p className="text-sm text-red-500">{errors.companyName.message}</p>
@@ -129,12 +129,12 @@ export function AddApplicationDialog ( { open,onOpenChange,onApplicationAdded }:
 						</div>
 
 						<div className="space-y-2">
-							<Label htmlFor="position">Position *</Label>
+							<Label htmlFor="position" className="text-white">Position *</Label>
 							<Input
 								id="position"
 								{...register( 'position' )}
 								placeholder="e.g., Senior Developer"
-								className={errors.position? 'border-red-500':''}
+								className={`bg-gray-800 border-gray-600 text-white placeholder-gray-400 ${errors.position? 'border-red-500':''}`}
 							/>
 							{errors.position&&(
 								<p className="text-sm text-red-500">{errors.position.message}</p>
@@ -143,23 +143,24 @@ export function AddApplicationDialog ( { open,onOpenChange,onApplicationAdded }:
 					</div>
 
 					<div className="space-y-2">
-						<Label htmlFor="jobUrl">Job URL</Label>
+						<Label htmlFor="jobUrl" className="text-white">Job URL</Label>
 						<Input
 							id="jobUrl"
 							{...register( 'jobUrl' )}
 							placeholder="https://company.com/careers/position"
 							type="url"
+							className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
 						/>
 					</div>
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div className="space-y-2">
-							<Label htmlFor="location">Location *</Label>
+							<Label htmlFor="location" className="text-white">Location *</Label>
 							<Input
 								id="location"
 								{...register( 'location' )}
 								placeholder="e.g., San Francisco, CA"
-								className={errors.location? 'border-red-500':''}
+								className={`bg-gray-800 border-gray-600 text-white placeholder-gray-400 ${errors.location? 'border-red-500':''}`}
 							/>
 							{errors.location&&(
 								<p className="text-sm text-red-500">{errors.location.message}</p>
@@ -167,40 +168,41 @@ export function AddApplicationDialog ( { open,onOpenChange,onApplicationAdded }:
 						</div>
 
 						<div className="space-y-2">
-							<Label htmlFor="salary">Salary Range</Label>
+							<Label htmlFor="salary" className="text-white">Salary Range</Label>
 							<Input
 								id="salary"
 								{...register( 'salary' )}
 								placeholder="e.g., $100k - $150k"
+								className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
 							/>
 						</div>
 					</div>
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div className="space-y-2">
-							<Label htmlFor="priority">Priority</Label>
+							<Label htmlFor="priority" className="text-white">Priority</Label>
 							<Select onValueChange={( value ) => setValue( 'priority',value as 'low'|'medium'|'high' )}>
-								<SelectTrigger>
+								<SelectTrigger className="bg-gray-800 border-gray-600 text-white hover:bg-gray-700 focus:ring-purple-500 focus:border-purple-500">
 									<SelectValue placeholder="Select priority" />
 								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="low">Low</SelectItem>
-									<SelectItem value="medium">Medium</SelectItem>
-									<SelectItem value="high">High</SelectItem>
+								<SelectContent className="bg-gray-800 border-gray-600 text-white">
+									<SelectItem value="low" className="hover:bg-gray-700 focus:bg-gray-700">Low</SelectItem>
+									<SelectItem value="medium" className="hover:bg-gray-700 focus:bg-gray-700">Medium</SelectItem>
+									<SelectItem value="high" className="hover:bg-gray-700 focus:bg-gray-700">High</SelectItem>
 								</SelectContent>
 							</Select>
 						</div>
 
 						<div className="space-y-2">
-							<Label>Remote Work</Label>
+							<Label className="text-white">Remote Work</Label>
 							<div className="flex items-center space-x-2">
 								<input
 									type="checkbox"
 									id="isRemote"
 									{...register( 'isRemote' )}
-									className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500 focus:ring-2"
+									className="w-4 h-4 text-purple-600 bg-gray-800 border-gray-600 rounded focus:ring-purple-500 focus:ring-2"
 								/>
-								<Label htmlFor="isRemote" className="text-sm">
+								<Label htmlFor="isRemote" className="text-sm text-white">
 									Remote position
 								</Label>
 							</div>
@@ -208,12 +210,12 @@ export function AddApplicationDialog ( { open,onOpenChange,onApplicationAdded }:
 					</div>
 
 					<div className="space-y-2">
-						<Label htmlFor="notes">Notes</Label>
+						<Label htmlFor="notes" className="text-white">Notes</Label>
 						<textarea
 							id="notes"
 							{...register( 'notes' )}
 							placeholder="Additional notes, requirements, or thoughts..."
-							className="w-full h-24 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+							className="w-full h-24 px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none bg-gray-800 text-white placeholder-gray-400"
 						/>
 					</div>
 

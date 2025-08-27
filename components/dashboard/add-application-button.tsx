@@ -10,7 +10,7 @@ interface AddApplicationButtonProps {
 	onApplicationAdded?: () => Promise<void>
 }
 
-export function AddApplicationButton ( { variant='default', onApplicationAdded }: AddApplicationButtonProps ) {
+export function AddApplicationButton ( { variant='default',onApplicationAdded }: AddApplicationButtonProps ) {
 	const [ isDialogOpen,setIsDialogOpen ]=useState( false )
 
 	const buttonClasses=variant==='quick-action'

@@ -8,14 +8,14 @@ import { RecentActivity } from '@/components/dashboard/recent-activity'
 import { ScheduleFollowupDialog } from '@/components/dashboard/schedule-followup-dialog'
 import { DashboardStats } from '@/components/dashboard/stats'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
-import { Suspense, useState } from 'react'
+import { Suspense,useState } from 'react'
 
-export default function DashboardPage() {
-	const [refreshKey, setRefreshKey] = useState(0)
+export default function DashboardPage () {
+	const [ refreshKey,setRefreshKey ]=useState( 0 )
 
-	const handleRefresh = async () => {
+	const handleRefresh=async () => {
 		// Increment refresh key to trigger re-renders
-		setRefreshKey(prev => prev + 1)
+		setRefreshKey( prev => prev+1 )
 	}
 
 	return (
