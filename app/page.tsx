@@ -89,22 +89,37 @@ export default function HomePage () {
 					Built with a clean, intuitive interface inspired by modern design principles.
 				</p>
 				<div className="flex flex-col sm:flex-row gap-4 justify-center">
-					<Button
-						onClick={handleGetStarted}
-						size="lg"
-						className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-lg px-8 py-6"
-					>
-						{hasSession? 'Go to Dashboard':'Start Tracking Now'}
-						<ArrowRight className="ml-2 w-5 h-5" />
-					</Button>
-					<Button
-						onClick={handleSignIn}
-						variant="outline"
-						size="lg"
-						className="text-lg px-8 py-6 border-2"
-					>
-						{hasSession? 'Dashboard':'Sign In'}
-					</Button>
+					{hasSession ? (
+						// When user is authenticated, show only one button
+						<Button
+							onClick={handleGetStarted}
+							size="lg"
+							className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-lg px-8 py-6"
+						>
+							Go to Dashboard
+							<ArrowRight className="ml-2 w-5 h-5" />
+						</Button>
+					) : (
+						// When user is not authenticated, show both buttons
+						<>
+							<Button
+								onClick={handleGetStarted}
+								size="lg"
+								className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-lg px-8 py-6"
+							>
+								Start Tracking Now
+								<ArrowRight className="ml-2 w-5 h-5" />
+							</Button>
+							<Button
+								onClick={handleSignIn}
+								variant="outline"
+								size="lg"
+								className="text-lg px-8 py-6 border-2"
+							>
+								Sign In
+							</Button>
+						</>
+					)}
 				</div>
 			</div>
 
@@ -191,25 +206,27 @@ export default function HomePage () {
 			</div>
 
 			{/* CTA Section */}
-			<div className="px-6 py-20 bg-black/20 backdrop-blur-sm border border-white/10">
-				<div className="max-w-4xl mx-auto text-center text-white">
-					<h2 className="text-3xl font-bold mb-4">
-						Ready to take control of your job search?
-					</h2>
-					<p className="text-xl mb-8 opacity-90">
-						Join thousands of job seekers who are already using CodeniWork to organize their applications.
-					</p>
-					<Button
-						onClick={handleGetStarted}
-						size="lg"
-						variant="secondary"
-						className="text-lg px-8 py-6"
-					>
-						{hasSession? 'Go to Dashboard':'Get Started Free'}
-						<ArrowRight className="ml-2 w-5 h-5" />
-					</Button>
+			{!hasSession && (
+				<div className="px-6 py-20 bg-black/20 backdrop-blur-sm border border-white/10">
+					<div className="max-w-4xl mx-auto text-center text-white">
+						<h2 className="text-3xl font-bold mb-4">
+							Ready to take control of your job search?
+						</h2>
+						<p className="text-xl mb-8 opacity-90">
+							Join thousands of job seekers who are already using CodeniWork to organize their applications.
+						</p>
+						<Button
+							onClick={handleGetStarted}
+							size="lg"
+							variant="secondary"
+							className="text-lg px-8 py-6"
+						>
+							Get Started Free
+							<ArrowRight className="ml-2 w-5 h-5" />
+						</Button>
+					</div>
 				</div>
-			</div>
+			)}
 
 			{/* Footer */}
 			<footer className="px-6 py-12 bg-gray-900 text-white">
