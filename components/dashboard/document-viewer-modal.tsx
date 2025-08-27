@@ -53,8 +53,9 @@ export function DocumentViewerModal({
 
 	if (!doc) return null
 
-	const isPDF = doc.format.toLowerCase() === 'pdf'
-	const isImage = ['jpg', 'jpeg', 'png', 'gif'].includes(doc.format.toLowerCase())
+	const isPDF = doc.format.toLowerCase() === 'pdf' || doc.fileUrl.toLowerCase().includes('.pdf')
+	const isImage = ['jpg', 'jpeg', 'png', 'gif'].includes(doc.format.toLowerCase()) || 
+		['.jpg', '.jpeg', '.png', '.gif'].some(ext => doc.fileUrl.toLowerCase().includes(ext))
 	const isViewable = isPDF || isImage
 
 	const handleDownload = async () => {
@@ -155,14 +156,7 @@ export function DocumentViewerModal({
 								<Download className="w-4 h-4 mr-2" />
 								Download
 							</Button>
-							<Button
-								variant="ghost"
-								size="sm"
-								onClick={() => onOpenChange(false)}
-								className="text-gray-400 hover:text-white hover:bg-white/10 p-2"
-							>
-								<X className="w-4 h-4" />
-							</Button>
+
 						</div>
 					</div>
 				</DialogHeader>
@@ -203,17 +197,35 @@ export function DocumentViewerModal({
 						{isViewable ? (
 							<div className="h-96 relative">
 								{isPDF ? (
-									<iframe
-										src={`${doc.fileUrl}#toolbar=0&navpanes=0&scrollbar=0`}
-										className="w-full h-full border-0"
-										onLoad={() => setIsLoading(false)}
-									/>
+									<>
+										<iframe
+											src={doc.fileUrl}
+											className="w-full h-full border-0"
+											onLoad={() => setIsLoading(false)}
+											onError={() => setIsLoading(false)}
+											title={`PDF Viewer - ${doc.name}`}
+											sandbox="allow-same-origin allow-scripts allow-forms"
+										/>
+										{/* PDF Fallback - if iframe doesn't load properly */}
+										<div className="absolute top-2 right-2">
+											<Button
+												variant="outline"
+												size="sm"
+												onClick={() => window.open(doc.fileUrl, '_blank')}
+												className="bg-gray-800/80 border-gray-600 text-white hover:bg-gray-700/80"
+											>
+												<ExternalLink className="w-4 h-4 mr-2" />
+												Open PDF
+											</Button>
+										</div>
+									</>
 								) : isImage ? (
 									<img
 										src={doc.fileUrl}
 										alt={doc.name}
 										className="w-full h-full object-contain"
 										onLoad={() => setIsLoading(false)}
+										onError={() => setIsLoading(false)}
 									/>
 								) : null}
 								
