@@ -8,8 +8,8 @@ import {
 	DialogTitle
 } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
-import { Calendar, Download, FileText, File, ExternalLink } from 'lucide-react'
-import { useState } from 'react'
+import { Calendar, Download, FileText, File, ExternalLink, X } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
 interface Document {
 	id: string
@@ -37,6 +37,19 @@ export function DocumentViewerModal({
 	document: doc 
 }: DocumentViewerModalProps) {
 	const [isLoading, setIsLoading] = useState(true)
+
+	// Reset loading state when document changes
+	useEffect(() => {
+		if (doc) {
+			setIsLoading(true)
+			// Set a timeout to hide loading after 1.5 seconds to prevent infinite loading
+			const timeout = setTimeout(() => {
+				setIsLoading(false)
+			}, 1500)
+			
+			return () => clearTimeout(timeout)
+		}
+	}, [doc])
 
 	if (!doc) return null
 
@@ -123,7 +136,7 @@ export function DocumentViewerModal({
 							</div>
 						</div>
 						
-						<div className="flex items-center space-x-2">
+						<div className="flex items-center space-x-4">
 							<Button
 								variant="outline"
 								size="sm"
@@ -141,6 +154,14 @@ export function DocumentViewerModal({
 							>
 								<Download className="w-4 h-4 mr-2" />
 								Download
+							</Button>
+							<Button
+								variant="ghost"
+								size="sm"
+								onClick={() => onOpenChange(false)}
+								className="text-gray-400 hover:text-white hover:bg-white/10 p-2"
+							>
+								<X className="w-4 h-4" />
 							</Button>
 						</div>
 					</div>
@@ -200,7 +221,8 @@ export function DocumentViewerModal({
 									<div className="absolute inset-0 flex items-center justify-center bg-gray-800/50">
 										<div className="text-center">
 											<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
-											<p className="text-gray-300">Loading document...</p>
+											<p className="text-gray-300 mb-2">Loading document...</p>
+											<p className="text-sm text-gray-400">This may take a few moments</p>
 										</div>
 									</div>
 								)}
@@ -236,7 +258,7 @@ export function DocumentViewerModal({
 							</span>
 						</div>
 						
-						<div className="flex items-center space-x-2">
+						<div className="flex items-center space-x-4">
 							<Button
 								variant="outline"
 								onClick={handleOpenInNewTab}
