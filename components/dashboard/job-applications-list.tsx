@@ -98,12 +98,12 @@ export function JobApplicationsList () {
 			try {
 				// Set a brief loading state for better UX
 				setIsLoading( true )
-				
+
 				// Add a small delay to show the loading state
-				await new Promise( resolve => setTimeout( resolve, 500 ) )
-				
+				await new Promise( resolve => setTimeout( resolve,500 ) )
+
 				await fetchApplications()
-				
+
 				// Show success feedback
 				console.log( 'Applications list refreshed successfully' )
 			} catch ( error ) {
