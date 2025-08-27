@@ -70,7 +70,7 @@ export default function ProfilePage () {
 		}
 	}
 
-			const handleImageUpload=async (): Promise<string|null> => {
+	const handleImageUpload=async (): Promise<string|null> => {
 		if ( !profileImage ) return null
 
 		try {
