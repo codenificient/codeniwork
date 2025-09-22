@@ -1,66 +1,66 @@
+import { and,count,desc,eq,sql } from 'drizzle-orm'
 import { db } from './index'
-import { jobApplications, companies, applicationEvents, users } from './schema'
-import { eq, and, count, desc, sql } from 'drizzle-orm'
+import { applicationEvents,companies,jobApplications } from './schema'
 
-export async function getDashboardStats(userId: string) {
+export async function getDashboardStats ( userId: string ) {
 	// Get total applications for the user
-	const totalApplications = await db
-		.select({ count: count() })
-		.from(jobApplications)
-		.where(eq(jobApplications.userId, userId))
+	const totalApplications=await db
+		.select( { count: count() } )
+		.from( jobApplications )
+		.where( eq( jobApplications.userId,userId ) )
 
 	// Get applications by status
-	const applicationsByStatus = await db
-		.select({
+	const applicationsByStatus=await db
+		.select( {
 			status: jobApplications.status,
 			count: count()
-		})
-		.from(jobApplications)
-		.where(eq(jobApplications.userId, userId))
-		.groupBy(jobApplications.status)
+		} )
+		.from( jobApplications )
+		.where( eq( jobApplications.userId,userId ) )
+		.groupBy( jobApplications.status )
 
 	// Get unique companies
-	const uniqueCompanies = await db
-		.select({ count: count() })
-		.from(jobApplications)
-		.innerJoin(companies, eq(jobApplications.companyId, companies.id))
-		.where(eq(jobApplications.userId, userId))
+	const uniqueCompanies=await db
+		.select( { count: count() } )
+		.from( jobApplications )
+		.innerJoin( companies,eq( jobApplications.companyId,companies.id ) )
+		.where( eq( jobApplications.userId,userId ) )
 
 	// Calculate success rate (offers / total applications)
-	const offersCount = await db
-		.select({ count: count() })
-		.from(jobApplications)
-		.where(and(
-			eq(jobApplications.userId, userId),
-			eq(jobApplications.status, 'offer')
-		))
+	const offersCount=await db
+		.select( { count: count() } )
+		.from( jobApplications )
+		.where( and(
+			eq( jobApplications.userId,userId ),
+			eq( jobApplications.status,'offer' )
+		) )
 
-	const totalCount = totalApplications[0]?.count || 0
-	const offers = offersCount[0]?.count || 0
-	const successRate = totalCount > 0 ? Math.round((offers / totalCount) * 100) : 0
+	const totalCount=totalApplications[ 0 ]?.count||0
+	const offers=offersCount[ 0 ]?.count||0
+	const successRate=totalCount>0? Math.round( ( offers/totalCount )*100 ):0
 
 	// Convert status counts to a map
-	const statusCounts = applicationsByStatus.reduce((acc, item) => {
-		acc[item.status] = Number(item.count)
+	const statusCounts=applicationsByStatus.reduce( ( acc,item ) => {
+		acc[ item.status ]=Number( item.count )
 		return acc
-	}, {} as Record<string, number>)
+	},{} as Record<string,number> )
 
 	return {
 		totalApplications: totalCount,
-		activeCompanies: uniqueCompanies[0]?.count || 0,
-		inProgress: (statusCounts.screening || 0) + (statusCounts.interview || 0),
-		interviews: statusCounts.interview || 0,
+		activeCompanies: uniqueCompanies[ 0 ]?.count||0,
+		inProgress: ( statusCounts.screening||0 )+( statusCounts.interview||0 ),
+		interviews: statusCounts.interview||0,
 		offers: offers,
-		rejected: statusCounts.rejected || 0,
+		rejected: statusCounts.rejected||0,
 		successRate,
-		applied: statusCounts.applied || 0,
+		applied: statusCounts.applied||0,
 		success: offers
 	}
 }
 
-export async function getJobApplications(userId: string) {
-	const applications = await db
-		.select({
+export async function getJobApplications ( userId: string ) {
+	const applications=await db
+		.select( {
 			id: jobApplications.id,
 			position: jobApplications.position,
 			status: jobApplications.status,
@@ -78,18 +78,18 @@ export async function getJobApplications(userId: string) {
 				logo: companies.logo,
 				website: companies.website
 			}
-		})
-		.from(jobApplications)
-		.innerJoin(companies, eq(jobApplications.companyId, companies.id))
-		.where(eq(jobApplications.userId, userId))
-		.orderBy(desc(jobApplications.appliedAt))
+		} )
+		.from( jobApplications )
+		.innerJoin( companies,eq( jobApplications.companyId,companies.id ) )
+		.where( eq( jobApplications.userId,userId ) )
+		.orderBy( desc( jobApplications.appliedAt ) )
 
 	return applications
 }
 
-export async function getRecentActivity(userId: string, limit: number = 5) {
-	const events = await db
-		.select({
+export async function getRecentActivity ( userId: string,limit: number=5 ) {
+	const events=await db
+		.select( {
 			id: applicationEvents.id,
 			type: applicationEvents.type,
 			title: applicationEvents.title,
@@ -99,46 +99,109 @@ export async function getRecentActivity(userId: string, limit: number = 5) {
 				position: jobApplications.position,
 				companyName: companies.name
 			}
-		})
-		.from(applicationEvents)
-		.innerJoin(jobApplications, eq(applicationEvents.applicationId, jobApplications.id))
-		.innerJoin(companies, eq(jobApplications.companyId, companies.id))
-		.where(eq(jobApplications.userId, userId))
-		.orderBy(desc(applicationEvents.date))
-		.limit(limit)
+		} )
+		.from( applicationEvents )
+		.innerJoin( jobApplications,eq( applicationEvents.applicationId,jobApplications.id ) )
+		.innerJoin( companies,eq( jobApplications.companyId,companies.id ) )
+		.where( eq( jobApplications.userId,userId ) )
+		.orderBy( desc( applicationEvents.date ) )
+		.limit( limit )
 
 	return events
 }
 
-export async function getApplicationCountsByStatus(userId: string) {
-	const counts = await db
-		.select({
+export async function getApplicationCountsByStatus ( userId: string ) {
+	const counts=await db
+		.select( {
 			status: jobApplications.status,
 			count: count()
-		})
-		.from(jobApplications)
-		.where(eq(jobApplications.userId, userId))
-		.groupBy(jobApplications.status)
+		} )
+		.from( jobApplications )
+		.where( eq( jobApplications.userId,userId ) )
+		.groupBy( jobApplications.status )
 
 	return counts
 }
 
-export async function createActivityEvent(
+export async function createActivityEvent (
 	applicationId: string,
 	type: string,
 	title: string,
 	description?: string
 ) {
-	const [event] = await db
-		.insert(applicationEvents)
-		.values({
+	const [ event ]=await db
+		.insert( applicationEvents )
+		.values( {
 			applicationId,
 			type,
 			title,
 			description,
 			date: new Date(),
-		})
+		} )
 		.returning()
 
 	return event
+}
+
+export async function autoRejectOldApplications () {
+	const twentyOneDaysAgo=new Date()
+	twentyOneDaysAgo.setDate( twentyOneDaysAgo.getDate()-21 )
+
+	// Find applications that are still in 'applied' or 'screening' status for 21+ days
+	const oldApplications=await db
+		.select( {
+			id: jobApplications.id,
+			position: jobApplications.position,
+			status: jobApplications.status,
+			appliedAt: jobApplications.appliedAt,
+			company: {
+				name: companies.name
+			}
+		} )
+		.from( jobApplications )
+		.innerJoin( companies,eq( jobApplications.companyId,companies.id ) )
+		.where(
+			and(
+				sql`${jobApplications.appliedAt} <= ${twentyOneDaysAgo}`,
+				sql`${jobApplications.status} IN ('applied', 'screening')`
+			)
+		)
+
+	if ( oldApplications.length===0 ) {
+		return { rejectedCount: 0,applications: [] }
+	}
+
+	// Update all old applications to 'rejected' status
+	const rejectedApplications=await db
+		.update( jobApplications )
+		.set( {
+			status: 'rejected',
+			updatedAt: new Date()
+		} )
+		.where(
+			and(
+				sql`${jobApplications.appliedAt} <= ${twentyOneDaysAgo}`,
+				sql`${jobApplications.status} IN ('applied', 'screening')`
+			)
+		)
+		.returning( {
+			id: jobApplications.id,
+			position: jobApplications.position,
+			companyId: jobApplications.companyId
+		} )
+
+	// Create activity events for each rejected application
+	for ( const app of rejectedApplications ) {
+		await createActivityEvent(
+			app.id,
+			'auto_rejected',
+			'Application automatically rejected',
+			`Application for ${app.position} was automatically rejected after 21 days without status update`
+		)
+	}
+
+	return {
+		rejectedCount: rejectedApplications.length,
+		applications: oldApplications
+	}
 }

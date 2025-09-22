@@ -9,17 +9,41 @@ import { ScheduleFollowupDialog } from '@/components/dashboard/schedule-followup
 import { DashboardStats } from '@/components/dashboard/stats'
 import { Button } from '@/components/ui/button'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
-import { Calendar, FileText } from 'lucide-react'
-import { Suspense, useState } from 'react'
+import { Calendar,FileText,RefreshCw } from 'lucide-react'
+import { Suspense,useState } from 'react'
 
-export default function DashboardPage() {
-	const [refreshKey, setRefreshKey] = useState(0)
-	const [isScheduleFollowupOpen, setIsScheduleFollowupOpen] = useState(false)
-	const [isExportDataOpen, setIsExportDataOpen] = useState(false)
+export default function DashboardPage () {
+	const [ refreshKey,setRefreshKey ]=useState( 0 )
+	const [ isScheduleFollowupOpen,setIsScheduleFollowupOpen ]=useState( false )
+	const [ isExportDataOpen,setIsExportDataOpen ]=useState( false )
 
-	const handleRefresh = async () => {
+	const handleRefresh=async () => {
 		// Increment refresh key to trigger re-renders
-		setRefreshKey(prev => prev + 1)
+		setRefreshKey( prev => prev+1 )
+	}
+
+	const handleAutoReject=async () => {
+		try {
+			const response=await fetch( '/api/dashboard/applications/auto-reject',{
+				method: 'POST'
+			} )
+
+			if ( !response.ok ) {
+				throw new Error( 'Failed to run auto-rejection' )
+			}
+
+			const result=await response.json()
+			console.log( 'Auto-rejection result:',result )
+
+			// Refresh the dashboard to show updated data
+			handleRefresh()
+
+			// Show success message (you could add a toast notification here)
+			alert( `Auto-rejection completed: ${result.rejectedCount} applications processed` )
+		} catch ( error ) {
+			console.error( 'Error running auto-rejection:',error )
+			alert( 'Error running auto-rejection. Check console for details.' )
+		}
 	}
 
 	return (
@@ -63,7 +87,7 @@ export default function DashboardPage() {
 									<AddApplicationButton variant="quick-action" onApplicationAdded={handleRefresh} />
 									<Button
 										variant="outline"
-										onClick={() => setIsScheduleFollowupOpen(true)}
+										onClick={() => setIsScheduleFollowupOpen( true )}
 										className="w-full bg-gray-800 border-gray-600 text-white hover:bg-gray-700"
 									>
 										<Calendar className="w-4 h-4 mr-2" />
@@ -71,11 +95,19 @@ export default function DashboardPage() {
 									</Button>
 									<Button
 										variant="outline"
-										onClick={() => setIsExportDataOpen(true)}
+										onClick={() => setIsExportDataOpen( true )}
 										className="w-full bg-gray-800 border-gray-600 text-white hover:bg-gray-700"
 									>
 										<FileText className="w-4 h-4 mr-2" />
 										Export Data
+									</Button>
+									<Button
+										variant="outline"
+										onClick={handleAutoReject}
+										className="w-full bg-orange-800 border-orange-600 text-white hover:bg-orange-700"
+									>
+										<RefreshCw className="w-4 h-4 mr-2" />
+										Auto-Reject Old Apps
 									</Button>
 								</div>
 							</div>
@@ -90,13 +122,13 @@ export default function DashboardPage() {
 			</div>
 
 			{/* Dialogs */}
-			<ScheduleFollowupDialog 
-				open={isScheduleFollowupOpen} 
+			<ScheduleFollowupDialog
+				open={isScheduleFollowupOpen}
 				onOpenChange={setIsScheduleFollowupOpen}
 			/>
-			
-			<ExportDataDialog 
-				open={isExportDataOpen} 
+
+			<ExportDataDialog
+				open={isExportDataOpen}
 				onOpenChange={setIsExportDataOpen}
 			/>
 		</div>

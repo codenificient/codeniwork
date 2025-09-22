@@ -12,7 +12,8 @@
 		"db:studio": "drizzle-kit studio",
 		"db:clear": "tsx scripts/clear-database.ts",
 		"db:seed": "tsx scripts/seed-database.ts",
-		"db:reset": "pnpm db:clear && pnpm db:seed"
+		"db:reset": "pnpm db:clear && pnpm db:seed",
+		"auto-reject": "tsx scripts/auto-reject-applications.ts"
 	},
 	"dependencies": {
 		"@auth/drizzle-adapter": "^1.10.0",
