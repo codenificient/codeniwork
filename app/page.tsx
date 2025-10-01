@@ -47,7 +47,7 @@ export default function HomePage () {
 	return (
 		<div className="min-h-screen relative">
 			{/* Navigation */}
-			<nav className="px-6 py-4 flex items-center justify-between">
+			<nav className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between px-6 py-6">
 				<div className="flex items-center space-x-2">
 					<div className="w-8 h-8 rounded-lg flex items-center justify-center">
 						<img src="/favicon.svg" alt="CodeniWork" className="w-6 h-6" />

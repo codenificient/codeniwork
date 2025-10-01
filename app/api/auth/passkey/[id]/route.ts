@@ -15,7 +15,7 @@ export async function DELETE (
 			return NextResponse.json( { error: 'Unauthorized' },{ status: 401 } )
 		}
 
-		const { id: passkeyId } = await params
+		const { id: passkeyId }=await params
 
 		// Delete the passkey (only if it belongs to the current user)
 		const result=await db
