@@ -89,7 +89,7 @@ export function base64URLEncode ( buffer: ArrayBuffer ): string {
 }
 
 export function base64URLDecode ( str: string ): ArrayBuffer {
-	return Buffer.from( str,'base64url' )
+	return Buffer.from( str,'base64url' ).buffer
 }
 
 // Generate registration options for a new passkey
