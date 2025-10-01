@@ -51,7 +51,7 @@ export function DashboardHeader () {
 		return (
 			<header className="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
 				<div className="px-6 py-4">
-					<div className="flex items-center justify-between">
+					<div className="flex items-center justify-between max-w-7xl mx-auto">
 						<div className="flex flex-1 max-w-md">
 							<div className="relative w-full">
 								<div className="w-full h-10 bg-white/20 rounded-md animate-pulse"></div>
@@ -71,7 +71,7 @@ export function DashboardHeader () {
 	return (
 		<header className="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
 			<div className="px-6 py-4">
-				<div className="flex items-center justify-between">
+				<div className="flex items-center justify-between max-w-7xl mx-auto">
 					{/* Search Bar */}
 					<div className="flex flex-1 max-w-md">
 						<div className="relative w-full">

@@ -25,6 +25,9 @@ export const users=pgTable( 'users',{
 	image: text( 'image' ),
 	emailVerified: timestamp( 'email_verified',{ mode: 'date' } ),
 	passwordHash: text( 'password_hash' ),
+	masterPasswordHash: text( 'master_password_hash' ),
+	masterPasswordSalt: text( 'master_password_salt' ),
+	encryptionKeyDerivationSalt: text( 'encryption_key_derivation_salt' ),
 	createdAt: timestamp( 'created_at' ).defaultNow().notNull(),
 	updatedAt: timestamp( 'updated_at' ).defaultNow().notNull(),
 } )
@@ -90,10 +93,26 @@ export const documents=pgTable( 'documents',{
 	updatedAt: timestamp( 'updated_at' ).defaultNow().notNull(),
 } )
 
+// Passkey credentials table for WebAuthn
+export const passkeyCredentials=pgTable( 'passkey_credentials',{
+	id: uuid( 'id' ).primaryKey().defaultRandom(),
+	userId: uuid( 'user_id' ).references( () => users.id,{ onDelete: 'cascade' } ).notNull(),
+	credentialId: text( 'credential_id' ).notNull().unique(),
+	publicKey: text( 'public_key' ).notNull(),
+	counter: text( 'counter' ).notNull().default( '0' ),
+	deviceType: text( 'device_type' ), // 'single_device', 'multi_device'
+	backedUp: boolean( 'backed_up' ).default( false ),
+	transports: text( 'transports' ), // JSON array of transport methods
+	name: text( 'name' ), // User-friendly name for the passkey
+	createdAt: timestamp( 'created_at' ).defaultNow().notNull(),
+	lastUsed: timestamp( 'last_used' ),
+} )
+
 // Relations
 export const usersRelations=relations( users,( { many } ) => ( {
 	applications: many( jobApplications ),
 	documents: many( documents ),
+	passkeyCredentials: many( passkeyCredentials ),
 } ) )
 
 export const companiesRelations=relations( companies,( { many } ) => ( {
@@ -160,6 +179,13 @@ export const sessionsRelations=relations( sessions,( { one } ) => ( {
 export const accountsRelations=relations( accounts,( { one } ) => ( {
 	user: one( users,{
 		fields: [ accounts.userId ],
+		references: [ users.id ],
+	} ),
+} ) )
+
+export const passkeyCredentialsRelations=relations( passkeyCredentials,( { one } ) => ( {
+	user: one( users,{
+		fields: [ passkeyCredentials.userId ],
 		references: [ users.id ],
 	} ),
 } ) )

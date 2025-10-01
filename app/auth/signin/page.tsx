@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button'
 import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ArrowLeft,Lock,Mail } from 'lucide-react'
+import { usePasskeyAuth } from '@/hooks/use-passkey-auth'
+import { ArrowLeft,Fingerprint,Lock,Mail } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -15,6 +16,7 @@ export default function SignInPage () {
 	const [ isLoading,setIsLoading ]=useState( false )
 	const [ error,setError ]=useState<string|null>( null )
 	const [ successMessage,setSuccessMessage ]=useState<string|null>( null )
+	const { isSupported,authenticateWithPasskey }=usePasskeyAuth()
 
 	// For now, use a default callback URL
 	// In a real app, you might want to handle this differently
@@ -71,6 +73,34 @@ export default function SignInPage () {
 		}
 	}
 
+	const handlePasskeySignIn=async () => {
+		setIsLoading( true )
+		setError( null )
+
+		try {
+			const result=await authenticateWithPasskey()
+			if ( result.verified&&result.user ) {
+				// Sign in the user with NextAuth
+				const signInResult=await signIn( 'credentials',{
+					email: result.user.email,
+					password: 'passkey-auth', // Special flag for passkey auth
+					redirect: false,
+				} )
+
+				if ( signInResult?.error ) {
+					setError( 'Authentication failed. Please try again.' )
+					setIsLoading( false )
+				} else {
+					router.push( callbackUrl )
+				}
+			}
+		} catch ( error ) {
+			console.error( 'Passkey authentication error:',error )
+			setError( 'Passkey authentication failed. Please try email and password.' )
+			setIsLoading( false )
+		}
+	}
+
 	return (
 		<div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
 			{/* Colorful Background Elements */}
@@ -119,6 +149,29 @@ export default function SignInPage () {
 						</div>
 					)}
 
+					{/* Passkey Sign In */}
+					{isSupported&&(
+						<div className="space-y-4">
+							<Button
+								onClick={handlePasskeySignIn}
+								disabled={isLoading}
+								className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white h-12 text-lg font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+							>
+								<Fingerprint className="w-5 h-5 mr-2" />
+								{isLoading? 'Authenticating...':'Sign In with Passkey'}
+							</Button>
+
+							<div className="relative">
+								<div className="absolute inset-0 flex items-center">
+									<span className="w-full border-t" />
+								</div>
+								<div className="relative flex justify-center text-xs uppercase">
+									<span className="bg-white px-2 text-gray-500">Or continue with</span>
+								</div>
+							</div>
+						</div>
+					)}
+
 					{/* Credentials Sign In Form */}
 					<form onSubmit={handleCredentialsSignIn} className="space-y-4">
 						<div className="space-y-2">
@@ -159,7 +212,7 @@ export default function SignInPage () {
 							disabled={isLoading}
 							className="w-full bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white h-12 text-lg font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
 						>
-							{isLoading? 'Signing In...':'Sign In'}
+							{isLoading? 'Signing In...':'Sign In with Email'}
 						</Button>
 					</form>
 
