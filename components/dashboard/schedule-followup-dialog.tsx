@@ -19,7 +19,7 @@ const followupSchema = z.object({
 	reminderDate: z.string().min(1, 'Reminder date is required'),
 	reminderTime: z.string().min(1, 'Reminder time is required'),
 	notes: z.string().optional(),
-	priority: z.string().default('medium')
+	priority: z.string()
 })
 
 type FollowupFormData = z.infer<typeof followupSchema>
@@ -77,7 +77,7 @@ export function ScheduleFollowupDialog({ open, onOpenChange }: ScheduleFollowupD
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-[500px] bg-gray-900/95 backdrop-blur-sm border border-gray-700 text-white">
+			<DialogContent className="sm:max-w-[500px] text-white">
 				<DialogHeader>
 					<DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
 						Schedule Follow-up
@@ -94,7 +94,7 @@ export function ScheduleFollowupDialog({ open, onOpenChange }: ScheduleFollowupD
 							<Input
 								id="contactName"
 								{...register('contactName')}
-								className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+								className=""
 								placeholder="Enter contact name"
 							/>
 							{errors.contactName && (
@@ -107,10 +107,10 @@ export function ScheduleFollowupDialog({ open, onOpenChange }: ScheduleFollowupD
 								Contact Type
 							</Label>
 							<Select onValueChange={(value) => register('contactType').onChange({ target: { value } })}>
-								<SelectTrigger className="bg-gray-800 border-gray-600 text-white">
+								<SelectTrigger className="">
 									<SelectValue placeholder="Select type" />
 								</SelectTrigger>
-								<SelectContent className="bg-gray-800 border-gray-600 text-white">
+								<SelectContent className="">
 									<SelectItem value="recruiter">Recruiter</SelectItem>
 									<SelectItem value="hiring_manager">Hiring Manager</SelectItem>
 									<SelectItem value="colleague">Colleague</SelectItem>
@@ -134,7 +134,7 @@ export function ScheduleFollowupDialog({ open, onOpenChange }: ScheduleFollowupD
 								id="reminderDate"
 								type="date"
 								{...register('reminderDate')}
-								className="bg-gray-800 border-gray-600 text-white"
+								className=""
 							/>
 							{errors.reminderDate && (
 								<p className="text-red-400 text-sm mt-1">{errors.reminderDate.message}</p>
@@ -150,7 +150,7 @@ export function ScheduleFollowupDialog({ open, onOpenChange }: ScheduleFollowupD
 								id="reminderTime"
 								type="time"
 								{...register('reminderTime')}
-								className="bg-gray-800 border-gray-600 text-white"
+								className=""
 							/>
 							{errors.reminderTime && (
 								<p className="text-red-400 text-sm mt-1">{errors.reminderTime.message}</p>
@@ -163,10 +163,10 @@ export function ScheduleFollowupDialog({ open, onOpenChange }: ScheduleFollowupD
 							Priority
 						</Label>
 						<Select onValueChange={(value) => register('priority').onChange({ target: { value } })} defaultValue="medium">
-							<SelectTrigger className="bg-gray-800 border-gray-600 text-white">
+							<SelectTrigger className="">
 								<SelectValue />
 							</SelectTrigger>
-							<SelectContent className="bg-gray-800 border-gray-600 text-white">
+							<SelectContent className="">
 								<SelectItem value="low">Low</SelectItem>
 								<SelectItem value="medium">Medium</SelectItem>
 								<SelectItem value="high">High</SelectItem>
@@ -181,7 +181,7 @@ export function ScheduleFollowupDialog({ open, onOpenChange }: ScheduleFollowupD
 						<Textarea
 							id="notes"
 							{...register('notes')}
-							className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+							className=""
 							placeholder="Add any additional notes..."
 							rows={3}
 						/>
@@ -192,7 +192,7 @@ export function ScheduleFollowupDialog({ open, onOpenChange }: ScheduleFollowupD
 							type="button"
 							variant="outline"
 							onClick={handleCancel}
-							className="bg-gray-800 border-gray-600 text-white hover:bg-gray-700"
+							className=""
 						>
 							Cancel
 						</Button>

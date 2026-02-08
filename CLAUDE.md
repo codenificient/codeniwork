@@ -4,14 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-CodeniWork is a job application tracker built with Next.js 15.5 (App Router), using NeonDB (serverless PostgreSQL) via Drizzle ORM, and NextAuth.js v5 (beta) for authentication. It features credential-based login, passkey/WebAuthn support, and a Clean My Mac-inspired glass-morphism UI.
+CodeniWork is a job application tracker built with Next.js 16 (App Router) and React 19, using NeonDB (serverless PostgreSQL) via Drizzle ORM, and NextAuth.js v5 (beta) for authentication. It features credential-based login, passkey/WebAuthn support, and a Clean My Mac-inspired glass-morphism UI.
 
 ## Commands
 
 ```bash
 pnpm dev              # Start dev server (localhost:3000)
 pnpm build            # Production build
-pnpm lint             # ESLint
+pnpm lint             # ESLint (flat config)
 pnpm db:generate      # Generate Drizzle migrations from schema
 pnpm db:push          # Push schema directly to NeonDB
 pnpm db:studio        # Open Drizzle Studio (DB browser)

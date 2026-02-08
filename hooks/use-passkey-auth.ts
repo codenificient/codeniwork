@@ -86,7 +86,7 @@ function convertAuthenticationOptions ( options: PublicKeyCredentialRequestOptio
 function credentialToJSON ( credential: PublicKeyCredential ): any {
 	const response=credential.response as AuthenticatorAttestationResponse|AuthenticatorAssertionResponse
 
-	let responseJSON: any={
+	const responseJSON: any={
 		clientDataJSON: bufferToBase64URLString( response.clientDataJSON ),
 	}
 

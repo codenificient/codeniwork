@@ -22,8 +22,8 @@ const documentSchema = z.object({
 	name: z.string().min(1, 'Document name is required'),
 	type: z.string().min(1, 'Document type is required'),
 	description: z.string().optional(),
-	status: z.string().default('active'),
-	version: z.string().default('v1.0'),
+	status: z.string(),
+	version: z.string(),
 })
 
 type DocumentFormData = z.infer<typeof documentSchema>
@@ -243,7 +243,7 @@ export function UploadDocumentDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-[500px] bg-gray-900/95 backdrop-blur-sm border border-gray-700 text-white">
+			<DialogContent className="sm:max-w-[500px] text-white">
 				<DialogHeader>
 					<DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
 						Upload Document
@@ -254,7 +254,7 @@ export function UploadDocumentDialog({
 					{/* File Upload Section */}
 					<div className="space-y-4">
 						<Label className="text-white">Select Document</Label>
-						<div className="border-2 border-dashed border-gray-600 rounded-lg p-6 text-center hover:border-gray-500 transition-colors">
+						<div className="border-2 border-dashed border-white/[0.10] rounded-lg p-6 text-center hover:border-white/20 transition-colors">
 							<input
 								ref={fileInputRef}
 								type="file"
@@ -265,14 +265,14 @@ export function UploadDocumentDialog({
 							
 							{!selectedFile ? (
 								<div>
-									<Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-									<p className="text-gray-300 mb-2">Click to select a document</p>
-									<p className="text-sm text-gray-400">PDF, DOC, DOCX, XLS, XLSX, TXT, JPG, PNG, GIF up to 10MB</p>
+									<Upload className="w-12 h-12 text-violet-300/40 mx-auto mb-4" />
+									<p className="text-white/70 mb-2">Click to select a document</p>
+									<p className="text-sm text-violet-300/40">PDF, DOC, DOCX, XLS, XLSX, TXT, JPG, PNG, GIF up to 10MB</p>
 									<Button
 										type="button"
 										variant="outline"
 										onClick={() => fileInputRef.current?.click()}
-										className="mt-4 bg-gray-800 border-gray-600 text-white hover:bg-gray-700"
+										className="mt-4"
 									>
 										Choose File
 									</Button>
@@ -283,7 +283,7 @@ export function UploadDocumentDialog({
 										{getFileIcon(selectedFile.type)}
 										<div className="flex-1">
 											<p className="text-white font-medium">{selectedFile.name}</p>
-											<p className="text-sm text-gray-400">{formatFileSize(selectedFile.size)}</p>
+											<p className="text-sm text-violet-300/40">{formatFileSize(selectedFile.size)}</p>
 										</div>
 										<Button
 											type="button"
@@ -297,7 +297,7 @@ export function UploadDocumentDialog({
 									</div>
 									
 									{uploadProgress > 0 && (
-										<div className="w-full bg-gray-700 rounded-full h-2">
+										<div className="w-full bg-white/10 rounded-full h-2">
 											<div 
 												className="bg-gradient-to-r from-purple-500 to-blue-600 h-2 rounded-full transition-all duration-300"
 												style={{ width: `${uploadProgress}%` }}
@@ -317,7 +317,7 @@ export function UploadDocumentDialog({
 								id="name"
 								{...register('name')}
 								placeholder="e.g., Software Engineer Resume"
-								className={`bg-gray-800 border-gray-600 text-white placeholder-gray-400 ${errors.name ? 'border-red-500' : ''}`}
+								className={`${errors.name ? 'border-red-500' : ''}`}
 							/>
 							{errors.name && (
 								<p className="text-sm text-red-500">{errors.name.message}</p>
@@ -327,10 +327,10 @@ export function UploadDocumentDialog({
 						<div className="space-y-2">
 							<Label htmlFor="type" className="text-white">Document Type *</Label>
 							<Select onValueChange={(value) => setValue('type', value)} defaultValue={documentType}>
-								<SelectTrigger className="bg-gray-800 border-gray-600 text-white">
+								<SelectTrigger className="">
 									<SelectValue placeholder="Select type" />
 								</SelectTrigger>
-								<SelectContent className="bg-gray-800 border-gray-600 text-white">
+								<SelectContent className="">
 									<SelectItem value="resume">Resume</SelectItem>
 									<SelectItem value="cover_letter">Cover Letter</SelectItem>
 									<SelectItem value="portfolio">Portfolio</SelectItem>
@@ -345,10 +345,10 @@ export function UploadDocumentDialog({
 						<div className="space-y-2">
 							<Label htmlFor="status" className="text-white">Status</Label>
 							<Select onValueChange={(value) => setValue('status', value)} defaultValue="active">
-								<SelectTrigger className="bg-gray-800 border-gray-600 text-white">
+								<SelectTrigger className="">
 									<SelectValue placeholder="Select status" />
 								</SelectTrigger>
-								<SelectContent className="bg-gray-800 border-gray-600 text-white">
+								<SelectContent className="">
 									<SelectItem value="active">Active</SelectItem>
 									<SelectItem value="archived">Archived</SelectItem>
 									<SelectItem value="template">Template</SelectItem>
@@ -362,7 +362,7 @@ export function UploadDocumentDialog({
 								id="version"
 								{...register('version')}
 								placeholder="e.g., v1.0"
-								className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+								className=""
 							/>
 						</div>
 					</div>
@@ -373,7 +373,7 @@ export function UploadDocumentDialog({
 							id="description"
 							{...register('description')}
 							placeholder="Document description or notes..."
-							className="w-full h-24 px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none bg-gray-800 text-white placeholder-gray-400"
+							className="w-full h-24 px-3 py-2 border border-white/[0.10] bg-white/[0.04] backdrop-blur-xl rounded-input focus:outline-none focus:ring-2 focus:ring-violet-500/40 focus:border-transparent resize-none text-white placeholder-violet-300/40"
 						/>
 					</div>
 

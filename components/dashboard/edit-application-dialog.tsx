@@ -25,7 +25,7 @@ const applicationSchema=z.object( {
 	salary: z.string().optional(),
 	notes: z.string().optional(),
 	priority: z.enum( [ 'low','medium','high' ] ),
-	isRemote: z.boolean().default( false ),
+	isRemote: z.boolean(),
 	status: z.enum( [ 'applied','screening','interview','offer','rejected','withdrawn' ] ),
 	deadline: z.string().optional(),
 } )
@@ -162,7 +162,7 @@ export function EditApplicationDialog ( {
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-[500px] bg-gray-900/95 backdrop-blur-sm border border-gray-700 text-white">
+			<DialogContent className="sm:max-w-[500px] text-white">
 				<DialogHeader>
 					<DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
 						Edit Application
@@ -177,7 +177,7 @@ export function EditApplicationDialog ( {
 								id="companyName"
 								{...register( 'companyName' )}
 								placeholder="e.g., Google, Apple"
-								className={`bg-gray-800 border-gray-600 text-white placeholder-gray-400 ${errors.companyName? 'border-red-500':''}`}
+								className={`${errors.companyName? 'border-red-500':''}`}
 							/>
 							{errors.companyName&&(
 								<p className="text-sm text-red-500">{errors.companyName.message}</p>
@@ -190,7 +190,7 @@ export function EditApplicationDialog ( {
 								id="position"
 								{...register( 'position' )}
 								placeholder="e.g., Senior Developer"
-								className={`bg-gray-800 border-gray-600 text-white placeholder-gray-400 ${errors.position? 'border-red-500':''}`}
+								className={`${errors.position? 'border-red-500':''}`}
 							/>
 							{errors.position&&(
 								<p className="text-sm text-red-500">{errors.position.message}</p>
@@ -205,7 +205,7 @@ export function EditApplicationDialog ( {
 							{...register( 'jobUrl' )}
 							placeholder="https://company.com/careers/position"
 							type="url"
-							className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+							className=""
 						/>
 					</div>
 
@@ -216,7 +216,7 @@ export function EditApplicationDialog ( {
 								id="location"
 								{...register( 'location' )}
 								placeholder="e.g., San Francisco, CA"
-								className={`bg-gray-800 border-gray-600 text-white placeholder-gray-400 ${errors.location? 'border-red-500':''}`}
+								className={`${errors.location? 'border-red-500':''}`}
 							/>
 							{errors.location&&(
 								<p className="text-sm text-red-500">{errors.location.message}</p>
@@ -229,7 +229,7 @@ export function EditApplicationDialog ( {
 								id="salary"
 								{...register( 'salary' )}
 								placeholder="e.g., $100k - $150k"
-								className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+								className=""
 							/>
 						</div>
 					</div>
@@ -238,16 +238,16 @@ export function EditApplicationDialog ( {
 						<div className="space-y-2">
 							<Label htmlFor="status" className="text-white">Status</Label>
 							<Select onValueChange={( value ) => setValue( 'status',value as any )}>
-								<SelectTrigger className="bg-gray-800 border-gray-600 text-white hover:bg-gray-700 focus:ring-purple-500 focus:border-purple-500">
+								<SelectTrigger className="">
 									<SelectValue placeholder="Select status" />
 								</SelectTrigger>
-								<SelectContent className="bg-gray-800 border-gray-600 text-white">
-									<SelectItem value="applied" className="hover:bg-gray-700 focus:bg-gray-700">Applied</SelectItem>
-									<SelectItem value="screening" className="hover:bg-gray-700 focus:bg-gray-700">Screening</SelectItem>
-									<SelectItem value="interview" className="hover:bg-gray-700 focus:bg-gray-700">Interview</SelectItem>
-									<SelectItem value="offer" className="hover:bg-gray-700 focus:bg-gray-700">Offer</SelectItem>
-									<SelectItem value="rejected" className="hover:bg-gray-700 focus:bg-gray-700">Rejected</SelectItem>
-									<SelectItem value="withdrawn" className="hover:bg-gray-700 focus:bg-gray-700">Withdrawn</SelectItem>
+								<SelectContent className="">
+									<SelectItem value="applied" className="">Applied</SelectItem>
+									<SelectItem value="screening" className="">Screening</SelectItem>
+									<SelectItem value="interview" className="">Interview</SelectItem>
+									<SelectItem value="offer" className="">Offer</SelectItem>
+									<SelectItem value="rejected" className="">Rejected</SelectItem>
+									<SelectItem value="withdrawn" className="">Withdrawn</SelectItem>
 								</SelectContent>
 							</Select>
 						</div>
@@ -255,13 +255,13 @@ export function EditApplicationDialog ( {
 						<div className="space-y-2">
 							<Label htmlFor="priority" className="text-white">Priority</Label>
 							<Select onValueChange={( value ) => setValue( 'priority',value as 'low'|'medium'|'high' )}>
-								<SelectTrigger className="bg-gray-800 border-gray-600 text-white hover:bg-gray-700 focus:ring-purple-500 focus:border-purple-500">
+								<SelectTrigger className="">
 									<SelectValue placeholder="Select priority" />
 								</SelectTrigger>
-								<SelectContent className="bg-gray-800 border-gray-600 text-white">
-									<SelectItem value="low" className="hover:bg-gray-700 focus:bg-gray-700">Low</SelectItem>
-									<SelectItem value="medium" className="hover:bg-gray-700 focus:bg-gray-700">Medium</SelectItem>
-									<SelectItem value="high" className="hover:bg-gray-700 focus:bg-gray-700">High</SelectItem>
+								<SelectContent className="">
+									<SelectItem value="low" className="">Low</SelectItem>
+									<SelectItem value="medium" className="">Medium</SelectItem>
+									<SelectItem value="high" className="">High</SelectItem>
 								</SelectContent>
 							</Select>
 						</div>
@@ -274,7 +274,7 @@ export function EditApplicationDialog ( {
 								id="deadline"
 								type="date"
 								{...register( 'deadline' )}
-								className="bg-gray-800 border-gray-600 text-white"
+								className=""
 							/>
 						</div>
 
@@ -285,7 +285,7 @@ export function EditApplicationDialog ( {
 									type="checkbox"
 									id="isRemote"
 									{...register( 'isRemote' )}
-									className="w-4 h-4 text-purple-600 bg-gray-800 border-gray-600 rounded focus:ring-purple-500 focus:ring-2"
+									className="w-4 h-4 text-violet-600 bg-white/[0.04] border-white/[0.10] rounded focus:ring-violet-500/40 focus:ring-2"
 								/>
 								<Label htmlFor="isRemote" className="text-sm text-white">
 									Remote position
@@ -300,7 +300,7 @@ export function EditApplicationDialog ( {
 							id="notes"
 							{...register( 'notes' )}
 							placeholder="Additional notes, requirements, or thoughts..."
-							className="w-full h-24 px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none bg-gray-800 text-white placeholder-gray-400"
+							className="w-full h-24 px-3 py-2 border border-white/[0.10] bg-white/[0.04] backdrop-blur-xl rounded-input focus:outline-none focus:ring-2 focus:ring-violet-500/40 focus:border-transparent resize-none text-white placeholder-violet-300/40"
 						/>
 					</div>
 
