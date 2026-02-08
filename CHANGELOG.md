@@ -1,3 +1,10 @@
+## 1.0.0 (2026-02-08)
+
+### Features
+
+* Add automatic rejection for job applications older than 21 days ([91cb1c7](https://github.com/codenificient/codeniwork/commit/91cb1c7f64a21aa1b7bab4e6cb13a1fd6d7680c8))
+* add telemetry SDK and semantic-release automation ([e630cde](https://github.com/codenificient/codeniwork/commit/e630cde78c29887d95112b0d0aaf0328dc4a9f73))
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
