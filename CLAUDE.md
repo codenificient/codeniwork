@@ -19,6 +19,7 @@ pnpm db:seed          # Seed database with sample data
 pnpm db:clear         # Clear all database tables
 pnpm db:reset         # Clear + reseed database
 pnpm auto-reject      # Run auto-rejection script (CLI)
+pnpm semantic-release # Run semantic-release (CI only, use --dry-run locally)
 ```
 
 There is no test suite configured.
@@ -49,8 +50,21 @@ There is no test suite configured.
 - `upload/` — Cloudinary-based file uploads (images, documents, company logos)
 - All protected endpoints use `const session = await auth()` and check `session?.user?.id`
 
+### Analytics / Telemetry
+- **@codenificient/analytics-sdk** integrated via `lib/analytics.ts` (AppAnalytics wrapper class)
+- Types in `types/analytics.ts`; API proxy at `app/api/analytics/track/route.ts`
+- `<AnalyticsProvider>` in root layout auto-tracks page views on route changes
+- Track auth events via `getAnalytics()?.authAction(...)` and custom events via `getAnalytics()?.custom(...)`
+- Enabled in production by default; set `NEXT_PUBLIC_ANALYTICS_ENABLED=true` for dev
+
+### Releases
+- **semantic-release** automates versioning and changelog via conventional commits
+- Config in `.releaserc.json`; commit lint rules in `.commitlintrc.json`
+- GitHub Actions workflow in `.github/workflows/release.yml` triggers on push to `master` or `beta`
+- Commit types: `feat` (minor), `fix`/`perf`/`refactor` (patch), `BREAKING CHANGE` (major), `docs`/`chore`/`style`/`test` (no release)
+
 ### Frontend Structure
-- **Root layout** (`app/layout.tsx`): Inter font, AuthProvider, Toaster
+- **Root layout** (`app/layout.tsx`): Inter font, AuthProvider, AnalyticsProvider, Toaster
 - **Dashboard layout** (`app/dashboard/layout.tsx`): Sidebar + main content area with purple gradient background
 - Dashboard pages: main dashboard, applications, companies, calendar, contacts, documents, analytics, quick-actions
 - Auth pages: `app/auth/signin/`, `app/auth/signup/`
@@ -62,7 +76,7 @@ There is no test suite configured.
 `@/*` maps to project root (configured in `tsconfig.json`). All imports use this alias.
 
 ### Environment Variables
-Required: `DATABASE_URL`, `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `GITHUB_ID`, `GITHUB_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`. Optional: `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`. See `env.example`.
+Required: `DATABASE_URL`, `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `GITHUB_ID`, `GITHUB_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`. Optional: `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `NEXT_PUBLIC_ANALYTICS_ENABLED`, `NEXT_PUBLIC_ANALYTICS_API_KEY`, `NEXT_PUBLIC_ANALYTICS_ENDPOINT`. See `env.example`.
 
 ### Code Style
 - Spaces inside parentheses and around operators (e.g., `fn( arg )`, `a=b`)

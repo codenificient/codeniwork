@@ -1,3 +1,4 @@
+import { AnalyticsProvider } from '@/components/analytics-provider'
 import { AuthProvider } from '@/components/providers/auth-provider'
 import { Toaster } from '@/components/ui/toaster'
 import type { Metadata } from 'next'
@@ -34,7 +35,9 @@ export default function RootLayout ( {
 		<html lang="en" className="h-full">
 			<body className={`${inter.className} h-full`} suppressHydrationWarning={true}>
 				<AuthProvider>
-					{children}
+					<AnalyticsProvider>
+						{children}
+					</AnalyticsProvider>
 					<Toaster />
 				</AuthProvider>
 			</body>
