@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/codenificient/codeniwork/compare/v1.0.0...v1.1.0) (2026-02-08)
+
+### Features
+
+* upgrade to Next.js 16, React 19, and ESLint flat config ([0b92f17](https://github.com/codenificient/codeniwork/commit/0b92f17d07b6007d0d8b12285f68bf58e3393b68))
+
 ## 1.0.0 (2026-02-08)
 
 ### Features
