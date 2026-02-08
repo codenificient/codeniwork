@@ -1,0 +1,70 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+CodeniWork is a job application tracker built with Next.js 15.5 (App Router), using NeonDB (serverless PostgreSQL) via Drizzle ORM, and NextAuth.js v5 (beta) for authentication. It features credential-based login, passkey/WebAuthn support, and a Clean My Mac-inspired glass-morphism UI.
+
+## Commands
+
+```bash
+pnpm dev              # Start dev server (localhost:3000)
+pnpm build            # Production build
+pnpm lint             # ESLint
+pnpm db:generate      # Generate Drizzle migrations from schema
+pnpm db:push          # Push schema directly to NeonDB
+pnpm db:studio        # Open Drizzle Studio (DB browser)
+pnpm db:seed          # Seed database with sample data
+pnpm db:clear         # Clear all database tables
+pnpm db:reset         # Clear + reseed database
+pnpm auto-reject      # Run auto-rejection script (CLI)
+```
+
+There is no test suite configured.
+
+## Architecture
+
+### Authentication Flow
+- **NextAuth.js v5** configured in `lib/auth.ts` — exports `handlers`, `auth`, `signIn`, `signOut`
+- Uses **JWT strategy** with credentials provider (email/password via bcrypt)
+- Passkey/WebAuthn support implemented manually in `lib/passkey-auth.ts` (simplified verification, not using @simplewebauthn/server)
+- Auth route handler at `app/api/auth/[...nextauth]/route.ts` re-exports handlers from `lib/auth.ts`
+- `middleware.ts` checks for session cookies and protects all routes except `/`, `/auth/signin`, `/auth/signup`; redirects authenticated users away from auth pages to `/dashboard`
+- Client-side auth via `<AuthProvider>` (SessionProvider wrapper) in root layout
+
+### Database
+- **NeonDB** (serverless PostgreSQL) connected via `@neondatabase/serverless` HTTP driver
+- **Drizzle ORM** with schema in `lib/db/schema.ts`, connection in `lib/db/index.ts`
+- `drizzle.config.ts` points to `lib/db/schema.ts` with output to `./drizzle/`
+- Key tables: `users`, `companies`, `job_applications` (with status enum: applied/screening/interview/offer/rejected/withdrawn), `application_events`, `documents`, `passkey_credentials`, plus NextAuth tables (`sessions`, `accounts`, `verification_tokens`)
+- Query functions centralized in `lib/db/queries.ts` (dashboard stats, applications list, activity feed, auto-rejection logic)
+
+### API Routes (all under `app/api/`)
+- `dashboard/applications/` — CRUD for job applications; `auto-reject/` endpoint runs as a Vercel cron (daily at 9 AM, configured in `vercel.json`)
+- `dashboard/companies/`, `dashboard/documents/`, `dashboard/stats/`, `dashboard/analytics/`, `dashboard/activity/` — domain-specific endpoints
+- `auth/signin/`, `auth/signup/` — credential auth endpoints
+- `auth/passkey/` — WebAuthn registration and authentication flows
+- `auth/master-password/` — master password setup/verify for encryption features
+- `upload/` — Cloudinary-based file uploads (images, documents, company logos)
+- All protected endpoints use `const session = await auth()` and check `session?.user?.id`
+
+### Frontend Structure
+- **Root layout** (`app/layout.tsx`): Inter font, AuthProvider, Toaster
+- **Dashboard layout** (`app/dashboard/layout.tsx`): Sidebar + main content area with purple gradient background
+- Dashboard pages: main dashboard, applications, companies, calendar, contacts, documents, analytics, quick-actions
+- Auth pages: `app/auth/signin/`, `app/auth/signup/`
+- Profile page: `app/profile/`
+- UI components in `components/ui/` are shadcn/ui based (use `cn()` from `lib/utils.ts` for class merging)
+- Dashboard components in `components/dashboard/` (dialogs, lists, stats, header)
+
+### Path Aliases
+`@/*` maps to project root (configured in `tsconfig.json`). All imports use this alias.
+
+### Environment Variables
+Required: `DATABASE_URL`, `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `GITHUB_ID`, `GITHUB_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`. Optional: `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`. See `env.example`.
+
+### Code Style
+- Spaces inside parentheses and around operators (e.g., `fn( arg )`, `a=b`)
+- No semicolons in some files, inconsistent across codebase
+- Package manager is **pnpm**
