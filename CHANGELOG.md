@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/codenificient/codeniwork/compare/v1.1.0...v1.2.0) (2026-02-08)
+
+### Features
+
+* complete glass-morphism visual overhaul across 34 files ([701e30f](https://github.com/codenificient/codeniwork/commit/701e30fc2a7d77c791aafc559026d5b9f8570e6f))
+
 ## [1.1.0](https://github.com/codenificient/codeniwork/compare/v1.0.0...v1.1.0) (2026-02-08)
 
 ### Features
