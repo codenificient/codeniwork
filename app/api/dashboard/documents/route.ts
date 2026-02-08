@@ -3,7 +3,7 @@ import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { documents } from '@/lib/db/schema'
 import { eq, desc } from 'drizzle-orm'
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
 // Validation schema for creating documents
 const createDocumentSchema = z.object({
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
 
 		if (error instanceof z.ZodError) {
 			return NextResponse.json(
-				{ error: 'Validation error', details: error.errors },
+				{ error: 'Validation error', details: error.issues },
 				{ status: 400 }
 			)
 		}

@@ -15,7 +15,7 @@ import { useToast } from '@/hooks/use-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect,useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
 const applicationSchema=z.object( {
 	companyName: z.string().min( 1,'Company name is required' ),

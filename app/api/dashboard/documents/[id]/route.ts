@@ -3,7 +3,7 @@ import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { documents } from '@/lib/db/schema'
 import { eq, and } from 'drizzle-orm'
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
 // Validation schema for updating documents
 const updateDocumentSchema = z.object({
@@ -82,7 +82,7 @@ export async function PUT(
 
 		if (error instanceof z.ZodError) {
 			return NextResponse.json(
-				{ error: 'Validation error', details: error.errors },
+				{ error: 'Validation error', details: error.issues },
 				{ status: 400 }
 			)
 		}

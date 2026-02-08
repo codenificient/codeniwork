@@ -4,7 +4,7 @@ import { createActivityEvent } from '@/lib/db/queries'
 import { companies,jobApplications } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 import { NextRequest,NextResponse } from 'next/server'
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
 // Validation schema for adding job applications
 const addApplicationSchema=z.object( {
@@ -134,7 +134,7 @@ export async function POST ( request: NextRequest ) {
 
 		if ( error instanceof z.ZodError ) {
 			return NextResponse.json(
-				{ error: 'Validation error',details: error.errors },
+				{ error: 'Validation error',details: error.issues },
 				{ status: 400 }
 			)
 		}

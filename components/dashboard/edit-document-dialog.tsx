@@ -15,7 +15,7 @@ import { useToast } from '@/hooks/use-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
 const documentSchema = z.object({
 	name: z.string().min(1, 'Document name is required').max(100, 'Document name too long'),

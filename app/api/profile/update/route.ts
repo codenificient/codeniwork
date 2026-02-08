@@ -4,7 +4,7 @@ import { users } from '@/lib/db/schema'
 import bcrypt from 'bcrypt'
 import { eq } from 'drizzle-orm'
 import { NextRequest,NextResponse } from 'next/server'
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
 // Validation schema for profile updates
 const updateProfileSchema=z.object( {
@@ -105,7 +105,7 @@ export async function PUT ( request: NextRequest ) {
 
 		if ( error instanceof z.ZodError ) {
 			return NextResponse.json(
-				{ error: 'Validation error',details: error.errors },
+				{ error: 'Validation error',details: error.issues },
 				{ status: 400 }
 			)
 		}
