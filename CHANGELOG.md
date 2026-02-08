@@ -1,3 +1,9 @@
+## [1.2.1](https://github.com/codenificient/codeniwork/compare/v1.2.0...v1.2.1) (2026-02-08)
+
+### Bug Fixes
+
+* patch lodash vulnerability, migrate middleware to proxy, update browserslist ([27b220a](https://github.com/codenificient/codeniwork/commit/27b220a4f3eaf84a9fd85be85410c879486f5c0a))
+
 ## [1.2.0](https://github.com/codenificient/codeniwork/compare/v1.1.0...v1.2.0) (2026-02-08)
 
 ### Features
