@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/codenificient/codeniwork/compare/v1.2.1...v1.3.0) (2026-02-08)
+
+### Features
+
+* upgrade 12 dependencies including Tailwind 4, Zod 4, ESLint 10 ([7c8fbec](https://github.com/codenificient/codeniwork/commit/7c8fbec1d5868aed35cebf89cbc6a6d28b2d3213))
+
 ## [1.2.1](https://github.com/codenificient/codeniwork/compare/v1.2.0...v1.2.1) (2026-02-08)
 
 ### Bug Fixes
