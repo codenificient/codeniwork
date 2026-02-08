@@ -16,7 +16,6 @@ export function DashboardHeader () {
 	const router=useRouter()
 	const menuRef=useRef<HTMLDivElement>( null )
 
-	// Debug logging for session data
 	useEffect( () => {
 		if ( session ) {
 			console.log( 'Better Auth session:',session )
@@ -24,7 +23,6 @@ export function DashboardHeader () {
 		}
 	},[ session ] )
 
-	// Close menu when clicking outside
 	useEffect( () => {
 		const handleClickOutside=( event: MouseEvent ) => {
 			if ( menuRef.current&&!menuRef.current.contains( event.target as Node ) ) {
@@ -46,21 +44,20 @@ export function DashboardHeader () {
 		}
 	}
 
-	// Prevent hydration mismatch by not rendering until session is loaded
 	if ( isLoading ) {
 		return (
-			<header className="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
-				<div className="px-6 py-4 ">
+			<header className="bg-white/[0.03] backdrop-blur-2xl border-b border-white/[0.06] sticky top-0 z-50">
+				<div className="px-6 py-4">
 					<div className="flex items-center justify-between max-w-6xl mx-auto">
 						<div className="flex flex-1 max-w-md">
 							<div className="relative w-full">
-								<div className="w-full h-10 bg-white/20 rounded-md animate-pulse"></div>
+								<div className="w-full h-10 skeleton rounded-input"></div>
 							</div>
 						</div>
 						<div className="flex items-center space-x-4">
-							<div className="w-10 h-10 bg-white/20 rounded-full animate-pulse"></div>
-							<div className="w-10 h-10 bg-white/20 rounded-full animate-pulse"></div>
-							<div className="w-10 h-10 bg-white/20 rounded-full animate-pulse"></div>
+							<div className="w-10 h-10 skeleton rounded-full"></div>
+							<div className="w-10 h-10 skeleton rounded-full"></div>
+							<div className="w-10 h-10 skeleton rounded-full"></div>
 						</div>
 					</div>
 				</div>
@@ -69,19 +66,19 @@ export function DashboardHeader () {
 	}
 
 	return (
-		<header className="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
+		<header className="bg-white/[0.03] backdrop-blur-2xl border-b border-white/[0.06] sticky top-0 z-50">
 			<div className="px-6 py-4">
 				<div className="flex items-center justify-between max-w-6xl mx-auto">
 					{/* Search Bar */}
 					<div className="flex flex-1 max-w-md">
 						<div className="relative w-full">
-							<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+							<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-violet-300/40 w-4 h-4" />
 							<Input
 								type="text"
 								placeholder="Search applications, companies..."
 								value={searchQuery}
 								onChange={( e ) => setSearchQuery( e.target.value )}
-								className="pl-10 bg-white/20 border-white/30 focus:ring-2 focus:ring-blue-400 focus:border-transparent backdrop-blur-sm text-white placeholder-blue-200"
+								className="pl-10"
 							/>
 						</div>
 					</div>
@@ -92,17 +89,17 @@ export function DashboardHeader () {
 						<Button
 							variant="ghost"
 							size="icon"
-							className="relative text-blue-200 hover:text-white hover:bg-white/20"
+							className="relative text-violet-200/70 hover:text-white hover:bg-white/[0.06]"
 						>
 							<Bell className="w-5 h-5" />
-							<span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
+							<span className="absolute -top-1 -right-1 w-3 h-3 bg-violet-500 rounded-full shadow-glow-violet animate-glow-pulse"></span>
 						</Button>
 
 						{/* Settings */}
 						<Button
 							variant="ghost"
 							size="icon"
-							className="text-blue-200 hover:text-white hover:bg-white/20"
+							className="text-violet-200/70 hover:text-white hover:bg-white/[0.06]"
 						>
 							<Settings className="w-5 h-5" />
 						</Button>
@@ -110,25 +107,25 @@ export function DashboardHeader () {
 						{/* User Menu */}
 						<div className="relative" ref={menuRef}>
 							{isLoading? (
-								<div className="w-8 h-8 bg-blue-200/50 rounded-full animate-pulse"></div>
+								<div className="w-8 h-8 skeleton rounded-full"></div>
 							):session?.user? (
 								<Button
 									variant="ghost"
 									onClick={() => setIsMenuOpen( !isMenuOpen )}
-									className="flex items-center space-x-2 text-blue-200 hover:text-white hover:bg-white/20"
+									className="flex items-center space-x-2 text-violet-200/70 hover:text-white hover:bg-white/[0.06]"
 								>
 									{session.user.image? (
 										<img
 											src={session.user.image}
 											alt={session.user.name||session.user.email||'User'}
-											className="w-8 h-8 rounded-full"
+											className="w-8 h-8 rounded-full ring-2 ring-violet-500/30"
 										/>
 									):(
-										<div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center">
+										<div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-full flex items-center justify-center ring-2 ring-violet-500/30">
 											<User className="w-4 h-4 text-white" />
 										</div>
 									)}
-									<span className="hidden md:block font-medium text-white">
+									<span className="hidden md:block font-medium text-white text-sm">
 										{session.user.name||session.user.email||'User'}
 									</span>
 								</Button>
@@ -136,12 +133,12 @@ export function DashboardHeader () {
 								<Button
 									variant="ghost"
 									onClick={() => router.push( '/auth/signin' )}
-									className="flex items-center space-x-2 text-blue-200 hover:text-white hover:bg-white/20"
+									className="flex items-center space-x-2 text-violet-200/70 hover:text-white hover:bg-white/[0.06]"
 								>
-									<div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center">
+									<div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-full flex items-center justify-center">
 										<User className="w-4 h-4 text-white" />
 									</div>
-									<span className="hidden md:block font-medium text-white">
+									<span className="hidden md:block font-medium text-white text-sm">
 										Sign In
 									</span>
 								</Button>
@@ -149,12 +146,12 @@ export function DashboardHeader () {
 
 							{/* Dropdown Menu */}
 							{isMenuOpen&&session?.user&&(
-								<Card className="absolute right-0 mt-2 w-48 py-2 shadow-xl border-white/20 bg-blue-900/95 backdrop-blur-sm">
-									<div className="px-4 py-2 border-b border-blue-200/30">
+								<Card className="absolute right-0 mt-2 w-48 py-2 shadow-glass-elevated">
+									<div className="px-4 py-2 border-b border-white/[0.06]">
 										<p className="text-sm font-medium text-white">
 											{session.user?.name||session.user?.email||'User'}
 										</p>
-										<p className="text-xs text-blue-200">
+										<p className="text-xs text-violet-200/60">
 											{session.user?.email||'No email'}
 										</p>
 									</div>
@@ -164,14 +161,14 @@ export function DashboardHeader () {
 												router.push( '/profile' )
 												setIsMenuOpen( false )
 											}}
-											className="flex items-center w-full px-4 py-2 text-sm text-blue-200 hover:bg-blue-800/80 transition-colors"
+											className="flex items-center w-full px-4 py-2 text-sm text-violet-200/80 hover:bg-white/[0.06] hover:text-white transition-colors"
 										>
 											<User className="w-4 h-4 mr-2" />
 											Profile Settings
 										</button>
 										<button
 											onClick={handleSignOut}
-											className="flex items-center w-full px-4 py-2 text-sm text-blue-200 hover:bg-blue-800/80 transition-colors"
+											className="flex items-center w-full px-4 py-2 text-sm text-violet-200/80 hover:bg-white/[0.06] hover:text-white transition-colors"
 										>
 											<LogOut className="w-4 h-4 mr-2" />
 											Sign Out
@@ -186,7 +183,7 @@ export function DashboardHeader () {
 							variant="ghost"
 							size="icon"
 							onClick={() => setIsMenuOpen( !isMenuOpen )}
-							className="md:hidden text-blue-200 hover:text-white hover:bg-white/20"
+							className="md:hidden text-violet-200/70 hover:text-white hover:bg-white/[0.06]"
 						>
 							{isMenuOpen? (
 								<X className="w-5 h-5" />
@@ -201,13 +198,13 @@ export function DashboardHeader () {
 				{isMenuOpen&&(
 					<div className="md:hidden mt-4">
 						<div className="relative">
-							<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-200 w-4 h-4" />
+							<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-violet-300/40 w-4 h-4" />
 							<Input
 								type="text"
 								placeholder="Search applications, companies..."
 								value={searchQuery}
 								onChange={( e ) => setSearchQuery( e.target.value )}
-								className="pl-10 bg-white/20 border-white/30 text-white placeholder-blue-200"
+								className="pl-10"
 							/>
 						</div>
 					</div>

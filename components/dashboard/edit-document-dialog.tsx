@@ -135,7 +135,7 @@ export function EditDocumentDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-[500px] bg-gray-900/95 backdrop-blur-sm border border-gray-700 text-white">
+			<DialogContent className="sm:max-w-[500px] text-white">
 				<DialogHeader>
 					<DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
 						Edit Document
@@ -151,7 +151,7 @@ export function EditDocumentDialog({
 								id="name"
 								{...register('name')}
 								placeholder="e.g., Software Engineer Resume"
-								className={`bg-gray-800 border-gray-600 text-white placeholder-gray-400 ${errors.name ? 'border-red-500' : ''}`}
+								className={`${errors.name ? 'border-red-500' : ''}`}
 							/>
 							{errors.name && (
 								<p className="text-sm text-red-500">{errors.name.message}</p>
@@ -161,10 +161,10 @@ export function EditDocumentDialog({
 						<div className="space-y-2">
 							<Label htmlFor="type" className="text-white">Document Type *</Label>
 							<Select onValueChange={(value) => setValue('type', value)} defaultValue={documentType}>
-								<SelectTrigger className="bg-gray-800 border-gray-600 text-white">
+								<SelectTrigger className="">
 									<SelectValue placeholder="Select type" />
 								</SelectTrigger>
-								<SelectContent className="bg-gray-800 border-gray-600 text-white">
+								<SelectContent className="">
 									<SelectItem value="resume">Resume</SelectItem>
 									<SelectItem value="cover_letter">Cover Letter</SelectItem>
 									<SelectItem value="portfolio">Portfolio</SelectItem>
@@ -179,10 +179,10 @@ export function EditDocumentDialog({
 						<div className="space-y-2">
 							<Label htmlFor="status" className="text-white">Status *</Label>
 							<Select onValueChange={(value) => setValue('status', value)} defaultValue="active">
-								<SelectTrigger className="bg-gray-800 border-gray-600 text-white">
+								<SelectTrigger className="">
 									<SelectValue placeholder="Select status" />
 								</SelectTrigger>
-								<SelectContent className="bg-gray-800 border-gray-600 text-white">
+								<SelectContent className="">
 									<SelectItem value="active">Active</SelectItem>
 									<SelectItem value="archived">Archived</SelectItem>
 									<SelectItem value="template">Template</SelectItem>
@@ -196,7 +196,7 @@ export function EditDocumentDialog({
 								id="version"
 								{...register('version')}
 								placeholder="e.g., v1.0"
-								className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+								className=""
 							/>
 						</div>
 					</div>
@@ -207,18 +207,18 @@ export function EditDocumentDialog({
 							id="description"
 							{...register('description')}
 							placeholder="Document description or notes..."
-							className="w-full h-24 px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none bg-gray-800 text-white placeholder-gray-400"
+							className="w-full h-24 px-3 py-2 border border-white/[0.10] bg-white/[0.04] backdrop-blur-xl rounded-input focus:outline-none focus:ring-2 focus:ring-violet-500/40 focus:border-transparent resize-none text-white placeholder-violet-300/40"
 						/>
 					</div>
 
 					{/* Read-only fields */}
 					<div className="grid grid-cols-2 gap-4 text-sm">
 						<div className="bg-white/5 p-3 rounded-lg">
-							<p className="text-gray-400">Format</p>
+							<p className="text-violet-300/40">Format</p>
 							<p className="text-white font-medium">{document?.format}</p>
 						</div>
 						<div className="bg-white/5 p-3 rounded-lg">
-							<p className="text-gray-400">Size</p>
+							<p className="text-violet-300/40">Size</p>
 							<p className="text-white font-medium">{document?.size}</p>
 						</div>
 					</div>

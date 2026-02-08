@@ -2,35 +2,206 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply relative text-white min-h-screen;
-  background-color: #2d0052; /* Deep base purple */
+/* ── Design Tokens ─────────────────────────────────────── */
+:root {
+  --base-hue: 265;
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-bg-elevated: rgba(255, 255, 255, 0.07);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-hover: rgba(255, 255, 255, 0.14);
+  --glow-violet: rgba(139, 92, 246, 0.35);
+  --glow-cyan: rgba(34, 211, 238, 0.25);
 }
 
-/* Rotating hazy purple clouds */
+/* ── Animated Mesh Gradient Background ─────────────────── */
+@property --mx {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 30%;
+}
+@property --my {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 20%;
+}
+@property --mx2 {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 70%;
+}
+@property --my2 {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 75%;
+}
+
+body {
+  @apply relative text-white min-h-screen;
+  background-color: #0f0a1a;
+}
+
 body::before {
   content: '';
   position: fixed;
-  top: -25%;
-  left: -25%;
-  width: 150%;
-  height: 150%;
+  inset: 0;
+  z-index: -2;
   background:
-    radial-gradient(circle at 30% 30%, #5a0084 0%, #2d0052 80%),
-    radial-gradient(circle at 70% 70%, #4a0077 0%, #2d0052 80%);
-  animation: rotateClouds 80s linear infinite;
-  z-index: -1;
+    radial-gradient(ellipse 60% 50% at var(--mx) var(--my), rgba(124, 58, 237, 0.35) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at var(--mx2) var(--my2), rgba(79, 70, 229, 0.30) 0%, transparent 70%),
+    radial-gradient(ellipse 45% 40% at 55% 50%, rgba(139, 92, 246, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 60% at 40% 80%, rgba(30, 27, 75, 0.90) 0%, transparent 70%);
+  animation: meshDrift 25s ease-in-out infinite alternate;
   pointer-events: none;
-  transform-origin: center;
-  filter: blur(100px);
-  opacity: 1;
 }
 
-@keyframes rotateClouds {
+@keyframes meshDrift {
   0% {
-    transform: rotate(0deg) scale(1.05);
+    --mx: 30%;
+    --my: 20%;
+    --mx2: 70%;
+    --my2: 75%;
+  }
+  33% {
+    --mx: 55%;
+    --my: 35%;
+    --mx2: 45%;
+    --my2: 60%;
+  }
+  66% {
+    --mx: 40%;
+    --my: 60%;
+    --mx2: 65%;
+    --my2: 30%;
   }
   100% {
-    transform: rotate(360deg) scale(1.05);
+    --mx: 60%;
+    --my: 25%;
+    --mx2: 35%;
+    --my2: 70%;
+  }
+}
+
+/* Noise texture overlay for glass realism */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.03;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ── Glass Utility Classes ─────────────────────────────── */
+@layer components {
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .glass-elevated {
+    background: var(--glass-bg-elevated);
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    border: 1px solid var(--glass-border-hover);
+    box-shadow:
+      0 8px 40px rgba(0, 0, 0, 0.20),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .glass-interactive {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .glass-interactive:hover {
+    background: var(--glass-bg-elevated);
+    border-color: var(--glass-border-hover);
+    box-shadow:
+      0 8px 40px rgba(0, 0, 0, 0.20),
+      0 0 0 1px rgba(139, 92, 246, 0.10),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    transform: translateY(-2px);
+  }
+
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-violet-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-heading {
+    @apply bg-gradient-to-r from-white via-violet-200 to-purple-300 bg-clip-text text-transparent;
+  }
+
+  /* Fade-up animation */
+  .animate-fade-up {
+    animation: fadeUp 0.5s ease-out both;
+  }
+
+  /* Stagger delay helpers */
+  .stagger-1 { animation-delay: 50ms; }
+  .stagger-2 { animation-delay: 100ms; }
+  .stagger-3 { animation-delay: 150ms; }
+  .stagger-4 { animation-delay: 200ms; }
+  .stagger-5 { animation-delay: 250ms; }
+  .stagger-6 { animation-delay: 300ms; }
+
+  /* Skeleton shimmer */
+  .skeleton {
+    @apply relative overflow-hidden;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+  }
+
+  .skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.06) 50%,
+      transparent 100%
+    );
+    animation: shimmer 1.8s ease-in-out infinite;
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.5);
   }
 }

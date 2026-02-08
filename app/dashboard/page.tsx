@@ -51,8 +51,8 @@ export default function DashboardPage () {
 			<DashboardHeader />
 			<div className="p-6">
 				<div className="mb-8">
-					<h1 className="text-3xl font-bold text-white mb-2">CodeniWork Dashboard</h1>
-					<p className="text-blue-200">Track your job applications and career progress</p>
+					<h1 className="text-4xl font-bold text-gradient-heading mb-2">CodeniWork Dashboard</h1>
+					<p className="text-violet-300/60">Track your job applications and career progress</p>
 				</div>
 
 				<div className="space-y-6">
@@ -79,7 +79,7 @@ export default function DashboardPage () {
 						{/* Right Sidebar */}
 						<div className="space-y-6">
 							{/* Quick Actions */}
-							<div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
+							<div className="glass rounded-card p-6">
 								<h3 className="text-lg font-semibold text-white mb-4">
 									Quick Actions
 								</h3>
@@ -88,7 +88,7 @@ export default function DashboardPage () {
 									<Button
 										variant="outline"
 										onClick={() => setIsScheduleFollowupOpen( true )}
-										className="w-full bg-gray-800 border-gray-600 text-white hover:bg-gray-700"
+										className="w-full"
 									>
 										<Calendar className="w-4 h-4 mr-2" />
 										Schedule Follow-up
@@ -96,7 +96,7 @@ export default function DashboardPage () {
 									<Button
 										variant="outline"
 										onClick={() => setIsExportDataOpen( true )}
-										className="w-full bg-gray-800 border-gray-600 text-white hover:bg-gray-700"
+										className="w-full"
 									>
 										<FileText className="w-4 h-4 mr-2" />
 										Export Data
@@ -104,7 +104,7 @@ export default function DashboardPage () {
 									<Button
 										variant="outline"
 										onClick={handleAutoReject}
-										className="w-full bg-orange-800 border-orange-600 text-white hover:bg-orange-700"
+										className="w-full border-orange-500/20 text-orange-300 hover:bg-orange-500/10 hover:border-orange-500/30"
 									>
 										<RefreshCw className="w-4 h-4 mr-2" />
 										Auto-Reject Old Apps

@@ -9,7 +9,7 @@ const Card=React.forwardRef<
 	<div
 		ref={ref}
 		className={cn(
-			"rounded-lg border border-purple-400/30 bg-purple-900/20 text-white shadow-lg backdrop-blur-sm",
+			"rounded-card bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] text-white shadow-glass",
 			className
 		)}
 		{...props}
@@ -50,7 +50,7 @@ const CardDescription=React.forwardRef<
 >( ( { className,...props },ref ) => (
 	<p
 		ref={ref}
-		className={cn( "text-sm text-purple-200",className )}
+		className={cn( "text-sm text-violet-200/70",className )}
 		{...props}
 	/>
 ) )
@@ -77,4 +77,3 @@ const CardFooter=React.forwardRef<
 CardFooter.displayName="CardFooter"
 
 export { Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle }
-

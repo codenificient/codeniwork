@@ -34,6 +34,15 @@ const activityTypeDots={
 	followup: 'bg-orange-400'
 }
 
+const activityTypeBorders={
+	email: 'border-l-blue-400',
+	call: 'border-l-green-400',
+	interview: 'border-l-purple-400',
+	offer: 'border-l-green-400',
+	rejection: 'border-l-red-400',
+	followup: 'border-l-orange-400'
+}
+
 export function RecentActivity () {
 	const { data: session }=useSession()
 	const [ activities,setActivities ]=useState<ActivityEvent[]>( [] )
@@ -82,12 +91,12 @@ export function RecentActivity () {
 
 	if ( isLoading ) {
 		return (
-			<div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
+			<div className="glass rounded-card p-6">
 				<h3 className="text-lg font-semibold text-white mb-4">Recent Activity</h3>
 				<div className="space-y-3">
 					{Array.from( { length: 3 } ).map( ( _,i ) => (
-						<div key={i} className="p-3 bg-white/10 rounded-lg animate-pulse">
-							<div className="h-4 bg-white/20 rounded w-3/4"></div>
+						<div key={i} className="p-3 skeleton rounded-lg">
+							<div className="h-4 skeleton rounded w-3/4"></div>
 						</div>
 					) )}
 				</div>
@@ -97,29 +106,30 @@ export function RecentActivity () {
 
 	if ( activities.length===0 ) {
 		return (
-			<div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
+			<div className="glass rounded-card p-6">
 				<h3 className="text-lg font-semibold text-white mb-4">Recent Activity</h3>
 				<div className="text-center py-4">
-					<p className="text-blue-200 text-sm">No recent activity</p>
-					<p className="text-blue-200/70 text-xs mt-1">Start tracking your applications to see activity here</p>
+					<p className="text-violet-200/70 text-sm">No recent activity</p>
+					<p className="text-violet-300/40 text-xs mt-1">Start tracking your applications to see activity here</p>
 				</div>
 			</div>
 		)
 	}
 
 	return (
-		<div className="bg-white/10 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
+		<div className="glass rounded-card p-6">
 			<h3 className="text-lg font-semibold text-white mb-4">Recent Activity</h3>
 			<div className="space-y-3">
 				{activities.map( ( activity ) => {
 					const type=activity.type.toLowerCase() as keyof typeof activityTypeColors
 					const bgColor=activityTypeColors[ type ]||'from-gray-900/50 to-gray-800/50'
 					const dotColor=activityTypeDots[ type ]||'bg-gray-400'
+					const borderColor=activityTypeBorders[ type ]||'border-l-gray-400'
 
 					return (
 						<div
 							key={activity.id}
-							className={`p-3 bg-gradient-to-r ${bgColor} rounded-lg border border-white/20`}
+							className={`p-3 bg-gradient-to-r ${bgColor} rounded-lg border border-white/20 border-l-2 ${borderColor}`}
 						>
 							<div className="flex items-center space-x-3">
 								<div className={`w-2 h-2 ${dotColor} rounded-full`}></div>
@@ -128,15 +138,15 @@ export function RecentActivity () {
 										{activity.title}
 									</span>
 									{activity.description&&(
-										<p className="text-xs text-blue-200 mt-1">
+										<p className="text-xs text-violet-200/70 mt-1">
 											{activity.description}
 										</p>
 									)}
 									<div className="flex items-center justify-between mt-2">
-										<span className="text-xs text-blue-200">
+										<span className="text-xs text-violet-200/70">
 											{activity.application.position} at {activity.application.companyName}
 										</span>
-										<span className="text-xs text-blue-200/70">
+										<span className="text-xs text-violet-300/40">
 											{formatDate( activity.date )}
 										</span>
 									</div>

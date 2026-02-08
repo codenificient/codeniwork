@@ -221,15 +221,15 @@ export default function ProfilePage () {
 			<div className="max-w-2xl mx-auto">
 				{/* Header */}
 				<div className="mb-8">
-					<h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+					<h1 className="text-4xl font-bold text-gradient-heading">
 						Profile Settings
 					</h1>
-					<p className="text-gray-300 mt-2">
+					<p className="text-violet-200/70 mt-2">
 						Update your personal information and account settings
 					</p>
 				</div>
 
-				<Card className="bg-gray-900/95 backdrop-blur-sm border border-gray-700">
+				<Card className="glass-elevated">
 					<CardHeader>
 						<CardTitle className="text-white flex items-center space-x-2">
 							<User className="w-5 h-5" />
@@ -240,10 +240,10 @@ export default function ProfilePage () {
 						<form onSubmit={handleSubmit} className="space-y-6">
 							{/* Profile Picture Section */}
 							<div className="space-y-4">
-								<Label className="text-white">Profile Picture</Label>
+								<Label>Profile Picture</Label>
 								<div className="flex items-center space-x-4">
 									<div className="relative">
-										<div className="w-24 h-24 rounded-full overflow-hidden bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center">
+										<div className="w-24 h-24 rounded-full overflow-hidden bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center ring-2 ring-violet-500/30">
 											{previewUrl? (
 												<img
 													src={previewUrl}
@@ -258,7 +258,7 @@ export default function ProfilePage () {
 											type="button"
 											size="sm"
 											variant="outline"
-											className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full p-0 bg-gray-800 border-gray-600 hover:bg-gray-700"
+											className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full p-0"
 											onClick={() => fileInputRef.current?.click()}
 										>
 											<Camera className="w-4 h-4" />
@@ -276,12 +276,11 @@ export default function ProfilePage () {
 											type="button"
 											variant="outline"
 											onClick={() => fileInputRef.current?.click()}
-											className="bg-gray-800 border-gray-600 text-white hover:bg-gray-700"
 										>
 											<ImageIcon className="w-4 h-4 mr-2" />
 											Choose Image
 										</Button>
-										<p className="text-sm text-gray-400 mt-1">
+										<p className="text-sm text-violet-300/40 mt-1">
 											JPEG, PNG up to 5MB
 										</p>
 									</div>
@@ -290,13 +289,12 @@ export default function ProfilePage () {
 
 							{/* Name Section */}
 							<div className="space-y-2">
-								<Label htmlFor="name" className="text-white">Full Name</Label>
+								<Label htmlFor="name">Full Name</Label>
 								<Input
 									id="name"
 									type="text"
 									value={formData.name}
 									onChange={( e ) => handleInputChange( 'name',e.target.value )}
-									className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
 									placeholder="Enter your full name"
 								/>
 							</div>
@@ -304,42 +302,39 @@ export default function ProfilePage () {
 							{/* Password Section */}
 							<div className="space-y-4">
 								<div className="flex items-center space-x-2">
-									<Lock className="w-5 h-5 text-white" />
-									<Label className="text-white">Change Password</Label>
+									<Lock className="w-5 h-5 text-violet-200" />
+									<Label>Change Password</Label>
 								</div>
 
 								<div className="space-y-2">
-									<Label htmlFor="currentPassword" className="text-white">Current Password</Label>
+									<Label htmlFor="currentPassword">Current Password</Label>
 									<Input
 										id="currentPassword"
 										type="password"
 										value={formData.currentPassword}
 										onChange={( e ) => handleInputChange( 'currentPassword',e.target.value )}
-										className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
 										placeholder="Enter current password"
 									/>
 								</div>
 
 								<div className="space-y-2">
-									<Label htmlFor="newPassword" className="text-white">New Password</Label>
+									<Label htmlFor="newPassword">New Password</Label>
 									<Input
 										id="newPassword"
 										type="password"
 										value={formData.newPassword}
 										onChange={( e ) => handleInputChange( 'newPassword',e.target.value )}
-										className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
 										placeholder="Enter new password"
 									/>
 								</div>
 
 								<div className="space-y-2">
-									<Label htmlFor="confirmPassword" className="text-white">Confirm New Password</Label>
+									<Label htmlFor="confirmPassword">Confirm New Password</Label>
 									<Input
 										id="confirmPassword"
 										type="password"
 										value={formData.confirmPassword}
 										onChange={( e ) => handleInputChange( 'confirmPassword',e.target.value )}
-										className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
 										placeholder="Confirm new password"
 									/>
 								</div>
@@ -349,7 +344,7 @@ export default function ProfilePage () {
 							<Button
 								type="submit"
 								disabled={isLoading}
-								className="w-full bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white"
+								className="w-full"
 							>
 								{isLoading? (
 									<>

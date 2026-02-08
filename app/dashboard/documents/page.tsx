@@ -148,13 +148,13 @@ export default function DocumentsPage() {
 	const getStatusColor = (status: string) => {
 		switch (status) {
 			case 'active':
-				return 'bg-green-600/20 text-green-200 border-green-400/30'
+				return 'bg-emerald-500/15 text-emerald-300 border-emerald-400/30'
 			case 'archived':
-				return 'bg-gray-600/20 text-gray-200 border-gray-400/30'
+				return 'bg-white/[0.06] text-violet-200/70 border-white/[0.10]'
 			case 'template':
-				return 'bg-blue-600/20 text-blue-200 border-blue-400/30'
+				return 'bg-blue-500/15 text-blue-300 border-blue-400/30'
 			default:
-				return 'bg-gray-600/20 text-gray-200 border-gray-400/30'
+				return 'bg-white/[0.06] text-violet-200/70 border-white/[0.10]'
 		}
 	}
 
@@ -204,21 +204,20 @@ export default function DocumentsPage() {
 				<div className="mb-8">
 					<div className="flex items-center justify-between">
 						<div>
-							<h1 className="text-3xl font-bold text-white mb-2">Documents</h1>
-							<p className="text-blue-200">Manage your resumes, cover letters, and portfolios</p>
+							<h1 className="text-4xl font-bold text-gradient-heading mb-2">Documents</h1>
+							<p className="text-violet-300/60">Manage your resumes, cover letters, and portfolios</p>
 						</div>
 						<div className="flex items-center space-x-3">
 							<Button
 								onClick={fetchDocuments}
 								variant="outline"
-								className="bg-white/10 border-white/20 text-white hover:bg-white/20"
 							>
 								<RefreshCw className="w-4 h-4 mr-2" />
 								Refresh
 							</Button>
-							<Button 
+							<Button
 								onClick={() => setIsUploadDialogOpen(true)}
-								className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
+								variant="glow"
 							>
 								<Plus className="w-4 h-4 mr-2" />
 								Upload Document
@@ -229,51 +228,51 @@ export default function DocumentsPage() {
 
 				{/* Document Categories */}
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-					<Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-200">
+					<Card className="glass glass-interactive animate-fade-up" style={{ animationDelay: '0ms' }}>
 						<CardContent className="p-6 text-center">
-							<div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-								<FileText className="w-8 h-8 text-white" />
+							<div className="w-16 h-16 bg-emerald-500/15 rounded-full flex items-center justify-center mx-auto mb-4">
+								<FileText className="w-8 h-8 text-emerald-400" />
 							</div>
 							<h3 className="text-white text-lg font-semibold mb-2">Resumes</h3>
-							<p className="text-blue-200 text-sm">{documentCounts.resume} document{documentCounts.resume !== 1 ? 's' : ''}</p>
+							<p className="text-violet-200/70 text-sm">{documentCounts.resume} document{documentCounts.resume !== 1 ? 's' : ''}</p>
 						</CardContent>
 					</Card>
 
-					<Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-200">
+					<Card className="glass glass-interactive animate-fade-up" style={{ animationDelay: '80ms' }}>
 						<CardContent className="p-6 text-center">
-							<div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-								<File className="w-8 h-8 text-white" />
+							<div className="w-16 h-16 bg-blue-500/15 rounded-full flex items-center justify-center mx-auto mb-4">
+								<File className="w-8 h-8 text-blue-400" />
 							</div>
 							<h3 className="text-white text-lg font-semibold mb-2">Cover Letters</h3>
-							<p className="text-blue-200 text-sm">{documentCounts.cover_letter} document{documentCounts.cover_letter !== 1 ? 's' : ''}</p>
+							<p className="text-violet-200/70 text-sm">{documentCounts.cover_letter} document{documentCounts.cover_letter !== 1 ? 's' : ''}</p>
 						</CardContent>
 					</Card>
 
-					<Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-200">
+					<Card className="glass glass-interactive animate-fade-up" style={{ animationDelay: '160ms' }}>
 						<CardContent className="p-6 text-center">
-							<div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-								<FileText className="w-8 h-8 text-white" />
+							<div className="w-16 h-16 bg-purple-500/15 rounded-full flex items-center justify-center mx-auto mb-4">
+								<FileText className="w-8 h-8 text-purple-400" />
 							</div>
 							<h3 className="text-white text-lg font-semibold mb-2">Portfolios</h3>
-							<p className="text-blue-200 text-sm">{documentCounts.portfolio} document{documentCounts.portfolio !== 1 ? 's' : ''}</p>
+							<p className="text-violet-200/70 text-sm">{documentCounts.portfolio} document{documentCounts.portfolio !== 1 ? 's' : ''}</p>
 						</CardContent>
 					</Card>
 				</div>
 
 				{/* Documents List */}
-				<Card className="bg-white/10 backdrop-blur-sm border-white/20">
+				<Card className="glass">
 					<CardHeader>
 						<CardTitle className="text-white">All Documents</CardTitle>
 					</CardHeader>
 					<CardContent>
 						{documents.length === 0 ? (
 							<div className="text-center py-12">
-								<FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+								<FileText className="w-16 h-16 text-violet-300/40 mx-auto mb-4" />
 								<h3 className="text-lg font-medium text-white mb-2">No documents yet</h3>
-								<p className="text-gray-300 mb-4">Upload your first document to get started.</p>
+								<p className="text-violet-200/70 mb-4">Upload your first document to get started.</p>
 								<Button
 									onClick={() => setIsUploadDialogOpen(true)}
-									className="bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700"
+									variant="glow"
 								>
 									<Plus className="w-4 h-4 mr-2" />
 									Upload Document
@@ -281,15 +280,15 @@ export default function DocumentsPage() {
 							</div>
 						) : (
 							<div className="space-y-4">
-								{documents.map((doc) => (
-									<div key={doc.id} className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 transition-all duration-200">
+								{documents.map((doc, index) => (
+									<div key={doc.id} className="flex items-center justify-between p-4 bg-white/[0.04] rounded-lg border border-white/[0.08] hover:bg-white/[0.06] transition-all duration-200 animate-fade-up" style={{ animationDelay: `${index * 50}ms` }}>
 										<div className="flex items-center space-x-4">
-											<div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
+											<div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-lg flex items-center justify-center">
 												{getTypeIcon(doc.type)}
 											</div>
 											<div>
 												<h3 className="text-white font-medium">{doc.name}</h3>
-												<div className="flex items-center space-x-4 mt-1 text-sm text-blue-200">
+												<div className="flex items-center space-x-4 mt-1 text-sm text-violet-200/70">
 													<span className="capitalize">{doc.type.replace('_', ' ')}</span>
 													<span>•</span>
 													<span>{doc.format}</span>
@@ -302,7 +301,7 @@ export default function DocumentsPage() {
 													</span>
 												</div>
 												{doc.description && (
-													<p className="text-sm text-gray-300 mt-1">{doc.description}</p>
+													<p className="text-sm text-violet-200/70 mt-1">{doc.description}</p>
 												)}
 											</div>
 										</div>
@@ -311,41 +310,41 @@ export default function DocumentsPage() {
 											<Badge className={getStatusColor(doc.status)}>
 												{doc.status}
 											</Badge>
-											<span className="text-xs text-blue-200">{doc.version}</span>
+											<span className="text-xs text-violet-300/40">{doc.version}</span>
 
 											<div className="flex items-center space-x-2">
-												<Button 
-													variant="ghost" 
-													size="sm" 
+												<Button
+													variant="ghost"
+													size="sm"
 													onClick={() => handleViewDocument(doc)}
-													className="text-blue-200 hover:text-white hover:bg-white/20"
+													className="text-violet-200/70 hover:text-white hover:bg-white/[0.06]"
 													title="View Document"
 												>
 													<Eye className="w-4 h-4" />
 												</Button>
-												<Button 
-													variant="ghost" 
-													size="sm" 
+												<Button
+													variant="ghost"
+													size="sm"
 													onClick={() => handleDownload(doc)}
-													className="text-blue-200 hover:text-white hover:bg-white/20"
+													className="text-violet-200/70 hover:text-white hover:bg-white/[0.06]"
 													title="Download Document"
 												>
 													<Download className="w-4 h-4" />
 												</Button>
-												<Button 
-													variant="ghost" 
-													size="sm" 
+												<Button
+													variant="ghost"
+													size="sm"
 													onClick={() => handleEditDocument(doc)}
-													className="text-blue-200 hover:text-white hover:bg-white/20"
+													className="text-violet-200/70 hover:text-white hover:bg-white/[0.06]"
 													title="Edit Document"
 												>
 													<Edit className="w-4 h-4" />
 												</Button>
-												<Button 
-													variant="ghost" 
-													size="sm" 
+												<Button
+													variant="ghost"
+													size="sm"
 													onClick={() => handleDeleteDocument(doc)}
-													className="text-red-400 hover:text-red-300 hover:bg-red-500/20"
+													className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
 													title="Delete Document"
 												>
 													<Trash2 className="w-4 h-4" />

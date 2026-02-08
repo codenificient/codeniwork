@@ -7,8 +7,8 @@ export default function ApplicationsPage () {
 			<DashboardHeader />
 			<div className="p-6">
 				<div className="mb-8">
-					<h1 className="text-3xl font-bold text-white mb-2">Job Applications</h1>
-					<p className="text-blue-200">Track and manage your job applications</p>
+					<h1 className="text-4xl font-bold text-gradient-heading mb-2">Job Applications</h1>
+					<p className="text-violet-300/60">Track and manage your job applications</p>
 				</div>
 				<JobApplicationsList />
 			</div>

@@ -3,7 +3,7 @@
 import { DashboardHeader } from '@/components/dashboard/header'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { AddApplicationDialog } from '@/components/dashboard/add-application-dialog'
 import { UploadDocumentDialog } from '@/components/dashboard/upload-document-dialog'
 import { ScheduleFollowupDialog } from '@/components/dashboard/schedule-followup-dialog'
@@ -11,15 +11,10 @@ import { ExportDataDialog } from '@/components/dashboard/export-data-dialog'
 import { RecentActivity } from '@/components/dashboard/recent-activity'
 import {
 	Calendar,
-	Clock,
 	ExternalLink,
 	FileText,
-	Mail,
 	Plus,
-	Search,
-	Star,
 	TrendingUp,
-	Users,
 	Zap,
 	Target,
 	Briefcase,
@@ -216,13 +211,11 @@ export default function QuickActionsPage() {
 	const handleDocumentUploaded = async () => {
 		setIsUploadDocumentOpen(false)
 		setDocumentType('')
-		// Optionally refresh the page or show success message
 	}
 
 	// Handle application added success
 	const handleApplicationAdded = async () => {
 		setIsAddApplicationOpen(false)
-		// Optionally refresh the page or show success message
 	}
 
 	return (
@@ -230,8 +223,8 @@ export default function QuickActionsPage() {
 			<DashboardHeader />
 			<div className="p-6">
 				<div className="mb-8">
-					<h1 className="text-3xl font-bold text-white mb-2">Quick Actions</h1>
-					<p className="text-blue-200">Fast access to common tasks and shortcuts</p>
+					<h1 className="text-4xl font-bold text-gradient-heading mb-2">Quick Actions</h1>
+					<p className="text-violet-300/60">Fast access to common tasks and shortcuts</p>
 				</div>
 
 				{/* Quick Actions Grid */}
@@ -241,32 +234,33 @@ export default function QuickActionsPage() {
 							<h2 className="text-xl font-semibold text-white mb-4 flex items-center space-x-2">
 								<Zap className="w-5 h-5 text-yellow-400" />
 								<span>{category.category}</span>
+								<div className="flex-1 h-px bg-gradient-to-r from-white/[0.10] to-transparent ml-4" />
 							</h2>
 							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-								{category.actions.map((action) => {
+								{category.actions.map((action, index) => {
 									const Icon = action.icon
 									return (
-										<Card key={action.title} className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-200 group cursor-pointer">
+										<Card key={action.title} className="glass glass-interactive cursor-pointer animate-fade-up" style={{ animationDelay: `${index * 80}ms` }}>
 											<CardContent className="p-6">
 												<div className="flex items-start justify-between mb-4">
 													<div className={`w-12 h-12 bg-gradient-to-br ${action.color} rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
 														<Icon className="w-6 h-6 text-white" />
 													</div>
-													<Badge variant="secondary" className="bg-white/20 text-white/80 border-white/30 text-xs">
+													<Badge variant="secondary" className="text-xs">
 														{action.shortcut}
 													</Badge>
 												</div>
-												<h3 className="text-white font-medium mb-2 group-hover:text-blue-200 transition-colors">
+												<h3 className="text-white font-medium mb-2">
 													{action.title}
 												</h3>
-												<p className="text-blue-200 text-sm mb-4">
+												<p className="text-violet-200/70 text-sm mb-4">
 													{action.description}
 												</p>
 												<Button
 													variant="ghost"
 													size="sm"
 													onClick={() => handleActionClick(action)}
-													className="w-full text-blue-200 hover:text-white hover:bg-white/20 group-hover:bg-gradient-to-r group-hover:from-purple-600/40 group-hover:to-blue-600/40 transition-all duration-200"
+													className="w-full text-violet-200/70 hover:text-white hover:bg-white/[0.06]"
 												>
 													{action.action === 'refresh-data' && isRefreshing ? (
 														<RefreshCw className="w-4 h-4 mr-2 animate-spin" />
@@ -288,32 +282,29 @@ export default function QuickActionsPage() {
 				<RecentActivity />
 
 				{/* Dialogs */}
-				<AddApplicationDialog 
-					open={isAddApplicationOpen} 
+				<AddApplicationDialog
+					open={isAddApplicationOpen}
 					onOpenChange={setIsAddApplicationOpen}
 					onApplicationAdded={handleApplicationAdded}
 				/>
-				
-				<UploadDocumentDialog 
-					open={isUploadDocumentOpen} 
+
+				<UploadDocumentDialog
+					open={isUploadDocumentOpen}
 					onOpenChange={setIsUploadDocumentOpen}
 					onDocumentUploaded={handleDocumentUploaded}
 					presetDocumentType={documentType}
 				/>
-				
-				<ScheduleFollowupDialog 
-					open={isScheduleFollowupOpen} 
+
+				<ScheduleFollowupDialog
+					open={isScheduleFollowupOpen}
 					onOpenChange={setIsScheduleFollowupOpen}
 				/>
-				
-				<ExportDataDialog 
-					open={isExportDataOpen} 
+
+				<ExportDataDialog
+					open={isExportDataOpen}
 					onOpenChange={setIsExportDataOpen}
 				/>
 			</div>
 		</div>
 	)
 }
-
-
-

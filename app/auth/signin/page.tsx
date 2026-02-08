@@ -18,19 +18,14 @@ export default function SignInPage () {
 	const [ successMessage,setSuccessMessage ]=useState<string|null>( null )
 	const { isSupported,authenticateWithPasskey }=usePasskeyAuth()
 
-	// For now, use a default callback URL
-	// In a real app, you might want to handle this differently
 	const callbackUrl='/dashboard'
 
-	// Check for success message from sign-up
 	useEffect( () => {
-		// Only run on client side
 		if ( typeof window!=='undefined' ) {
 			const urlParams=new URLSearchParams( window.location.search )
 			const message=urlParams.get( 'message' )
 			if ( message ) {
 				setSuccessMessage( message )
-				// Clear the URL parameter
 				window.history.replaceState( {},document.title,window.location.pathname )
 			}
 		}
@@ -64,7 +59,6 @@ export default function SignInPage () {
 				setError( 'Invalid email or password. Please try again.' )
 				setIsLoading( false )
 			} else {
-				// If we get here, sign in was successful
 				router.push( callbackUrl )
 			}
 		} catch ( error ) {
@@ -80,10 +74,9 @@ export default function SignInPage () {
 		try {
 			const result=await authenticateWithPasskey()
 			if ( result.verified&&result.user ) {
-				// Sign in the user with NextAuth
 				const signInResult=await signIn( 'credentials',{
 					email: result.user.email,
-					password: 'passkey-auth', // Special flag for passkey auth
+					password: 'passkey-auth',
 					redirect: false,
 				} )
 
@@ -103,31 +96,26 @@ export default function SignInPage () {
 
 	return (
 		<div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-			{/* Colorful Background Elements */}
+			{/* Background decorations */}
 			<div className="absolute inset-0 pointer-events-none">
-				{/* Large gradient circles */}
-				<div className="absolute top-20 left-20 w-96 h-96 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse" />
-				<div className="absolute top-40 right-32 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl animate-pulse delay-1000" />
-				<div className="absolute bottom-32 left-1/3 w-72 h-72 bg-gradient-to-br from-green-400/20 to-teal-400/20 rounded-full blur-3xl animate-pulse delay-2000" />
-				{/* Floating orbs */}
-				<div className="absolute top-1/4 left-1/4 w-4 h-4 bg-yellow-400 rounded-full animate-bounce" />
-				<div className="absolute top-1/3 right-1/4 w-3 h-3 bg-pink-400 rounded-full animate-bounce delay-300" />
-				<div className="absolute bottom-1/4 left-1/2 w-5 h-5 bg-green-400 rounded-full animate-bounce delay-700" />
+				<div className="absolute top-20 left-20 w-96 h-96 bg-gradient-to-br from-violet-500/15 to-indigo-500/15 rounded-full blur-3xl" />
+				<div className="absolute top-40 right-32 w-80 h-80 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl" />
+				<div className="absolute bottom-32 left-1/3 w-72 h-72 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-full blur-3xl" />
 			</div>
 
-			<Card className="w-full max-w-md bg-white/90 backdrop-blur-sm border-0 shadow-2xl relative z-10">
+			<Card className="w-full max-w-md glass-elevated relative z-10">
 				<CardHeader className="text-center space-y-4">
-					<Link href="/" className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4">
+					<Link href="/" className="inline-flex items-center text-sm text-violet-200/60 hover:text-white mb-4 transition-colors">
 						<ArrowLeft className="w-4 h-4 mr-2" />
 						Back to Home
 					</Link>
-					<div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto">
+					<div className="w-16 h-16 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto shadow-glow-violet">
 						<img src="/favicon.svg" alt="CodeniWork" className="w-10 h-10" />
 					</div>
-					<CardTitle className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+					<CardTitle className="text-3xl font-bold text-gradient-heading">
 						Welcome to CodeniWork
 					</CardTitle>
-					<CardDescription className="text-gray-600">
+					<CardDescription className="text-violet-200/60">
 						Sign in to continue tracking your career with CodeniWork
 					</CardDescription>
 				</CardHeader>
@@ -135,7 +123,7 @@ export default function SignInPage () {
 				<CardContent className="space-y-6">
 					{/* Error Display */}
 					{error&&(
-						<div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+						<div className="bg-red-500/10 border border-red-500/20 rounded-card p-4 mb-4">
 							<div className="flex items-center">
 								<div className="flex-shrink-0">
 									<svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
@@ -143,7 +131,7 @@ export default function SignInPage () {
 									</svg>
 								</div>
 								<div className="ml-3">
-									<p className="text-sm text-red-800">{error}</p>
+									<p className="text-sm text-red-300">{error}</p>
 								</div>
 							</div>
 						</div>
@@ -155,7 +143,8 @@ export default function SignInPage () {
 							<Button
 								onClick={handlePasskeySignIn}
 								disabled={isLoading}
-								className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white h-12 text-lg font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+								variant="success"
+								className="w-full h-12 text-lg font-medium"
 							>
 								<Fingerprint className="w-5 h-5 mr-2" />
 								{isLoading? 'Authenticating...':'Sign In with Passkey'}
@@ -163,10 +152,10 @@ export default function SignInPage () {
 
 							<div className="relative">
 								<div className="absolute inset-0 flex items-center">
-									<span className="w-full border-t" />
+									<span className="w-full border-t border-white/[0.08]" />
 								</div>
 								<div className="relative flex justify-center text-xs uppercase">
-									<span className="bg-white px-2 text-gray-500">Or continue with</span>
+									<span className="bg-base-50 px-2 text-violet-200/40">Or continue with</span>
 								</div>
 							</div>
 						</div>
@@ -177,7 +166,7 @@ export default function SignInPage () {
 						<div className="space-y-2">
 							<Label htmlFor="email">Email</Label>
 							<div className="relative">
-								<Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+								<Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-violet-300/40 w-4 h-4" />
 								<Input
 									id="email"
 									name="email"
@@ -194,7 +183,7 @@ export default function SignInPage () {
 						<div className="space-y-2">
 							<Label htmlFor="password">Password</Label>
 							<div className="relative">
-								<Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+								<Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-violet-300/40 w-4 h-4" />
 								<Input
 									id="password"
 									name="password"
@@ -210,28 +199,28 @@ export default function SignInPage () {
 						<Button
 							type="submit"
 							disabled={isLoading}
-							className="w-full bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white h-12 text-lg font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+							className="w-full h-12 text-lg font-medium"
 						>
 							{isLoading? 'Signing In...':'Sign In with Email'}
 						</Button>
 					</form>
 
 					{/* Sign Up Link */}
-					<div className="text-center text-sm text-gray-600">
+					<div className="text-center text-sm text-violet-200/60">
 						Don't have an account?{' '}
-						<Link href="/auth/signup" className="text-purple-600 hover:text-purple-700 font-medium">
+						<Link href="/auth/signup" className="text-violet-400 hover:text-violet-300 font-medium transition-colors">
 							Sign up here
 						</Link>
 					</div>
 
 					{/* Terms */}
-					<div className="text-center text-xs text-gray-500">
+					<div className="text-center text-xs text-violet-200/40">
 						By signing in, you agree to our{' '}
-						<Link href="/terms" className="text-purple-600 hover:text-purple-700">
+						<Link href="/terms" className="text-violet-400/70 hover:text-violet-300">
 							Terms of Service
 						</Link>{' '}
 						and{' '}
-						<Link href="/privacy" className="text-purple-600 hover:text-purple-700">
+						<Link href="/privacy" className="text-violet-400/70 hover:text-violet-300">
 							Privacy Policy
 						</Link>
 					</div>

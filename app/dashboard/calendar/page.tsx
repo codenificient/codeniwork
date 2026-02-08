@@ -50,13 +50,13 @@ const events=[
 const getStatusColor=( status: string ) => {
 	switch ( status ) {
 		case 'Urgent':
-			return 'bg-red-600/20 text-red-200 border-red-400/30'
+			return 'bg-red-500/15 text-red-300 border-red-400/30'
 		case 'Upcoming':
-			return 'bg-blue-600/20 text-blue-200 border-blue-400/30'
+			return 'bg-blue-500/15 text-blue-300 border-blue-400/30'
 		case 'Scheduled':
-			return 'bg-green-600/20 text-green-200 border-green-400/30'
+			return 'bg-emerald-500/15 text-emerald-300 border-emerald-400/30'
 		default:
-			return 'bg-gray-600/20 text-gray-200 border-gray-400/30'
+			return 'bg-white/[0.06] text-violet-200/70 border-white/[0.10]'
 	}
 }
 
@@ -81,13 +81,13 @@ export default function CalendarPage () {
 			<DashboardHeader />
 			<div className="p-6">
 				<div className="mb-8">
-					<h1 className="text-3xl font-bold text-white mb-2">Calendar</h1>
-					<p className="text-blue-200">Track your interviews, deadlines, and events</p>
+					<h1 className="text-4xl font-bold text-gradient-heading mb-2">Calendar</h1>
+					<p className="text-violet-300/60">Track your interviews, deadlines, and events</p>
 				</div>
 
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 					{/* Upcoming Events */}
-					<Card className="bg-white/10 backdrop-blur-sm border-white/20">
+					<Card className="glass">
 						<CardHeader>
 							<CardTitle className="text-white flex items-center space-x-2">
 								<Calendar className="w-5 h-5" />
@@ -97,15 +97,15 @@ export default function CalendarPage () {
 						<CardContent className="space-y-4">
 							{events
 								.filter( event => event.status==='Upcoming'||event.status==='Scheduled' )
-								.map( ( event ) => (
-									<div key={event.id} className="flex items-start space-x-3 p-3 bg-white/5 rounded-lg border border-white/10">
-										<div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
+								.map( ( event,index ) => (
+									<div key={event.id} className="flex items-start space-x-3 p-3 bg-white/[0.04] rounded-lg border border-white/[0.08] animate-fade-up" style={{ animationDelay: `${index*80}ms` }}>
+										<div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-lg flex items-center justify-center">
 											{getTypeIcon( event.type )}
 										</div>
 										<div className="flex-1">
 											<h3 className="text-white font-medium">{event.title}</h3>
-											<p className="text-blue-200 text-sm">{event.company}</p>
-											<div className="flex items-center space-x-4 mt-2 text-xs text-blue-200">
+											<p className="text-violet-200/70 text-sm">{event.company}</p>
+											<div className="flex items-center space-x-4 mt-2 text-xs text-violet-300/40">
 												<span className="flex items-center space-x-1">
 													<Calendar className="w-3 h-3" />
 													{event.date}
@@ -125,7 +125,7 @@ export default function CalendarPage () {
 					</Card>
 
 					{/* Urgent Deadlines */}
-					<Card className="bg-white/10 backdrop-blur-sm border-white/20">
+					<Card className="glass">
 						<CardHeader>
 							<CardTitle className="text-white flex items-center space-x-2">
 								<AlertCircle className="w-5 h-5 text-red-400" />
@@ -135,15 +135,15 @@ export default function CalendarPage () {
 						<CardContent className="space-y-4">
 							{events
 								.filter( event => event.status==='Urgent' )
-								.map( ( event ) => (
-									<div key={event.id} className="flex items-start space-x-3 p-3 bg-red-500/10 rounded-lg border border-red-400/30">
+								.map( ( event,index ) => (
+									<div key={event.id} className="flex items-start space-x-3 p-3 bg-red-500/10 rounded-lg border border-red-400/30 animate-fade-up" style={{ animationDelay: `${index*80}ms` }}>
 										<div className="w-10 h-10 bg-gradient-to-br from-red-500 to-pink-600 rounded-lg flex items-center justify-center">
 											<AlertCircle className="w-4 h-4 text-white" />
 										</div>
 										<div className="flex-1">
 											<h3 className="text-white font-medium">{event.title}</h3>
 											<p className="text-red-200 text-sm">{event.company}</p>
-											<div className="flex items-center space-x-4 mt-2 text-xs text-red-200">
+											<div className="flex items-center space-x-4 mt-2 text-xs text-red-300/60">
 												<span className="flex items-center space-x-1">
 													<Calendar className="w-3 h-3" />
 													{event.date}
@@ -154,7 +154,7 @@ export default function CalendarPage () {
 												</span>
 											</div>
 										</div>
-										<Badge className="bg-red-600/20 text-red-200 border-red-400/30">
+										<Badge className="bg-red-500/15 text-red-300 border-red-400/30">
 											{event.status}
 										</Badge>
 									</div>

@@ -34,7 +34,7 @@ export function DashboardStats() {
 	useEffect(() => {
 		async function fetchStats() {
 			if (!session?.user?.id) return
-			
+
 			try {
 				const response = await fetch('/api/dashboard/stats')
 				if (!response.ok) {
@@ -57,20 +57,20 @@ export function DashboardStats() {
 			<div className="space-y-6">
 				<div className="flex items-center justify-between">
 					<h2 className="text-2xl font-bold text-white">Overview</h2>
-					<div className="flex items-center space-x-2 text-sm text-blue-200">
+					<div className="flex items-center space-x-2 text-sm text-violet-200/70">
 						<TrendingUp className="w-4 h-4" />
 						<span>Last 30 days</span>
 					</div>
 				</div>
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
 					{Array.from({ length: 6 }).map((_, i) => (
-						<Card key={i} className="bg-white/10 backdrop-blur-sm border-white/20 animate-pulse">
+						<Card key={i} className="glass">
 							<CardHeader className="pb-3">
-								<div className="h-8 bg-white/20 rounded"></div>
+								<div className="h-8 skeleton rounded"></div>
 							</CardHeader>
 							<CardContent className="pt-0">
-								<div className="h-6 bg-white/20 rounded mb-2"></div>
-								<div className="h-4 bg-white/20 rounded"></div>
+								<div className="h-6 skeleton rounded mb-2"></div>
+								<div className="h-4 skeleton rounded"></div>
 							</CardContent>
 						</Card>
 					))}
@@ -84,13 +84,13 @@ export function DashboardStats() {
 			<div className="space-y-6">
 				<div className="flex items-center justify-between">
 					<h2 className="text-2xl font-bold text-white">Overview</h2>
-					<div className="flex items-center space-x-2 text-sm text-blue-200">
+					<div className="flex items-center space-x-2 text-sm text-violet-200/70">
 						<TrendingUp className="w-4 h-4" />
 						<span>Last 30 days</span>
 					</div>
 				</div>
 				<div className="text-center py-8">
-					<p className="text-blue-200">No data available</p>
+					<p className="text-violet-200/70">No data available</p>
 				</div>
 			</div>
 		)
@@ -104,8 +104,8 @@ export function DashboardStats() {
 			changeType: 'positive' as const,
 			icon: Briefcase,
 			color: 'from-blue-500 to-blue-600',
-			bgColor: 'bg-blue-50/80',
-			textColor: 'text-blue-600'
+			bgColor: 'bg-blue-500/15',
+			textColor: 'text-blue-400'
 		},
 		{
 			title: 'Active Companies',
@@ -114,8 +114,8 @@ export function DashboardStats() {
 			changeType: 'positive' as const,
 			icon: Building2,
 			color: 'from-purple-500 to-purple-600',
-			bgColor: 'bg-purple-50/80',
-			textColor: 'text-purple-600'
+			bgColor: 'bg-purple-500/15',
+			textColor: 'text-purple-400'
 		},
 		{
 			title: 'In Progress',
@@ -124,8 +124,8 @@ export function DashboardStats() {
 			changeType: 'positive' as const,
 			icon: Clock,
 			color: 'from-orange-500 to-orange-600',
-			bgColor: 'bg-orange-50/80',
-			textColor: 'text-orange-600'
+			bgColor: 'bg-orange-500/15',
+			textColor: 'text-orange-400'
 		},
 		{
 			title: 'Interviews',
@@ -134,8 +134,8 @@ export function DashboardStats() {
 			changeType: 'positive' as const,
 			icon: Calendar,
 			color: 'from-teal-500 to-teal-600',
-			bgColor: 'bg-teal-50/80',
-			textColor: 'text-teal-600'
+			bgColor: 'bg-teal-500/15',
+			textColor: 'text-teal-400'
 		},
 		{
 			title: 'Offers',
@@ -144,8 +144,8 @@ export function DashboardStats() {
 			changeType: 'positive' as const,
 			icon: CheckCircle,
 			color: 'from-green-500 to-green-600',
-			bgColor: 'bg-green-50/80',
-			textColor: 'text-green-600'
+			bgColor: 'bg-green-500/15',
+			textColor: 'text-green-400'
 		},
 		{
 			title: 'Rejected',
@@ -154,8 +154,8 @@ export function DashboardStats() {
 			changeType: 'positive' as const,
 			icon: XCircle,
 			color: 'from-red-500 to-red-600',
-			bgColor: 'bg-red-50/80',
-			textColor: 'text-red-600'
+			bgColor: 'bg-red-500/15',
+			textColor: 'text-red-400'
 		}
 	]
 
@@ -165,7 +165,7 @@ export function DashboardStats() {
 				<h2 className="text-2xl font-bold text-white">
 					Overview
 				</h2>
-				<div className="flex items-center space-x-2 text-sm text-blue-200">
+				<div className="flex items-center space-x-2 text-sm text-violet-200/70">
 					<TrendingUp className="w-4 h-4" />
 					<span>Last 30 days</span>
 				</div>
@@ -177,7 +177,7 @@ export function DashboardStats() {
 					return (
 						<Card
 							key={index}
-							className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-0 bg-white/10 backdrop-blur-sm border-white/20"
+							className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 glass-interactive"
 						>
 							<CardHeader className="pb-3">
 								<div className="flex items-center justify-between">
@@ -185,18 +185,18 @@ export function DashboardStats() {
 										<IconComponent className={`w-5 h-5 ${stat.textColor}`} />
 									</div>
 									<span className={`text-xs font-medium px-2 py-1 rounded-full ${stat.changeType === 'positive'
-										? 'bg-green-100 text-green-800'
-										: 'bg-red-100 text-red-800'
+										? 'bg-emerald-500/15 text-emerald-300'
+										: 'bg-red-500/15 text-red-300'
 										}`}>
 										{stat.change}
 									</span>
 								</div>
 							</CardHeader>
 							<CardContent className="pt-0">
-								<CardTitle className="text-2xl font-bold text-white mb-1">
+								<CardTitle className="text-2xl font-bold text-white mb-1 text-gradient-primary">
 									{stat.value}
 								</CardTitle>
-								<p className="text-sm text-blue-200">
+								<p className="text-sm text-violet-200/70">
 									{stat.title}
 								</p>
 							</CardContent>
@@ -206,7 +206,7 @@ export function DashboardStats() {
 			</div>
 
 			{/* Progress Bar */}
-			<Card className="bg-white/10 backdrop-blur-sm border-white/20">
+			<Card className="glass">
 				<CardContent className="p-6">
 					<div className="flex items-center justify-between mb-4">
 						<h3 className="text-lg font-semibold text-white">
@@ -216,13 +216,13 @@ export function DashboardStats() {
 							{stats.successRate}%
 						</span>
 					</div>
-					<div className="w-full bg-gray-200/50 rounded-full h-3">
+					<div className="w-full bg-white/[0.06] rounded-full h-3">
 						<div
 							className="bg-gradient-to-r from-purple-500 to-blue-600 h-3 rounded-full transition-all duration-500 ease-out"
 							style={{ width: `${stats.successRate}%` }}
 						></div>
 					</div>
-					<div className="flex justify-between text-sm text-blue-200 mt-2">
+					<div className="flex justify-between text-sm text-violet-200/70 mt-2">
 						<span>Applied: {stats.applied}</span>
 						<span>Success: {stats.success}</span>
 					</div>

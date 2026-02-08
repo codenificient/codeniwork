@@ -73,17 +73,14 @@ export function Sidebar ( { className }: SidebarProps ) {
 
 	return (
 		<div className={cn(
-			"relative h-screen bg-gradient-to-b from-purple-800 via-purple-700 to-purple-900 transition-all duration-300",
+			"relative h-screen bg-white/[0.03] backdrop-blur-2xl border-r border-white/[0.06] transition-all duration-300",
 			isCollapsed? "w-16":"w-64",
 			className
 		)}>
-			{/* Gradient Overlay */}
-			<div className="absolute inset-0 bg-gradient-to-b from-purple-800/95 via-purple-700/95 to-purple-900/95 backdrop-blur-sm" />
-
 			{/* Content */}
 			<div className="relative z-10 h-full flex flex-col">
 				{/* Header */}
-				<div className="flex items-center justify-between p-4 border-b border-white/20">
+				<div className="flex items-center justify-between p-4 border-b border-white/[0.06]">
 					{!isCollapsed&&(
 						<div className="flex items-center space-x-2">
 							<div className="w-8 h-8 rounded-lg flex items-center justify-center">
@@ -96,14 +93,14 @@ export function Sidebar ( { className }: SidebarProps ) {
 						variant="ghost"
 						size="sm"
 						onClick={() => setIsCollapsed( !isCollapsed )}
-						className="text-white hover:bg-white/20 p-1"
+						className="text-violet-200 hover:bg-white/[0.06] hover:text-white p-1"
 					>
 						{isCollapsed? <ChevronRight className="w-4 h-4" />:<ChevronLeft className="w-4 h-4" />}
 					</Button>
 				</div>
 
 				{/* Navigation Menu */}
-				<nav className="flex-1 px-3 py-4 space-y-2">
+				<nav className="flex-1 px-3 py-4 space-y-1">
 					{menuItems.map( ( item ) => {
 						const Icon=item.icon
 						const isActive=pathname===item.href
@@ -112,24 +109,24 @@ export function Sidebar ( { className }: SidebarProps ) {
 								key={item.title}
 								href={item.href}
 								className={cn(
-									"flex items-center space-x-3 px-3 py-3 rounded-xl text-white transition-all duration-200 group",
+									"flex items-center space-x-3 px-3 py-2.5 rounded-button text-white/80 transition-all duration-200 group",
 									isActive
-										? "bg-gradient-to-r from-purple-600/80 to-purple-700/80 shadow-lg backdrop-blur-sm border border-purple-400/30"
-										:"hover:bg-gradient-to-r hover:from-purple-600/40 hover:to-purple-700/40 hover:shadow-md"
+										? "bg-white/[0.08] text-white border border-white/[0.10] shadow-glass"
+										:"hover:bg-white/[0.04] hover:text-white"
 								)}
 							>
 								<div className={cn(
-									"p-2 rounded-lg transition-all duration-200",
+									"p-1.5 rounded-lg transition-all duration-200",
 									isActive
-										? "bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-md"
-										:"bg-white/20 text-white/80 group-hover:bg-gradient-to-r group-hover:from-purple-500/60 group-hover:to-blue-600/60 group-hover:text-white"
+										? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md shadow-violet-500/20"
+										:"text-violet-300/70 group-hover:text-violet-200"
 								)}>
-									<Icon className="w-5 h-5" />
+									<Icon className="w-4 h-4" />
 								</div>
 								{!isCollapsed&&(
 									<span className={cn(
-										"font-medium transition-all duration-200",
-										isActive? "text-white":"text-white/90 group-hover:text-white"
+										"text-sm font-medium transition-all duration-200",
+										isActive? "text-white":"text-violet-200/80 group-hover:text-white"
 									)}>
 										{item.title}
 									</span>
@@ -140,23 +137,17 @@ export function Sidebar ( { className }: SidebarProps ) {
 				</nav>
 
 				{/* Footer */}
-				<div className="p-3 border-t border-white/20">
+				<div className="p-3 border-t border-white/[0.06]">
 					<Button
 						variant="ghost"
 						size="sm"
-						className="w-full text-white hover:bg-gradient-to-r hover:from-purple-600/40 hover:to-purple-700/40 justify-start"
+						className="w-full text-violet-200/70 hover:bg-white/[0.04] hover:text-white justify-start"
 					>
-						<Settings className="w-5 h-5 mr-3" />
-						{!isCollapsed&&<span>Settings</span>}
+						<Settings className="w-4 h-4 mr-3" />
+						{!isCollapsed&&<span className="text-sm">Settings</span>}
 					</Button>
 				</div>
 			</div>
-
-			{/* Decorative Elements */}
-			<div className="absolute top-20 left-4 w-2 h-2 bg-purple-400 rounded-full animate-pulse" />
-			<div className="absolute top-32 right-6 w-3 h-3 bg-purple-300 rounded-full animate-pulse delay-100" />
-			<div className="absolute top-48 left-8 w-2 h-2 bg-purple-500 rounded-full animate-pulse delay-200" />
-			<div className="absolute bottom-32 right-4 w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-300" />
 		</div>
 	)
 }

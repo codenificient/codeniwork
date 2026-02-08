@@ -234,7 +234,7 @@ export function EditCompanyDialog ( {
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-[500px] bg-gray-900/95 backdrop-blur-sm border border-gray-700 text-white">
+			<DialogContent className="sm:max-w-[500px] text-white">
 				<DialogHeader>
 					<DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
 						Edit Company
@@ -262,7 +262,7 @@ export function EditCompanyDialog ( {
 									type="button"
 									size="sm"
 									variant="outline"
-									className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full p-0 bg-gray-800 border-gray-600 hover:bg-gray-700"
+									className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full p-0"
 									onClick={() => fileInputRef.current?.click()}
 								>
 									<Camera className="w-4 h-4" />
@@ -280,12 +280,12 @@ export function EditCompanyDialog ( {
 									type="button"
 									variant="outline"
 									onClick={() => fileInputRef.current?.click()}
-									className="bg-gray-800 border-gray-600 text-white hover:bg-gray-700"
+									className=""
 								>
 									<ImageIcon className="w-4 h-4 mr-2" />
 									Choose Logo
 								</Button>
-								<p className="text-sm text-gray-400 mt-1">
+								<p className="text-sm text-violet-300/40 mt-1">
 									JPEG, PNG up to 5MB
 								</p>
 							</div>
@@ -300,7 +300,7 @@ export function EditCompanyDialog ( {
 								id="name"
 								{...register( 'name' )}
 								placeholder="e.g., Google, Apple"
-								className={`bg-gray-800 border-gray-600 text-white placeholder-gray-400 ${errors.name? 'border-red-500':''}`}
+								className={`${errors.name? 'border-red-500':''}`}
 							/>
 							{errors.name&&(
 								<p className="text-sm text-red-500">{errors.name.message}</p>
@@ -314,7 +314,7 @@ export function EditCompanyDialog ( {
 								{...register( 'website' )}
 								placeholder="https://company.com"
 								type="url"
-								className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+								className=""
 							/>
 						</div>
 					</div>
@@ -326,7 +326,7 @@ export function EditCompanyDialog ( {
 								id="industry"
 								{...register( 'industry' )}
 								placeholder="e.g., Technology, Healthcare"
-								className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+								className=""
 							/>
 						</div>
 
@@ -336,7 +336,7 @@ export function EditCompanyDialog ( {
 								id="size"
 								{...register( 'size' )}
 								placeholder="e.g., 100-500 employees"
-								className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+								className=""
 							/>
 						</div>
 					</div>
@@ -347,7 +347,7 @@ export function EditCompanyDialog ( {
 							id="location"
 							{...register( 'location' )}
 							placeholder="e.g., San Francisco, CA"
-							className="bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+							className=""
 						/>
 					</div>
 
@@ -357,7 +357,7 @@ export function EditCompanyDialog ( {
 							id="description"
 							{...register( 'description' )}
 							placeholder="Company description, mission, or additional notes..."
-							className="w-full h-24 px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none bg-gray-800 text-white placeholder-gray-400"
+							className="w-full h-24 px-3 py-2 border border-white/[0.10] bg-white/[0.04] backdrop-blur-xl rounded-input focus:outline-none focus:ring-2 focus:ring-violet-500/40 focus:border-transparent resize-none text-white placeholder-violet-300/40"
 						/>
 					</div>
 

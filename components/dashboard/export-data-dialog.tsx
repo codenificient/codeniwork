@@ -76,7 +76,7 @@ export function ExportDataDialog({ open, onOpenChange }: ExportDataDialogProps) 
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-[600px] bg-gray-900/95 backdrop-blur-sm border border-gray-700 text-white">
+			<DialogContent className="sm:max-w-[600px] text-white">
 				<DialogHeader>
 					<DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
 						Export Your Data
@@ -93,7 +93,7 @@ export function ExportDataDialog({ open, onOpenChange }: ExportDataDialogProps) 
 									id="applications"
 									checked={selectedData.applications}
 									onChange={() => handleDataToggle('applications')}
-									className="border-gray-400 data-[state=checked]:bg-purple-600"
+									className="border-white/[0.10] data-[state=checked]:bg-violet-600"
 								/>
 								<Label htmlFor="applications" className="text-white flex items-center space-x-2">
 									<FileText className="w-4 h-4" />
@@ -106,7 +106,7 @@ export function ExportDataDialog({ open, onOpenChange }: ExportDataDialogProps) 
 									id="companies"
 									checked={selectedData.companies}
 									onChange={() => handleDataToggle('companies')}
-									className="border-gray-400 data-[state=checked]:bg-purple-600"
+									className="border-white/[0.10] data-[state=checked]:bg-violet-600"
 								/>
 								<Label htmlFor="companies" className="text-white flex items-center space-x-2">
 									<Building className="w-4 h-4" />
@@ -119,7 +119,7 @@ export function ExportDataDialog({ open, onOpenChange }: ExportDataDialogProps) 
 									id="documents"
 									checked={selectedData.documents}
 									onChange={() => handleDataToggle('documents')}
-									className="border-gray-400 data-[state=checked]:bg-purple-600"
+									className="border-white/[0.10] data-[state=checked]:bg-violet-600"
 								/>
 								<Label htmlFor="documents" className="text-white flex items-center space-x-2">
 									<FileText className="w-4 h-4" />
@@ -132,7 +132,7 @@ export function ExportDataDialog({ open, onOpenChange }: ExportDataDialogProps) 
 									id="activities"
 									checked={selectedData.activities}
 									onChange={() => handleDataToggle('activities')}
-									className="border-gray-400 data-[state=checked]:bg-purple-600"
+									className="border-white/[0.10] data-[state=checked]:bg-violet-600"
 								/>
 								<Label htmlFor="activities" className="text-white flex items-center space-x-2">
 									<Calendar className="w-4 h-4" />
@@ -145,7 +145,7 @@ export function ExportDataDialog({ open, onOpenChange }: ExportDataDialogProps) 
 									id="profile"
 									checked={selectedData.profile}
 									onChange={() => handleDataToggle('profile')}
-									className="border-gray-400 data-[state=checked]:bg-purple-600"
+									className="border-white/[0.10] data-[state=checked]:bg-violet-600"
 								/>
 								<Label htmlFor="profile" className="text-white flex items-center space-x-2">
 									<Users className="w-4 h-4" />
@@ -162,10 +162,10 @@ export function ExportDataDialog({ open, onOpenChange }: ExportDataDialogProps) 
 								Export Format
 							</Label>
 							<Select value={exportFormat} onValueChange={setExportFormat}>
-								<SelectTrigger className="bg-gray-800 border-gray-600 text-white">
+								<SelectTrigger className="">
 									<SelectValue />
 								</SelectTrigger>
-								<SelectContent className="bg-gray-800 border-gray-600 text-white">
+								<SelectContent className="">
 									<SelectItem value="json">JSON</SelectItem>
 									<SelectItem value="csv">CSV</SelectItem>
 									<SelectItem value="pdf">PDF Report</SelectItem>
@@ -178,10 +178,10 @@ export function ExportDataDialog({ open, onOpenChange }: ExportDataDialogProps) 
 								Date Range
 							</Label>
 							<Select value={dateRange} onValueChange={setDateRange}>
-								<SelectTrigger className="bg-gray-800 border-gray-600 text-white">
+								<SelectTrigger className="">
 									<SelectValue />
 								</SelectTrigger>
-								<SelectContent className="bg-gray-800 border-gray-600 text-white">
+								<SelectContent className="">
 									<SelectItem value="all">All Time</SelectItem>
 									<SelectItem value="last30">Last 30 Days</SelectItem>
 									<SelectItem value="last90">Last 90 Days</SelectItem>
@@ -212,7 +212,7 @@ export function ExportDataDialog({ open, onOpenChange }: ExportDataDialogProps) 
 					<Button
 						variant="outline"
 						onClick={handleCancel}
-						className="bg-gray-800 border-gray-600 text-white hover:bg-gray-700"
+						className=""
 					>
 						Cancel
 					</Button>
