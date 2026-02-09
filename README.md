@@ -2,7 +2,7 @@
 
 A beautiful, modern job application tracker built with Next.js 15.5, featuring a colorful Clean My Mac-inspired interface with a comprehensive sidebar navigation system. **Powered by CodeniWork** - your trusted partner in career development.
 
-[![Preview](https://api.microlink.io/?url=https://codeniwork.vercel.app&screenshot=true&meta=false&embed=screenshot.url&delay=3000)](https://codeniwork.vercel.app)
+[![Preview](https://api.microlink.io/?url=https%3A%2F%2Fcodeniwork.vercel.app&screenshot=true&meta=false&embed=screenshot.url&screenshot.delay=4000)](https://codeniwork.vercel.app)
 
 ## ✨ Features
 
