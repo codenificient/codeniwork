@@ -1,3 +1,9 @@
+## [1.4.0](https://github.com/codenificient/codeniwork/compare/v1.3.1...v1.4.0) (2026-03-16)
+
+### Features
+
+* add Umami analytics tracking ([0cfe25f](https://github.com/codenificient/codeniwork/commit/0cfe25f3c94d5deb11c77780884af967af52efce))
+
 ## [1.3.1](https://github.com/codenificient/codeniwork/compare/v1.3.0...v1.3.1) (2026-02-09)
 
 ### Bug Fixes
