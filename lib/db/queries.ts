@@ -143,9 +143,19 @@ export async function createActivityEvent (
 	return event
 }
 
-export async function autoRejectOldApplications () {
+export async function autoRejectOldApplications ( userId?: string ) {
 	const twentyOneDaysAgo=new Date()
 	twentyOneDaysAgo.setDate( twentyOneDaysAgo.getDate()-21 )
+
+	// Build conditions — scope by userId when provided (user-triggered action)
+	const conditions=[
+		sql`${jobApplications.appliedAt} <= ${twentyOneDaysAgo}`,
+		sql`${jobApplications.status} IN ('applied', 'screening')`
+	]
+
+	if ( userId ) {
+		conditions.push( eq( jobApplications.userId,userId ) )
+	}
 
 	// Find applications that are still in 'applied' or 'screening' status for 21+ days
 	const oldApplications=await db
@@ -160,12 +170,7 @@ export async function autoRejectOldApplications () {
 		} )
 		.from( jobApplications )
 		.innerJoin( companies,eq( jobApplications.companyId,companies.id ) )
-		.where(
-			and(
-				sql`${jobApplications.appliedAt} <= ${twentyOneDaysAgo}`,
-				sql`${jobApplications.status} IN ('applied', 'screening')`
-			)
-		)
+		.where( and( ...conditions ) )
 
 	if ( oldApplications.length===0 ) {
 		return { rejectedCount: 0,applications: [] }
@@ -178,12 +183,7 @@ export async function autoRejectOldApplications () {
 			status: 'rejected',
 			updatedAt: new Date()
 		} )
-		.where(
-			and(
-				sql`${jobApplications.appliedAt} <= ${twentyOneDaysAgo}`,
-				sql`${jobApplications.status} IN ('applied', 'screening')`
-			)
-		)
+		.where( and( ...conditions ) )
 		.returning( {
 			id: jobApplications.id,
 			position: jobApplications.position,

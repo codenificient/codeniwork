@@ -31,7 +31,7 @@ There is no test suite configured.
 - Uses **JWT strategy** with credentials provider (email/password via bcrypt)
 - Passkey/WebAuthn support implemented manually in `lib/passkey-auth.ts` (simplified verification, not using @simplewebauthn/server)
 - Auth route handler at `app/api/auth/[...nextauth]/route.ts` re-exports handlers from `lib/auth.ts`
-- `middleware.ts` checks for session cookies and protects all routes except `/`, `/auth/signin`, `/auth/signup`; redirects authenticated users away from auth pages to `/dashboard`
+- `proxy.ts` (Next.js 16 proxy) checks for session cookies and protects all routes except `/`, `/auth/signin`, `/auth/signup`; redirects authenticated users away from auth pages to `/dashboard`
 - Client-side auth via `<AuthProvider>` (SessionProvider wrapper) in root layout
 
 ### Database
