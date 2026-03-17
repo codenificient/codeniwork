@@ -95,7 +95,7 @@ export function getAnalytics(): AppAnalytics | null {
 
 const defaultConfig: AnalyticsConfig = {
 	apiKey: process.env.NEXT_PUBLIC_ANALYTICS_API_KEY || "",
-	endpoint: process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT || "",
+	endpoint: process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT || "https://codenalytics.vercel.app/api",
 	debug: process.env.NODE_ENV === "development",
 	enabled: process.env.NODE_ENV === "production" || process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === "true",
 }
