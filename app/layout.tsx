@@ -34,7 +34,7 @@ export default function RootLayout ( {
 	return (
 		<html lang="en" className="h-full">
       <head>
-        <script defer src="https://analytics.afrotomation.com/track" data-website-id="fa178569-fd4b-4502-b97f-232884172e42"></script>
+        <script defer src="/a/script.js" data-host-url="/a" data-website-id="fa178569-fd4b-4502-b97f-232884172e42"></script>
       </head>
 			<body className={`${inter.className} h-full`} suppressHydrationWarning={true}>
 				<AuthProvider>
