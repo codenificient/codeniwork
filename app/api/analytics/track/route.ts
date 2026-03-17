@@ -2,7 +2,7 @@ import type { AnalyticsResponse, EventData } from "@codenificient/analytics-sdk"
 import { NextRequest, NextResponse } from "next/server"
 
 const ANALYTICS_ENDPOINT = process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT || ""
-const API_KEY = process.env.NEXT_PUBLIC_ANALYTICS_API_KEY || ""
+const API_KEY = process.env.NEXT_PUBLIC_ANALYTICS_API_KEY || "proj_codeniwork_main"
 
 interface AnalyticsRequestPayload {
 	events?: EventData[]
