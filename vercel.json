@@ -1,10 +1,4 @@
 {
-  "crons": [
-    {
-      "path": "/api/dashboard/applications/auto-reject",
-      "schedule": "0 9 * * *"
-    }
-  ],
   "git": {
     "deploymentEnabled": {
       "preview": false
