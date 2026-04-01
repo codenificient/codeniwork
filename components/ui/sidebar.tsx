@@ -9,6 +9,7 @@ import {
 	Calendar,
 	ChevronLeft,
 	ChevronRight,
+	Compass,
 	FileText,
 	Settings,
 	Target,
@@ -29,6 +30,11 @@ const menuItems=[
 		icon: BarChart3,
 		href: '/dashboard',
 		active: false
+	},
+	{
+		title: 'Discover',
+		icon: Compass,
+		href: '/dashboard/discover'
 	},
 	{
 		title: 'Applications',

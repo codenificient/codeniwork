@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm'
-import { boolean,index,pgEnum,pgTable,text,timestamp,uuid } from 'drizzle-orm/pg-core'
+import { boolean,index,integer,pgEnum,pgTable,real,text,timestamp,uuid } from 'drizzle-orm/pg-core'
 
 // Enums
 export const applicationStatusEnum=pgEnum( 'application_status',[
@@ -135,6 +135,53 @@ export const applicationEventsRelations=relations( applicationEvents,( { one } )
 	application: one( jobApplications,{
 		fields: [ applicationEvents.applicationId ],
 		references: [ jobApplications.id ],
+	} ),
+} ) )
+
+// External jobs table (fetched from job board APIs)
+export const externalJobs=pgTable( 'external_jobs',{
+	id: uuid( 'id' ).primaryKey().defaultRandom(),
+	title: text( 'title' ).notNull(),
+	company: text( 'company' ).notNull(),
+	companyLogo: text( 'company_logo' ),
+	url: text( 'url' ).notNull(),
+	source: text( 'source' ).notNull(), // 'remoteok', 'adzuna', 'jsearch'
+	sourceId: text( 'source_id' ), // ID from source API for dedup
+	description: text( 'description' ),
+	salaryMin: integer( 'salary_min' ),
+	salaryMax: integer( 'salary_max' ),
+	salaryCurrency: text( 'salary_currency' ).default( 'USD' ),
+	location: text( 'location' ),
+	isRemote: boolean( 'is_remote' ).default( false ),
+	tags: text( 'tags' ), // JSON array of tags/skills
+	postedAt: timestamp( 'posted_at' ),
+	fetchedAt: timestamp( 'fetched_at' ).defaultNow().notNull(),
+	createdAt: timestamp( 'created_at' ).defaultNow().notNull(),
+},( table ) => ( {
+	sourceIdx: index( 'external_jobs_source_idx' ).on( table.source ),
+	titleCompanyIdx: index( 'external_jobs_title_company_idx' ).on( table.title,table.company ),
+} ) )
+
+// Saved external jobs (user bookmarks)
+export const savedJobs=pgTable( 'saved_jobs',{
+	id: uuid( 'id' ).primaryKey().defaultRandom(),
+	userId: uuid( 'user_id' ).references( () => users.id,{ onDelete: 'cascade' } ).notNull(),
+	externalJobId: uuid( 'external_job_id' ).references( () => externalJobs.id,{ onDelete: 'cascade' } ).notNull(),
+	matchScore: real( 'match_score' ), // 0-100 match percentage
+	savedAt: timestamp( 'saved_at' ).defaultNow().notNull(),
+},( table ) => ( {
+	userJobIdx: index( 'saved_jobs_user_job_idx' ).on( table.userId,table.externalJobId ),
+} ) )
+
+// Saved jobs relations
+export const savedJobsRelations=relations( savedJobs,( { one } ) => ( {
+	user: one( users,{
+		fields: [ savedJobs.userId ],
+		references: [ users.id ],
+	} ),
+	externalJob: one( externalJobs,{
+		fields: [ savedJobs.externalJobId ],
+		references: [ externalJobs.id ],
 	} ),
 } ) )
 
