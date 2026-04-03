@@ -15,13 +15,14 @@ class AppAnalytics {
 		if ( typeof window === "undefined" || !this.config.enabled ) return
 
 		try {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			this.analytics = new Analytics( {
 				apiKey: this.config.apiKey,
 				endpoint: this.config.endpoint,
 				debug: this.config.debug || false,
 				webVitals: true,
 				errorTracking: true,
-			} )
+			} as any )
 			this.isInitialized = true
 		} catch ( error ) {
 			console.error( "Failed to initialize analytics:", error )

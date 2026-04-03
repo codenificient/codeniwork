@@ -12,6 +12,7 @@ import {
 	Compass,
 	FileText,
 	Settings,
+	Sparkles,
 	Target,
 	Users,
 	Zap
@@ -65,6 +66,11 @@ const menuItems=[
 		title: 'Contacts',
 		icon: Users,
 		href: '/dashboard/contacts'
+	},
+	{
+		title: 'AI Tools',
+		icon: Sparkles,
+		href: '/dashboard/ai-tools'
 	},
 	{
 		title: 'Quick Actions',

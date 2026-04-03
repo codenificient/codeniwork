@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm'
-import { boolean,index,integer,pgEnum,pgTable,real,text,timestamp,uuid } from 'drizzle-orm/pg-core'
+import { boolean,index,integer,jsonb,pgEnum,pgTable,real,text,timestamp,uuid } from 'drizzle-orm/pg-core'
 
 // Enums
 export const applicationStatusEnum=pgEnum( 'application_status',[
@@ -182,6 +182,87 @@ export const savedJobsRelations=relations( savedJobs,( { one } ) => ( {
 	externalJob: one( externalJobs,{
 		fields: [ savedJobs.externalJobId ],
 		references: [ externalJobs.id ],
+	} ),
+} ) )
+
+// AI Resume Parses table
+export const resumeParses=pgTable( 'resume_parses',{
+	id: uuid( 'id' ).primaryKey().defaultRandom(),
+	userId: uuid( 'user_id' ).references( () => users.id,{ onDelete: 'cascade' } ).notNull(),
+	documentId: uuid( 'document_id' ).references( () => documents.id,{ onDelete: 'cascade' } ),
+	rawText: text( 'raw_text' ),
+	name: text( 'name' ),
+	email: text( 'email' ),
+	phone: text( 'phone' ),
+	summary: text( 'summary' ),
+	skills: text( 'skills' ).array(),
+	experience: jsonb( 'experience' ), // [{title, company, duration, description}]
+	education: jsonb( 'education' ), // [{degree, school, year}]
+	createdAt: timestamp( 'created_at' ).defaultNow().notNull(),
+	updatedAt: timestamp( 'updated_at' ).defaultNow().notNull(),
+} )
+
+// AI Job Match Scores table
+export const jobMatches=pgTable( 'job_matches',{
+	id: uuid( 'id' ).primaryKey().defaultRandom(),
+	userId: uuid( 'user_id' ).references( () => users.id,{ onDelete: 'cascade' } ).notNull(),
+	applicationId: uuid( 'application_id' ).references( () => jobApplications.id,{ onDelete: 'cascade' } ),
+	resumeParseId: uuid( 'resume_parse_id' ).references( () => resumeParses.id ),
+	jobDescription: text( 'job_description' ),
+	matchScore: integer( 'match_score' ), // 0-100
+	matchedSkills: text( 'matched_skills' ).array(),
+	missingSkills: text( 'missing_skills' ).array(),
+	aiAnalysis: text( 'ai_analysis' ),
+	createdAt: timestamp( 'created_at' ).defaultNow().notNull(),
+} )
+
+// AI Cover Letters table
+export const coverLetters=pgTable( 'cover_letters',{
+	id: uuid( 'id' ).primaryKey().defaultRandom(),
+	userId: uuid( 'user_id' ).references( () => users.id,{ onDelete: 'cascade' } ).notNull(),
+	applicationId: uuid( 'application_id' ).references( () => jobApplications.id,{ onDelete: 'cascade' } ),
+	content: text( 'content' ).notNull(),
+	tone: text( 'tone' ).default( 'professional' ), // professional, casual, enthusiastic
+	createdAt: timestamp( 'created_at' ).defaultNow().notNull(),
+	updatedAt: timestamp( 'updated_at' ).defaultNow().notNull(),
+} )
+
+// AI Relations
+export const resumeParsesRelations=relations( resumeParses,( { one,many } ) => ( {
+	user: one( users,{
+		fields: [ resumeParses.userId ],
+		references: [ users.id ],
+	} ),
+	document: one( documents,{
+		fields: [ resumeParses.documentId ],
+		references: [ documents.id ],
+	} ),
+	jobMatches: many( jobMatches ),
+} ) )
+
+export const jobMatchesRelations=relations( jobMatches,( { one } ) => ( {
+	user: one( users,{
+		fields: [ jobMatches.userId ],
+		references: [ users.id ],
+	} ),
+	application: one( jobApplications,{
+		fields: [ jobMatches.applicationId ],
+		references: [ jobApplications.id ],
+	} ),
+	resumeParse: one( resumeParses,{
+		fields: [ jobMatches.resumeParseId ],
+		references: [ resumeParses.id ],
+	} ),
+} ) )
+
+export const coverLettersRelations=relations( coverLetters,( { one } ) => ( {
+	user: one( users,{
+		fields: [ coverLetters.userId ],
+		references: [ users.id ],
+	} ),
+	application: one( jobApplications,{
+		fields: [ coverLetters.applicationId ],
+		references: [ jobApplications.id ],
 	} ),
 } ) )
 
