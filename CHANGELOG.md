@@ -1,3 +1,14 @@
+## [1.6.0](https://github.com/codenificient/codeniwork/compare/v1.5.0...v1.6.0) (2026-04-03)
+
+### Features
+
+* add AI resume parser, job scoring, cover letter generator ([3ecded7](https://github.com/codenificient/codeniwork/commit/3ecded774942d35a0c97aec441cc2bb05d2ef4f0))
+
+### Bug Fixes
+
+* remove openai package (using ada Ollama proxy instead) ([3f1605e](https://github.com/codenificient/codeniwork/commit/3f1605ebfd7e2b46af6d6fc088ad31ed289b7588))
+* replace OpenAI with Ada Ollama proxy (ingest.afrotomation.com/ai/chat) ([2c7d30b](https://github.com/codenificient/codeniwork/commit/2c7d30b35125f35ddb51465216e74d91b7232b3b))
+
 ## [1.5.0](https://github.com/codenificient/codeniwork/compare/v1.4.0...v1.5.0) (2026-04-03)
 
 ### Features
