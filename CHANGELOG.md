@@ -1,3 +1,17 @@
+## [1.5.0](https://github.com/codenificient/codeniwork/compare/v1.4.0...v1.5.0) (2026-04-03)
+
+### Features
+
+* add job board API integration with discover page ([d0e52ea](https://github.com/codenificient/codeniwork/commit/d0e52ea4a8ecf6b5f0acb69b02bd158f987fbf82))
+* upgrade analytics SDK v2.0 — ClickHouse + Web Vitals + error tracking ([1316768](https://github.com/codenificient/codeniwork/commit/1316768ff7bcd6a4b240d88f8eedb673ed2cddd0))
+
+### Bug Fixes
+
+* proxy Umami analytics through app domain to bypass adblockers ([2b78c07](https://github.com/codenificient/codeniwork/commit/2b78c07b87f4b1c36c11957af0e58a105b90a5b2))
+* set per-project analytics API key for codenalytics telemetry ([52c73a8](https://github.com/codenificient/codeniwork/commit/52c73a84f654753c857802f522d3889f0e8f4d2f))
+* stabilize app with error boundaries, auth scoping, and build fixes ([569cf8b](https://github.com/codenificient/codeniwork/commit/569cf8bf3d0b28820447aaedb91717fa6bd1df5d))
+* update analytics endpoint to codenalytics.vercel.app ([6e554f1](https://github.com/codenificient/codeniwork/commit/6e554f1325037196a81f510ac6cd310a62931c5b))
+
 ## [1.4.0](https://github.com/codenificient/codeniwork/compare/v1.3.1...v1.4.0) (2026-03-16)
 
 ### Features
