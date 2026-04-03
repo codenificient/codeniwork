@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { getOpenAI } from '@/lib/openai'
+import { jsonCompletion } from '@/lib/ai'
 import { db } from '@/lib/db'
 import { resumeParses, jobMatches } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
@@ -30,37 +30,18 @@ export async function POST( request: NextRequest ) {
 			return NextResponse.json( { error: 'Resume parse not found' }, { status: 404 } )
 		}
 
-		const completion = await getOpenAI().chat.completions.create( {
-			model: 'gpt-4o-mini',
-			messages: [
-				{
-					role: 'system',
-					content: `You are a job matching expert. Compare the candidate's resume against the job description and provide a match analysis. Return valid JSON with these fields:
-- matchScore (integer 0-100)
-- matchedSkills (string array of skills the candidate has that match the job)
-- missingSkills (string array of required skills the candidate lacks)
-- analysis (string, 3-5 sentence analysis of the match quality with actionable advice)
-
-Return ONLY valid JSON, no markdown or extra text.`
-				},
-				{
-					role: 'user',
-					content: `RESUME DATA:
-Name: ${resumeParse.name}
-Skills: ${( resumeParse.skills || [] ).join( ', ' )}
-Experience: ${JSON.stringify( resumeParse.experience )}
-Education: ${JSON.stringify( resumeParse.education )}
-Summary: ${resumeParse.summary}
-
-JOB DESCRIPTION:
-${jobDescription}`
-				}
-			],
-			temperature: 0.2,
-			response_format: { type: 'json_object' },
-		} )
-
-		const result = JSON.parse( completion.choices[0].message.content || '{}' )
+		const result = await jsonCompletion<{
+			matchScore?: number; matchedSkills?: string[]; missingSkills?: string[]; analysis?: string
+		}>([
+			{
+				role: 'system',
+				content: 'You are a job matching expert. Compare the resume against the job description. Return JSON with: matchScore (0-100), matchedSkills (array), missingSkills (array), analysis (3-5 sentences with actionable advice).',
+			},
+			{
+				role: 'user',
+				content: `RESUME:\nName: ${resumeParse.name}\nSkills: ${(resumeParse.skills || []).join(', ')}\nExperience: ${JSON.stringify(resumeParse.experience)}\nSummary: ${resumeParse.summary}\n\nJOB DESCRIPTION:\n${jobDescription}`,
+			},
+		], { temperature: 0.2 })
 
 		const [ jobMatch ] = await db.insert( jobMatches ).values( {
 			userId: session.user.id,

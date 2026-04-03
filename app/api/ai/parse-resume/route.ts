@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { getOpenAI } from '@/lib/openai'
+import { jsonCompletion } from '@/lib/ai'
 import { db } from '@/lib/db'
 import { resumeParses } from '@/lib/db/schema'
 
@@ -18,32 +18,16 @@ export async function POST( request: NextRequest ) {
 			return NextResponse.json( { error: 'Resume text is required' }, { status: 400 } )
 		}
 
-		const completion = await getOpenAI().chat.completions.create( {
-			model: 'gpt-4o-mini',
-			messages: [
-				{
-					role: 'system',
-					content: `You are a resume parser. Extract structured data from the resume text provided. Return valid JSON with these fields:
-- name (string)
-- email (string)
-- phone (string)
-- summary (string, 2-3 sentence professional summary)
-- skills (string array)
-- experience (array of objects with: title, company, duration, description)
-- education (array of objects with: degree, school, year)
-
-Return ONLY valid JSON, no markdown or extra text.`
-				},
-				{
-					role: 'user',
-					content: text
-				}
-			],
-			temperature: 0.1,
-			response_format: { type: 'json_object' },
-		} )
-
-		const parsed = JSON.parse( completion.choices[0].message.content || '{}' )
+		const parsed = await jsonCompletion<{
+			name?: string; email?: string; phone?: string; summary?: string
+			skills?: string[]; experience?: unknown[]; education?: unknown[]
+		}>([
+			{
+				role: 'system',
+				content: 'You are a resume parser. Extract structured data from the resume text. Return JSON with: name, email, phone, summary (2-3 sentences), skills (array), experience (array of {title,company,duration,description}), education (array of {degree,school,year}).',
+			},
+			{ role: 'user', content: text },
+		], { temperature: 0.1 })
 
 		const [ resumeParse ] = await db.insert( resumeParses ).values( {
 			userId: session.user.id,

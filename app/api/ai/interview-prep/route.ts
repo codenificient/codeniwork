@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { getOpenAI } from '@/lib/openai'
+import { jsonCompletion } from '@/lib/ai'
 import { db } from '@/lib/db'
 import { resumeParses } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
@@ -36,40 +36,13 @@ Summary: ${resumeParse.summary}`
 			}
 		}
 
-		const completion = await getOpenAI().chat.completions.create( {
-			model: 'gpt-4o-mini',
-			messages: [
-				{
-					role: 'system',
-					content: `You are an expert interview coach. Generate 10 likely interview questions for the given job description, along with ideal answer frameworks. Return valid JSON with this structure:
-{
-  "questions": [
-    {
-      "question": "...",
-      "category": "behavioral" | "technical" | "situational" | "general",
-      "difficulty": "easy" | "medium" | "hard",
-      "answerFramework": "...",
-      "tips": "..."
-    }
-  ]
-}
-
-For answerFramework, provide a structured approach (e.g., STAR method outline, key points to cover) rather than a scripted answer. If candidate background is provided, tailor the frameworks to their specific experience.
-
-Return ONLY valid JSON, no markdown or extra text.`
-				},
-				{
-					role: 'user',
-					content: `JOB DESCRIPTION:
-${jobDescription}
-${resumeContext}`
-				}
-			],
-			temperature: 0.4,
-			response_format: { type: 'json_object' },
-		} )
-
-		const result = JSON.parse( completion.choices[0].message.content || '{"questions":[]}' )
+		const result = await jsonCompletion<{ questions: unknown[] }>([
+			{
+				role: 'system',
+				content: 'You are an expert interview coach. Generate 10 interview questions with answer frameworks. Return JSON: { questions: [ { question, category (behavioral|technical|situational|general), difficulty (easy|medium|hard), answerFramework, tips } ] }',
+			},
+			{ role: 'user', content: `JOB DESCRIPTION:\n${jobDescription}${resumeContext}` },
+		], { temperature: 0.4 })
 
 		return NextResponse.json( result )
 	} catch ( error ) {

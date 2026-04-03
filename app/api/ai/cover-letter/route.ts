@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { getOpenAI } from '@/lib/openai'
+import { chatCompletion } from '@/lib/ai'
 import { db } from '@/lib/db'
 import { resumeParses, coverLetters } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
@@ -36,41 +36,16 @@ export async function POST( request: NextRequest ) {
 			enthusiastic: 'Write with energy and passion, showing genuine excitement about the opportunity.',
 		}
 
-		const completion = await getOpenAI().chat.completions.create( {
-			model: 'gpt-4o-mini',
-			messages: [
-				{
-					role: 'system',
-					content: `You are an expert cover letter writer. Generate a compelling, tailored cover letter. ${toneInstructions[tone] || toneInstructions.professional}
-
-The letter should:
-- Be 3-4 paragraphs
-- Reference specific skills and experience from the resume that match the job
-- Show knowledge of the company
-- Include a strong opening and confident closing
-- Be ready to send (include greeting and sign-off using the candidate's name)
-
-Return ONLY the cover letter text, no JSON wrapping.`
-				},
-				{
-					role: 'user',
-					content: `CANDIDATE:
-Name: ${resumeParse.name}
-Skills: ${( resumeParse.skills || [] ).join( ', ' )}
-Experience: ${JSON.stringify( resumeParse.experience )}
-Summary: ${resumeParse.summary}
-
-COMPANY: ${companyName}
-POSITION: ${position}
-
-JOB DESCRIPTION:
-${jobDescription}`
-				}
-			],
-			temperature: 0.7,
-		} )
-
-		const content = completion.choices[0].message.content || ''
+		const content = await chatCompletion([
+			{
+				role: 'system',
+				content: `You are an expert cover letter writer. ${toneInstructions[tone] || toneInstructions.professional} Write a compelling 3-4 paragraph cover letter. Reference specific skills matching the job. Include greeting and sign-off. Return ONLY the letter text.`,
+			},
+			{
+				role: 'user',
+				content: `CANDIDATE: ${resumeParse.name}\nSkills: ${(resumeParse.skills || []).join(', ')}\nSummary: ${resumeParse.summary}\n\nCOMPANY: ${companyName}\nPOSITION: ${position}\nJOB: ${jobDescription}`,
+			},
+		], { temperature: 0.7 })
 
 		const [ coverLetter ] = await db.insert( coverLetters ).values( {
 			userId: session.user.id,
