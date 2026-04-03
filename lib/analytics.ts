@@ -19,6 +19,8 @@ class AppAnalytics {
 				apiKey: this.config.apiKey,
 				endpoint: this.config.endpoint,
 				debug: this.config.debug || false,
+				webVitals: true,
+				errorTracking: true,
 			} )
 			this.isInitialized = true
 		} catch ( error ) {
@@ -94,8 +96,8 @@ export function getAnalytics(): AppAnalytics | null {
 }
 
 const defaultConfig: AnalyticsConfig = {
-	apiKey: process.env.NEXT_PUBLIC_ANALYTICS_API_KEY || "",
-	endpoint: process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT || "https://codenalytics.vercel.app/api",
+	apiKey: process.env.NEXT_PUBLIC_ANALYTICS_API_KEY!,
+	endpoint: "https://ingest.afrotomation.com",
 	debug: process.env.NODE_ENV === "development",
 	enabled: process.env.NODE_ENV === "production" || process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === "true",
 }
