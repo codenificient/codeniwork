@@ -1,3 +1,9 @@
+## [1.7.0](https://github.com/codenificient/codeniwork/compare/v1.6.0...v1.7.0) (2026-04-15)
+
+### Features
+
+* Coolify deployment setup ([1704d1b](https://github.com/codenificient/codeniwork/commit/1704d1bdf9ce2c0e39f0615603f3a50e68671b9b))
+
 ## [1.6.0](https://github.com/codenificient/codeniwork/compare/v1.5.0...v1.6.0) (2026-04-03)
 
 ### Features
