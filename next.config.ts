@@ -1,14 +1,15 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-    async rewrites() {
-      return [
-        {
-          source: '/a/:path*',
-          destination: 'https://analytics.afrotomation.com/:path*',
-        },
-      ];
-    },
+  output: 'standalone',
+  async rewrites() {
+    return [
+      {
+        source: '/a/:path*',
+        destination: 'https://analytics.afrotomation.com/:path*',
+      },
+    ];
+  },
   serverExternalPackages: ['@neondatabase/serverless'],
   images: {
     remotePatterns: [
