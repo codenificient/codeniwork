@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint --max-warnings 100 .",
     "db:generate": "drizzle-kit generate",
+    "db:migrate:prod": "bun scripts/migrate.ts",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:clear": "tsx scripts/clear-database.ts",
