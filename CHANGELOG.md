@@ -1,3 +1,13 @@
+## [1.8.0](https://github.com/codenificient/codeniwork/compare/v1.7.0...v1.8.0) (2026-04-25)
+
+### Features
+
+* **migrate:** add standalone migration script for ArgoCD PreSync Job ([2d6a899](https://github.com/codenificient/codeniwork/commit/2d6a89923c2d8b67af6ce824a21140565bfffe4b))
+
+### Bug Fixes
+
+* **db:** switch from Neon HTTP driver to pg (node-postgres) for CNPG ([b3fe67a](https://github.com/codenificient/codeniwork/commit/b3fe67ab5c0d66c639765001ba2bace0d6a9ceff))
+
 ## [1.7.0](https://github.com/codenificient/codeniwork/compare/v1.6.0...v1.7.0) (2026-04-15)
 
 ### Features
