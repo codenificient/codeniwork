@@ -4,6 +4,8 @@ A beautiful, modern job application tracker built with Next.js 15.5, featuring a
 
 [![Preview](https://api.microlink.io/?url=https%3A%2F%2Fcodeniwork.tioye.dev&screenshot=true&meta=false&embed=screenshot.url&screenshot.delay=4000)](https://codeniwork.tioye.dev)
 
+🌍 **Live:** [codeniwork.tioye.dev](https://codeniwork.tioye.dev)
+
 ## ✨ Features
 
 ### 🎯 **Core Functionality**
@@ -37,7 +39,7 @@ A beautiful, modern job application tracker built with Next.js 15.5, featuring a
 - **Authentication**: NextAuth.js (Google, GitHub OAuth)
 - **Forms**: React Hook Form with Zod validation
 - **Icons**: Lucide React
-- **Deployment**: Vercel-ready
+- **Deployment**: Self-hosted k3s (Cloudflare tunnel + ArgoCD GitOps)
 
 ## 🚀 Quick Start
 
